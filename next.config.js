@@ -1,9 +1,3 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  experimental: {
-    outputFileTracingIncludes: {
-      "/api/export-fiche/[id]": ["./lib/templates/**"],
-    },
-  },
-};
+const nextConfig = {};
 module.exports = nextConfig;

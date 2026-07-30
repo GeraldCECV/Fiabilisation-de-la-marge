@@ -49,7 +49,7 @@ export async function GET(request, { params }) {
     options = data || [];
   }
 
-  const templatePath = path.join(process.cwd(), "lib", "templates", "trame_renta_template.xlsx");
+  const templatePath = path.join(process.cwd(), "public", "templates", "trame_renta_template.xlsx");
   const workbook = new ExcelJS.Workbook();
   await workbook.xlsx.readFile(templatePath);
   workbook.calcProperties.fullCalcOnLoad = true; // force Excel à recalculer toutes les formules à l'ouverture
