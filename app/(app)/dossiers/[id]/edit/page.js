@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
-import { calculerMarge } from "@/lib/margeEngine";
+import { calculerMarge, BATTERIE_COUTS } from "@/lib/margeEngine";
 
 const ANNEE_COURANTE = 2027;
 const fmt = (n) => (Number(n) || 0).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
@@ -27,7 +27,8 @@ export default function EditDossierPage() {
 
   const [client, setClient] = useState("");
   const [statut, setStatut] = useState("PROPOSITION");
-  const [stockStatut, setStockStatut] = useState("STOCK");
+  const [stockStatut, setStockStatut] = useState("COMMANDE");
+  const [numeroChassis, setNumeroChassis] = useState("");
   const [fraisSortieUsine, setFraisSortieUsine] = useState(0);
   const [transportUsine, setTransportUsine] = useState(0);
   const [cessionOdoo, setCessionOdoo] = useState(0);
@@ -67,6 +68,7 @@ export default function EditDossierPage() {
       setClient(d.client_nom || "");
       setStatut(d.statut);
       setStockStatut(d.stock_statut || "STOCK");
+      setNumeroChassis(d.numero_chassis || "");
       setFraisSortieUsine(d.frais_sortie_usine || 0);
       setTransportUsine(d.transport_usine || 0);
       setCessionOdoo(d.cession_odoo || 0);
@@ -103,8 +105,9 @@ export default function EditDossierPage() {
         transportIntersite: Number(transportIntersite) || 0,
       },
       expo,
+      batterieChoix,
     });
-  }, [modele, optionsChoisies, baremes, forfaits, prixNegocie, financementActif, financementMontant, fraisSortieUsine, transportUsine, cessionOdoo, transportIntersite, expo]);
+  }, [modele, optionsChoisies, baremes, forfaits, prixNegocie, financementActif, financementMontant, fraisSortieUsine, transportUsine, cessionOdoo, transportIntersite, expo, batterieChoix]);
 
   async function enregistrer() {
     if (!calc || !dossier) return;
@@ -116,13 +119,14 @@ export default function EditDossierPage() {
       statut, client_nom: client,
       options_choisies: optionsChoisiesIds,
       stock_statut: stockStatut,
+      numero_chassis: stockStatut === "STOCK" ? numeroChassis : null,
       frais_sortie_usine: Number(fraisSortieUsine) || 0,
       transport_usine: Number(transportUsine) || 0,
       cession_odoo: Number(cessionOdoo) || 0,
       transport_intersite: Number(transportIntersite) || 0,
       expo, batterie_choix: batterieChoix,
       prix_negocie_ttc: Number(prixNegocie) || 0,
-      prix_affiche_parc: Number(prixAffichParc) || 0,
+      prix_affiche_parc: rachatActif ? Number(prixAffichParc) || 0 : null,
       financement_organisme: financementActif ? (financementOrganisme || "À préciser") : null,
       financement_montant: financementActif ? Number(financementMontant) || 0 : 0,
       rachat_actif: rachatActif,
@@ -190,12 +194,18 @@ export default function EditDossierPage() {
               <div>
                 <label className="text-xs text-sub uppercase font-bold">Statut stock</label>
                 <select value={stockStatut} onChange={(e) => setStockStatut(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
+                  <option value="COMMANDE">Commande usine</option>
                   <option value="STOCK">En stock</option>
                   <option value="REASSORT">Réassort</option>
-                  <option value="COMMANDE">Commande usine</option>
                 </select>
               </div>
             </div>
+            {stockStatut === "STOCK" && (
+              <div className="mt-3">
+                <label className="text-xs text-sub uppercase font-bold">N° de série / châssis</label>
+                <input value={numeroChassis} onChange={(e) => setNumeroChassis(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+              </div>
+            )}
             <div className="mt-3">
               <label className="text-xs text-sub uppercase font-bold">Client</label>
               <input value={client} onChange={(e) => setClient(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
@@ -223,9 +233,9 @@ export default function EditDossierPage() {
               <div>
                 <div className="text-xs text-sub">Batterie</div>
                 <select value={batterieChoix} onChange={(e) => setBatterieChoix(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
-                  <option>Camping car avec batterie</option>
-                  <option>Batterie gel 105Ah</option>
-                  <option>Pack 2 batteries gel 105Ah</option>
+                  {Object.keys(BATTERIE_COUTS).map((nom) => (
+                    <option key={nom} value={nom}>{nom}</option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -261,9 +271,8 @@ export default function EditDossierPage() {
 
           <div className="bg-surface border border-border rounded-lg p-5">
             <label className="text-xs text-sub uppercase font-bold">Négociation</label>
-            <div className="grid grid-cols-2 gap-3 mt-2">
-              <div><div className="text-xs text-sub">Prix négocié TTC (hors carte grise)</div><input type="number" value={prixNegocie} onChange={(e) => setPrixNegocie(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" /></div>
-              <div><div className="text-xs text-sub">Prix affiché sur parc</div><input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" /></div>
+            <div>
+              <div className="text-xs text-sub">Prix négocié TTC (hors carte grise)</div><input type="number" value={prixNegocie} onChange={(e) => setPrixNegocie(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
             </div>
             <div className="grid grid-cols-2 gap-3 mt-3">
               <div>
@@ -298,6 +307,12 @@ export default function EditDossierPage() {
                 <div><div className="text-xs text-sub">Montant rachat</div><input type="number" value={rachatMontant} onChange={(e) => setRachatMontant(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" /></div>
               )}
             </div>
+            {rachatActif && (
+              <div className="mt-3">
+                <div className="text-xs text-sub">Prix affiché sur parc</div>
+                <input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+              </div>
+            )}
             <div className="mt-3">
               <div className="text-xs text-sub">Bon de préparation / commentaires</div>
               <textarea value={commentaires} onChange={(e) => setCommentaires(e.target.value)} rows={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />

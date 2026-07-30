@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
-import { calculerMarge } from "@/lib/margeEngine";
+import { calculerMarge, BATTERIE_COUTS } from "@/lib/margeEngine";
 
 const ANNEE_COURANTE = 2027;
 const fmt = (n) => (Number(n) || 0).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
@@ -19,7 +19,8 @@ export default function CalculateurPage() {
   const [baremes, setBaremes] = useState([]);
   const [forfaits, setForfaits] = useState([]);
 
-  const [stockStatut, setStockStatut] = useState("STOCK");
+  const [stockStatut, setStockStatut] = useState("COMMANDE");
+  const [numeroChassis, setNumeroChassis] = useState("");
   const [fraisSortieUsine, setFraisSortieUsine] = useState(0);
   const [transportUsine, setTransportUsine] = useState(0);
   const [cessionOdoo, setCessionOdoo] = useState(0);
@@ -101,8 +102,9 @@ export default function CalculateurPage() {
         transportIntersite: Number(transportIntersite) || 0,
       },
       expo,
+      batterieChoix,
     });
-  }, [modele, optionsChoisies, baremes, forfaits, prixNegocie, financementActif, financementMontant, fraisSortieUsine, transportUsine, cessionOdoo, transportIntersite, expo]);
+  }, [modele, optionsChoisies, baremes, forfaits, prixNegocie, financementActif, financementMontant, fraisSortieUsine, transportUsine, cessionOdoo, transportIntersite, expo, batterieChoix]);
 
   async function enregistrer(statut) {
     if (!modele || !calc) return;
@@ -116,6 +118,7 @@ export default function CalculateurPage() {
       modele_id: modele.id,
       options_choisies: optionsChoisiesIds,
       stock_statut: stockStatut,
+      numero_chassis: stockStatut === "STOCK" ? numeroChassis : null,
       frais_sortie_usine: Number(fraisSortieUsine) || 0,
       transport_usine: Number(transportUsine) || 0,
       cession_odoo: Number(cessionOdoo) || 0,
@@ -123,7 +126,7 @@ export default function CalculateurPage() {
       expo,
       batterie_choix: batterieChoix,
       prix_negocie_ttc: Number(prixNegocie) || 0,
-      prix_affiche_parc: Number(prixAffichParc) || 0,
+      prix_affiche_parc: rachatActif ? Number(prixAffichParc) || 0 : null,
       financement_organisme: financementActif ? (financementOrganisme || "À préciser") : null,
       financement_montant: financementActif ? Number(financementMontant) || 0 : 0,
       rachat_actif: rachatActif,
@@ -172,9 +175,9 @@ export default function CalculateurPage() {
               <div>
                 <label className="text-xs text-sub">Statut stock</label>
                 <select value={stockStatut} onChange={(e) => setStockStatut(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
+                  <option value="COMMANDE">Commande usine</option>
                   <option value="STOCK">En stock</option>
                   <option value="REASSORT">Réassort</option>
-                  <option value="COMMANDE">Commande usine</option>
                 </select>
               </div>
               <div>
@@ -187,6 +190,12 @@ export default function CalculateurPage() {
                 </select>
               </div>
             </div>
+            {stockStatut === "STOCK" && (
+              <div className="mt-3">
+                <label className="text-xs text-sub">N° de série / châssis</label>
+                <input value={numeroChassis} onChange={(e) => setNumeroChassis(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+              </div>
+            )}
             {modele && (
               <div className="flex gap-6 mt-3 text-sm text-sub">
                 <div>Prix usine HT : <b className="text-ink">{fmt(modele.prix_usine_ht)}</b></div>
@@ -218,9 +227,9 @@ export default function CalculateurPage() {
             <div className="mt-3">
               <div className="text-xs text-sub">Batterie</div>
               <select value={batterieChoix} onChange={(e) => setBatterieChoix(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
-                <option>Camping car avec batterie</option>
-                <option>Batterie gel 105Ah</option>
-                <option>Pack 2 batteries gel 105Ah</option>
+                {Object.keys(BATTERIE_COUTS).map((nom) => (
+                  <option key={nom} value={nom}>{nom}</option>
+                ))}
               </select>
             </div>
           </div>
@@ -255,15 +264,9 @@ export default function CalculateurPage() {
 
           <div className="bg-surface border border-border rounded-lg p-5">
             <label className="text-xs text-sub uppercase font-bold">Négociation</label>
-            <div className="grid grid-cols-2 gap-3 mt-2">
-              <div>
-                <div className="text-xs text-sub">Prix négocié TTC (hors carte grise)</div>
-                <input type="number" value={prixNegocie} onChange={(e) => setPrixNegocie(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
-              </div>
-              <div>
-                <div className="text-xs text-sub">Prix affiché sur parc</div>
-                <input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
-              </div>
+            <div>
+              <div className="text-xs text-sub">Prix négocié TTC (hors carte grise)</div>
+              <input type="number" value={prixNegocie} onChange={(e) => setPrixNegocie(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
             </div>
             <div className="grid grid-cols-2 gap-3 mt-3">
               <div>
@@ -308,6 +311,12 @@ export default function CalculateurPage() {
                 </div>
               )}
             </div>
+            {rachatActif && (
+              <div className="mt-3">
+                <div className="text-xs text-sub">Prix affiché sur parc</div>
+                <input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+              </div>
+            )}
             <div className="mt-3">
               <div className="text-xs text-sub">Client</div>
               <input value={client} onChange={(e) => setClient(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />

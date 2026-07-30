@@ -37,6 +37,7 @@ export default async function DossierDetailPage({ params }) {
         <Link href="/dossiers" className="text-sub text-sm hover:text-ink">&larr; Retour aux dossiers</Link>
         <div className="flex gap-3">
           <Link href={`/dossiers/${params.id}/edit`} className="px-4 py-2 rounded-md border border-border bg-white font-bold text-sm">Modifier</Link>
+          <a href={`/api/export-fiche/${params.id}`} className="px-4 py-2 rounded-md border border-border bg-white font-bold text-sm">Exporter en Excel</a>
           <PrintButton />
         </div>
       </div>
@@ -46,7 +47,7 @@ export default async function DossierDetailPage({ params }) {
           <div>
             <div className="text-[11px] tracking-widest text-accent font-bold uppercase">Fiche de rentabilité — Véhicule Neuf</div>
             <div className="text-2xl font-extrabold mt-1">{dossier.modeles?.marques?.nom} {dossier.modeles?.nom}</div>
-            <div className="text-sm text-sub mt-1">{dossier.modeles?.gamme} — {STOCK_LABELS[dossier.stock_statut] || dossier.stock_statut}</div>
+            <div className="text-sm text-sub mt-1">{dossier.modeles?.gamme} — {STOCK_LABELS[dossier.stock_statut] || dossier.stock_statut}{dossier.numero_chassis && ` — N° ${dossier.numero_chassis}`}</div>
           </div>
           <div className="text-right text-sm">
             <span className={`inline-block text-[11px] font-bold px-2.5 py-1 rounded-full ${dossier.statut === "VENDU" ? "bg-[#E4EEE6] text-pos" : "bg-[#EFEBE0] text-accent"}`}>{dossier.statut}</span>
