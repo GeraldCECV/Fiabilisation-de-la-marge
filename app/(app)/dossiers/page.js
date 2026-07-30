@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 const fmt = (n) => (Number(n) || 0).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
@@ -28,16 +29,18 @@ export default async function DossiersPage() {
           </thead>
           <tbody>
             {(dossiers || []).map((d) => (
-              <tr key={d.id} className="border-t border-border">
-                <td className="px-3 py-2">{new Date(d.created_at).toLocaleDateString("fr-FR")}</td>
+              <tr key={d.id} className="border-t border-border hover:bg-[#FCFBF8] cursor-pointer">
+                <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{new Date(d.created_at).toLocaleDateString("fr-FR")}</Link></td>
                 <td className="px-3 py-2">
-                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${d.statut === "VENDU" ? "bg-[#E4EEE6] text-pos" : "bg-[#EFEBE0] text-accent"}`}>{d.statut}</span>
+                  <Link href={`/dossiers/${d.id}`} className="block">
+                    <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${d.statut === "VENDU" ? "bg-[#E4EEE6] text-pos" : "bg-[#EFEBE0] text-accent"}`}>{d.statut}</span>
+                  </Link>
                 </td>
-                <td className="px-3 py-2">{d.client_nom || "—"}</td>
-                <td className="px-3 py-2">{d.utilisateurs?.nom || "—"}</td>
-                <td className="px-3 py-2">{d.modeles?.nom || "—"}</td>
-                <td className="px-3 py-2 text-right">{fmt(d.prix_negocie_ttc)}</td>
-                <td className={`px-3 py-2 text-right font-bold ${d.marge_reelle >= 0 ? "text-pos" : "text-neg"}`}>{fmt(d.marge_reelle)}</td>
+                <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.client_nom || "—"}</Link></td>
+                <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.utilisateurs?.nom || "—"}</Link></td>
+                <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.modeles?.nom || "—"}</Link></td>
+                <td className="px-3 py-2 text-right"><Link href={`/dossiers/${d.id}`} className="block">{fmt(d.prix_negocie_ttc)}</Link></td>
+                <td className={`px-3 py-2 text-right font-bold ${d.marge_reelle >= 0 ? "text-pos" : "text-neg"}`}><Link href={`/dossiers/${d.id}`} className="block">{fmt(d.marge_reelle)}</Link></td>
               </tr>
             ))}
             {(!dossiers || dossiers.length === 0) && (

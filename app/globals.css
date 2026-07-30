@@ -5,3 +5,19 @@
 body {
   font-variant-numeric: tabular-nums;
 }
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  header {
+    display: none !important;
+  }
+  body {
+    background: white;
+  }
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+  }
+}
