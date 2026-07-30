@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { supabaseServer } from "@/lib/supabaseServer";
 import PrintButton from "./PrintButton";
+import DossierActions from "./DossierActions";
 
 const fmt = (n) => (Number(n) || 0).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
 const fmtPct = (n) => (Number.isFinite(n) ? (Number(n) * 100).toFixed(1) : "0") + " %";
@@ -35,7 +36,8 @@ export default async function DossierDetailPage({ params }) {
     <div>
       <div className="no-print flex items-center justify-between mb-6">
         <Link href="/dossiers" className="text-sub text-sm hover:text-ink">&larr; Retour aux dossiers</Link>
-        <div className="flex gap-3">
+        <div className="flex gap-3 items-center">
+          <DossierActions dossierId={params.id} statut={dossier.statut} />
           <Link href={`/dossiers/${params.id}/edit`} className="px-4 py-2 rounded-md border border-border bg-white font-bold text-sm">Modifier</Link>
           <a href={`/api/export-fiche/${params.id}`} className="px-4 py-2 rounded-md border border-border bg-white font-bold text-sm">Exporter en Excel</a>
           <PrintButton />
