@@ -1,0 +1,198 @@
+// Données de référence extraites des tarifs distributeur/public 2027 (Dreamer + Rapido),
+// reprises telles quelles depuis le prototype validé. Ce fichier est la source de vérité
+// pour le script d'import scripts/seed.js — ne pas modifier sans mettre à jour les deux en parallèle.
+
+function zipCompat(ids, statuts) {
+  const map = {};
+  ids.forEach((id, i) => { map[id] = statuts[i]; });
+  return map;
+}
+
+// ---------------------------------------------------------------------------
+// VÉHICULES
+// ---------------------------------------------------------------------------
+
+const DREAMER_VEHICULE_IDS = ["d43", "d43p", "d43up", "d43upp", "d55", "d55p", "d55up", "d55upp", "d68", "d68p", "d68up", "d68upp", "cf", "cfp", "cs", "csp"];
+
+const DREAMER_VEHICULES = [
+  { id: "d43", nom: "D43 FUN 120cv", prixUsineHt: 39803.67, prixPublicTtc: 54500 },
+  { id: "d43p", nom: "D43 FUN+ 140cv", prixUsineHt: 43763.67, prixPublicTtc: 59900 },
+  { id: "d43up", nom: "D43 UP FUN 120cv", prixUsineHt: 44203.67, prixPublicTtc: 60500 },
+  { id: "d43upp", nom: "D43 UP FUN+ 140cv", prixUsineHt: 48163.67, prixPublicTtc: 65900 },
+  { id: "d55", nom: "D55 FUN 140cv", prixUsineHt: 43030.33, prixPublicTtc: 58900 },
+  { id: "d55p", nom: "D55 FUN+ 140cv", prixUsineHt: 45963.67, prixPublicTtc: 62900 },
+  { id: "d55up", nom: "D55 UP FUN 140cv", prixUsineHt: 47430.33, prixPublicTtc: 64900 },
+  { id: "d55upp", nom: "D55 UP FUN+ 140cv", prixUsineHt: 50363.67, prixPublicTtc: 68900 },
+  { id: "d68", nom: "D68 FUN 140cv", prixUsineHt: 44497.0, prixPublicTtc: 60900 },
+  { id: "d68p", nom: "D68 FUN+ 140cv", prixUsineHt: 47430.33, prixPublicTtc: 64900 },
+  { id: "d68up", nom: "D68 UP FUN 140cv", prixUsineHt: 48897.0, prixPublicTtc: 66900 },
+  { id: "d68upp", nom: "D68 UP FUN+ 140cv", prixUsineHt: 51097.0, prixPublicTtc: 69900 },
+  { id: "cf", nom: "CAMPER FIVE FUN 140cv", prixUsineHt: 46403.67, prixPublicTtc: 63500 },
+  { id: "cfp", nom: "CAMPER FIVE FUN+ 140cv", prixUsineHt: 49337.0, prixPublicTtc: 67500 },
+  { id: "cs", nom: "CAMPER SPORT FUN 140cv", prixUsineHt: 46403.67, prixPublicTtc: 63500 },
+  { id: "csp", nom: "CAMPER SPORT FUN+ 140cv", prixUsineHt: 49337.0, prixPublicTtc: 67500 },
+].map((v) => ({ ...v, marque: "Dreamer", gamme: "FUN", type: "CAMPING_CAR", collection: 2027 }));
+
+const RAPIDO_VEHICULE_IDS = ["r_c03", "r_c50", "r_c55", "r_c66ol", "r_c86ol", "r_606f", "r_666fol", "r_686f", "r_696fol"];
+
+const RAPIDO_VEHICULES = [
+  { id: "r_c03", nom: "C03", prixUsineHt: 53124.10, prixPublicTtc: 73500 },
+  { id: "r_c50", nom: "C50", prixUsineHt: 54574.10, prixPublicTtc: 75500 },
+  { id: "r_c55", nom: "C55", prixUsineHt: 54574.10, prixPublicTtc: 75500 },
+  { id: "r_c66ol", nom: "C66 Optimum Line", prixUsineHt: 59141.60, prixPublicTtc: 81800 },
+  { id: "r_c86ol", nom: "C86 Optimum Line", prixUsineHt: 59141.60, prixPublicTtc: 81800 },
+  { id: "r_606f", nom: "606F", prixUsineHt: 54864.10, prixPublicTtc: 75900 },
+  { id: "r_666fol", nom: "666F Optimum Line", prixUsineHt: 60591.60, prixPublicTtc: 83800 },
+  { id: "r_686f", nom: "686F", prixUsineHt: 55516.60, prixPublicTtc: 76800 },
+  { id: "r_696fol", nom: "696F Optimum Line", prixUsineHt: 60591.60, prixPublicTtc: 83800 },
+].map((v) => ({ ...v, marque: "Rapido", gamme: "Profilés (Séries C / 6F)", type: "CAMPING_CAR", collection: 2027 }));
+
+const RAPIDO_INTEGRAUX_IDS = ["r_c55i", "r_c66iol", "r_c86iol", "r_850f", "r_866fol", "r_896fol", "r_8066dfalko", "r_8086dfalko", "r_8096dfalko", "r_i66mtruma", "r_i66malde", "r_i96mtruma", "r_i96malde", "r_i166malde", "r_i196malde"];
+
+const RAPIDO_VEHICULES_INTEGRAUX = [
+  { id: "r_c55i", nom: "C55I", prixUsineHt: 61389.10, prixPublicTtc: 84900 },
+  { id: "r_c66iol", nom: "C66I Optimum Line", prixUsineHt: 66464.10, prixPublicTtc: 91900 },
+  { id: "r_c86iol", nom: "C86I Optimum Line", prixUsineHt: 66464.10, prixPublicTtc: 91900 },
+  { id: "r_850f", nom: "850F", prixUsineHt: 62114.10, prixPublicTtc: 85900 },
+  { id: "r_866fol", nom: "866F Optimum Line", prixUsineHt: 67914.10, prixPublicTtc: 93900 },
+  { id: "r_896fol", nom: "896F Optimum Line", prixUsineHt: 67914.10, prixPublicTtc: 93900 },
+  { id: "r_8086dfalko", nom: "8086dF AL-KO", prixUsineHt: 70524.10, prixPublicTtc: 97500 },
+  { id: "r_8066dfalko", nom: "8066dF AL-KO", prixUsineHt: 71974.10, prixPublicTtc: 99500 },
+  { id: "r_8096dfalko", nom: "8096dF AL-KO", prixUsineHt: 71974.10, prixPublicTtc: 99500 },
+  { id: "r_i66mtruma", nom: "I66M TRUMA (Mercedes)", prixUsineHt: 99391.47, prixPublicTtc: 138900 },
+  { id: "r_i96mtruma", nom: "I96M TRUMA (Mercedes)", prixUsineHt: 99391.47, prixPublicTtc: 138900 },
+  { id: "r_i66malde", nom: "I66M ALDE (Mercedes)", prixUsineHt: 102258.13, prixPublicTtc: 142900 },
+  { id: "r_i96malde", nom: "I96M ALDE (Mercedes)", prixUsineHt: 102258.13, prixPublicTtc: 142900 },
+  { id: "r_i166malde", nom: "I166M ALDE (Mercedes)", prixUsineHt: 115158.13, prixPublicTtc: 160900 },
+  { id: "r_i196malde", nom: "I196M ALDE (Mercedes)", prixUsineHt: 115158.13, prixPublicTtc: 160900 },
+].map((v) => ({ ...v, marque: "Rapido", gamme: "Intégraux (Séries C / 8F / 80dF / Distinction)", type: "CAMPING_CAR", collection: 2027 }));
+
+const RAPIDO_VANS_IDS = ["r_v55ol", "r_v62ol", "r_v64", "r_v65xl", "r_v68"];
+
+const RAPIDO_VEHICULES_VANS = [
+  { id: "r_v55ol", nom: "V55 Optimum Line", prixUsineHt: 52553.40, prixPublicTtc: 71900 },
+  { id: "r_v68", nom: "V68", prixUsineHt: 48886.73, prixPublicTtc: 66900 },
+  { id: "r_v62ol", nom: "V62 Optimum Line", prixUsineHt: 54020.07, prixPublicTtc: 73900 },
+  { id: "r_v64", nom: "V64", prixUsineHt: 50353.40, prixPublicTtc: 68900 },
+  { id: "r_v65xl", nom: "V65 XL", prixUsineHt: 51086.73, prixPublicTtc: 69900 },
+].map((v) => ({ ...v, marque: "Rapido", gamme: "Vans (Fourgons)", type: "CAMPING_CAR", collection: 2027 }));
+
+const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS];
+
+// ---------------------------------------------------------------------------
+// OPTIONS (statut par véhicule : "O" option payante, "S" de série, "-"/absent indisponible)
+// ---------------------------------------------------------------------------
+
+const DREAMER_OPTIONS = [
+  { id: "isolation_portes", nom: "Kit isolation portes arrière Grand Froid", achatHt: 191, cessionPose: 0, prixTtc: 270, poids: 2,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["O","O","O","O","O","O","O","O","O","O","O","O","O","O","O","O"]) },
+  { id: "reservoir_chauffe", nom: "Réservoir d'eaux usées chauffé", achatHt: 213, cessionPose: 0, prixTtc: 300, poids: 12,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["O","O","O","O","O","O","O","O","O","O","O","O","O","O","O","O"]) },
+  { id: "douchette", nom: "Douchette extérieure eau froide", achatHt: 135, cessionPose: 0, prixTtc: 190, poids: 1,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["O","S","O","S","O","S","O","S","O","S","O","S","O","S","S","S"]) },
+  { id: "jantes", nom: "Jantes Stellantis alliage 16\"", achatHt: 600, cessionPose: 0, prixTtc: 800, poids: 0,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["O","S","O","S","O","S","O","S","O","S","O","S","O","S","O","S"]) },
+  { id: "batterie_agm", nom: "2e batterie cellule AGM 95Ah", achatHt: 248, cessionPose: 0, prixTtc: 350, poids: 27,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["O","S","O","S","O","S","O","S","O","S","O","S","O","S","O","S"]) },
+  { id: "moquette", nom: "Moquette cellule", achatHt: 390, cessionPose: 0, prixTtc: 550, poids: 5,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["O","O","O","O","O","O","O","O","O","O","O","O","O","O","O","O"]) },
+  { id: "toit_pano", nom: "Toit panoramique Skyview", achatHt: 1063, cessionPose: 0, prixTtc: 1500, poids: 20,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["-","O","-","O","-","O","-","O","-","O","-","O","-","-","-","O"]) },
+  { id: "peinture_up", nom: "Peinture carrosserie gamme UP (Gris Artense / Storm Blue...)", achatHt: 1425, cessionPose: 0, prixTtc: 1900, poids: 0,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["-","-","O","O","-","-","O","O","-","-","O","O","-","-","-","-"]) },
+  { id: "peinture_h2", nom: "Peinture carrosserie gamme H2", achatHt: 788, cessionPose: 0, prixTtc: 1050, poids: 0,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["O","O","-","-","O","O","-","-","O","O","-","-","-","-","-","-"]) },
+  { id: "isolation_toile", nom: "Kit isolation toile de toit", achatHt: 584, cessionPose: 0, prixTtc: 820, poids: 4.6,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["-","-","O","O","-","-","O","O","-","-","O","O","-","-","-","-"]) },
+  { id: "four", nom: "Four 20 litres avec grill", achatHt: 638, cessionPose: 0, prixTtc: 900, poids: 15,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["-","-","-","-","O","O","O","O","O","O","O","O","O","O","-","-"]) },
+  { id: "couchage_appoint", nom: "Couchage d'appoint 1 place", achatHt: 248, cessionPose: 0, prixTtc: 350, poids: 0,
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["O","S","-","-","O","S","-","-","O","S","-","-","-","-","O","S"]) },
+].map((o) => ({ ...o, marque: "Dreamer" }));
+
+const RAPIDO_OPTIONS = [
+  { id: "toit_pano_r", nom: "Toit panoramique Skyview", achatHt: 1063, cessionPose: 0, prixTtc: 1500, poids: 20,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["S","S","S","S","S","-","-","-","-"]) },
+  { id: "truma_combi", nom: "TRUMA Combi 6 EH Diesel (diesel + électrique)", achatHt: 531, cessionPose: 0, prixTtc: 750, poids: 0,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["O","O","O","O","O","O","O","O","O"]) },
+  { id: "alde_confort", nom: "Chauffage central ALDE Confort Plus Arctic", achatHt: 3152, cessionPose: 0, prixTtc: 4450, poids: 65,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["-","-","-","-","-","-","O","-","-"]) },
+  { id: "plancher_chauffant_r", nom: "Plancher chauffant cellule 230V", achatHt: 460, cessionPose: 0, prixTtc: 650, poids: 7,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["O","O","O","O","O","O","O","O","O"]) },
+  { id: "reservoir_chauffe_r", nom: "Réservoir d'eaux usées chauffé", achatHt: 213, cessionPose: 0, prixTtc: 300, poids: 15,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["O","O","O","O","O","O","O","O","O"]) },
+  { id: "sellerie_palma", nom: "Sellerie TEP Palma (mobilier Palatina)", achatHt: 354, cessionPose: 0, prixTtc: 500, poids: 0,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["O","O","O","S","S","S","S","S","S"]) },
+  { id: "lit_pavillon", nom: "Lit de pavillon relevable électriquement (2 pers.)", achatHt: 1488, cessionPose: 0, prixTtc: 2100, poids: 45,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["-","-","-","-","-","-","O","O","O"]) },
+  { id: "four23", nom: "Four 23 litres avec grill", achatHt: 638, cessionPose: 0, prixTtc: 900, poids: 22,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["O","O","O","O","O","-","O","O","O"]) },
+  { id: "lit_bas_reglable", nom: "Lit permanent bas réglable en hauteur (vérins électriques)", achatHt: 638, cessionPose: 0, prixTtc: 900, poids: 15,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["-","O","-","-","O","-","O","O","O"]) },
+  { id: "batterie_2e", nom: "2e batterie cellule LITHIUM 150Ah", achatHt: 1063, cessionPose: 0, prixTtc: 1500, poids: 0,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["-","O","O","O","O","O","O","O","O"]) },
+  { id: "convertisseur", nom: "Convertisseur 2000W avec coupe batterie", achatHt: 638, cessionPose: 0, prixTtc: 900, poids: 5,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["-","-","-","S","S","-","S","-","S"]) },
+  { id: "bva_fiat_peugeot", nom: "Boîte de vitesses automatique Fiat/Peugeot", achatHt: 2438, cessionPose: 0, prixTtc: 3250, poids: 5,
+    compat: zipCompat(RAPIDO_VEHICULE_IDS, ["O","O","O","S","S","O","S","O","S"]) },
+].map((o) => ({ ...o, marque: "Rapido" }));
+
+const RAPIDO_OPTIONS_INTEGRAUX = [
+  { id: "pack_energy_i", nom: "PACK ENERGY (batterie Lithium + panneau solaire 150W)", achatHt: 758, cessionPose: 0, prixTtc: 1500, poids: 0,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["O","S","S","O","S","S","-","-","-","-","-","-","-","-","-"]) },
+  { id: "pack_smart_i", nom: "PACK SMART (jantes 16'' bi-ton, volant confort)", achatHt: 825, cessionPose: 0, prixTtc: 1100, poids: 0,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["O","S","S","O","S","S","S","S","S","-","-","-","-","-","-"]) },
+  { id: "pack_lounge_i", nom: "PACK LOUNGE (climatisation auto + chargeur induction)", achatHt: 743, cessionPose: 0, prixTtc: 990, poids: 0,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["O","O","O","O","O","O","O","O","O","-","-","-","-","-","-"]) },
+  { id: "pack_drive_assist_66_96", nom: "PACK DRIVE ASSIST i66M/i96M", achatHt: 3075, cessionPose: 0, prixTtc: 4100, poids: 0,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["-","-","-","-","-","-","-","-","-","O","O","O","O","-","-"]) },
+  { id: "pack_drive_assist_166_196", nom: "PACK DRIVE ASSIST i166M/i196M", achatHt: 2175, cessionPose: 0, prixTtc: 2900, poids: 0,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["-","-","-","-","-","-","-","-","-","-","-","-","-","O","O"]) },
+  { id: "bva_fiat_i", nom: "Boîte de vitesses automatique FIAT", achatHt: 2438, cessionPose: 0, prixTtc: 3250, poids: 5,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["O","S","S","O","S","S","S","S","S","-","-","-","-","-","-"]) },
+  { id: "fiat_160ch_i", nom: "FIAT 160 ch (vs 140 ch)", achatHt: 1163, cessionPose: 0, prixTtc: 1550, poids: 0,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["O","O","O","O","O","O","O","O","O","-","-","-","-","-","-"]) },
+  { id: "chassis_heavy", nom: "Châssis HEAVY : PTAC 4,5T (réservoir 93L inclus)", achatHt: 1875, cessionPose: 0, prixTtc: 2500, poids: 40,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["-","-","-","-","-","-","-","-","-","O","S","O","S","S","S"]) },
+  { id: "frein_stationnement_i", nom: "Frein de stationnement électrique", achatHt: 450, cessionPose: 0, prixTtc: 600, poids: 0,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["O","S","S","O","S","S","-","-","-","S","S","S","S","S","S"]) },
+  { id: "led_i", nom: "Projecteurs avant 100% LED", achatHt: 921, cessionPose: 0, prixTtc: 1300, poids: 0,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["O","O","O","O","O","O","O","O","O","-","-","-","-","S","S"]) },
+  { id: "retro_double_vision", nom: "Rétroviseurs extérieurs double vision", achatHt: 213, cessionPose: 0, prixTtc: 280, poids: 0,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["O","O","O","O","O","O","O","O","O","S","S","S","S","S","S"]) },
+  { id: "verins_stabilisation", nom: "Vérins de stabilisation", achatHt: 128, cessionPose: 0, prixTtc: 180, poids: 5,
+    compat: zipCompat(RAPIDO_INTEGRAUX_IDS, ["O","O","O","O","O","O","O","O","O","O","S","O","S","S","S"]) },
+].map((o) => ({ ...o, marque: "Rapido" }));
+
+const RAPIDO_OPTIONS_VANS = [
+  { id: "toit_pano_van", nom: "Toit panoramique Skyview", achatHt: 1063, cessionPose: 0, prixTtc: 1500, poids: 20,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","O","-","O"]) },
+  { id: "isolation_portes_van", nom: "Kit isolation portes arrière Grand Froid", achatHt: 191, cessionPose: 0, prixTtc: 270, poids: 2,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","O","O","O"]) },
+  { id: "truma_combi_van", nom: "TRUMA Combi 6 EH Diesel (diesel + électrique)", achatHt: 531, cessionPose: 0, prixTtc: 750, poids: 0,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","-","O","O"]) },
+  { id: "plancher_chauffant_van", nom: "Plancher chauffant cellule 230V", achatHt: 319, cessionPose: 0, prixTtc: 450, poids: 5,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","O","O","O"]) },
+  { id: "reservoir_chauffe_van", nom: "Réservoir d'eaux usées chauffé", achatHt: 213, cessionPose: 0, prixTtc: 300, poids: 12,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","O","O","O"]) },
+  { id: "sellerie_milan_van", nom: "Sellerie TEP Milan", achatHt: 283, cessionPose: 0, prixTtc: 400, poids: 0,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","O","O","O"]) },
+  { id: "four20_van", nom: "Four 20 litres avec grill", achatHt: 638, cessionPose: 0, prixTtc: 900, poids: 15,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","-","O","O","O"]) },
+  { id: "surmatelas_van", nom: "Sur-matelas à mémoire de forme sur lit permanent", achatHt: 283, cessionPose: 0, prixTtc: 400, poids: 6,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","O","O","-"]) },
+  { id: "kit_protection_matelas_van", nom: "Kit protection matelas", achatHt: 213, cessionPose: 0, prixTtc: 300, poids: 2.2,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","O","O","O"]) },
+  { id: "moquette_van", nom: "Moquette cellule", achatHt: 390, cessionPose: 0, prixTtc: 550, poids: 5,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","O","O","O"]) },
+  { id: "bva_van", nom: "Boîte de vitesses automatique Fiat/Peugeot", achatHt: 2438, cessionPose: 0, prixTtc: 3250, poids: 5,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["S","S","O","O","O"]) },
+  { id: "fiat_160ch_van", nom: "FIAT/Peugeot 160 ch (vs 140 ch)", achatHt: 1163, cessionPose: 0, prixTtc: 1550, poids: 0,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","O","O","O"]) },
+  { id: "led_van", nom: "Projecteurs avant 100% LED", achatHt: 750, cessionPose: 0, prixTtc: 1000, poids: 0,
+    compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","O","O","O"]) },
+].map((o) => ({ ...o, marque: "Rapido" }));
+
+const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS];
+
+module.exports = { VEHICULES, OPTIONS };
