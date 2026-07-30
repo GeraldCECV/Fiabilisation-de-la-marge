@@ -6,8 +6,8 @@
 // Nécessite SUPABASE_SERVICE_ROLE_KEY dans .env.local (Project Settings → API → service_role).
 // Cette clé contourne le RLS : ne JAMAIS l'exposer côté navigateur, uniquement en local/CI.
 //
-// Le script est idempotent : il supprime puis réinsère les modèles/options des marques
-// présentes dans seedData.js à chaque exécution (les dossiers de vente ne sont jamais touchés).
+// Le script est idempotent : il met À JOUR (upsert) les modèles/options déjà en base au lieu
+// de les supprimer, pour ne jamais casser les dossiers de vente qui les référencent.
 
 require("dotenv").config({ path: ".env.local" });
 const { createClient } = require("@supabase/supabase-js");
@@ -44,35 +44,41 @@ async function main() {
     }
   }
 
-  // 2. Nettoyage idempotent : on repart de zéro pour ces marques (modeles -> cascade sur compatibilites)
-  const marqueIds = Object.values(marqueIdParNom);
-  const { error: delModelesErr } = await supabase.from("modeles").delete().in("marque_id", marqueIds);
-  if (delModelesErr) throw delModelesErr;
-  const { error: delOptionsErr } = await supabase.from("options").delete().in("marque_id", marqueIds);
-  if (delOptionsErr) throw delOptionsErr;
-
-  // 3. Modèles
+  // 2. Modèles — upsert sur (marque_id, nom) : met à jour si le véhicule existe déjà,
+  //    l'insère sinon. Ne supprime jamais rien (préserve les dossiers de vente existants).
   const modeleIdParCode = {};
   for (const v of VEHICULES) {
     const { data, error } = await supabase
       .from("modeles")
-      .insert({
-        marque_id: marqueIdParNom[v.marque],
-        nom: v.nom,
-        gamme: v.gamme,
-        type: v.type,
-        collection: v.collection,
-        prix_usine_ht: v.prixUsineHt,
-        prix_public_ttc: v.prixPublicTtc,
-      })
+      .upsert(
+        {
+          marque_id: marqueIdParNom[v.marque],
+          nom: v.nom,
+          gamme: v.gamme,
+          type: v.type,
+          collection: v.collection,
+          prix_usine_ht: v.prixUsineHt,
+          prix_public_ttc: v.prixPublicTtc,
+          actif: true,
+        },
+        { onConflict: "marque_id,nom" }
+      )
       .select()
       .single();
     if (error) throw error;
     modeleIdParCode[v.id] = data.id;
   }
-  console.log(`${VEHICULES.length} modèles importés.`);
+  console.log(`${VEHICULES.length} modèles importés (mis à jour ou créés).`);
 
-  // 4. Options
+  // 3. Options — on repart de zéro pour les options des marques concernées.
+  //    Aucune contrainte de clé étrangère stricte ne relie les dossiers de vente aux options
+  //    (elles sont stockées comme simple liste d'identifiants), donc pas de risque de blocage.
+  //    Plusieurs options partagent le même nom entre gammes (ex. "Sur-matelas...") avec des prix
+  //    différents, donc pas d'upsert par nom ici — juste marque_id.
+  const marqueIds = Object.values(marqueIdParNom);
+  const { error: delOptionsErr } = await supabase.from("options").delete().in("marque_id", marqueIds);
+  if (delOptionsErr) throw delOptionsErr;
+
   const optionIdParCode = {};
   for (const o of OPTIONS) {
     const { data, error } = await supabase
@@ -92,7 +98,12 @@ async function main() {
   }
   console.log(`${OPTIONS.length} options importées.`);
 
-  // 5. Compatibilités (une ligne par couple modèle/option réellement disponible)
+  // 4. Compatibilités — on repart de zéro pour les modèles concernés (aucune référence
+  //    externe ne pointe vers cette table, donc pas de risque de casser des dossiers).
+  const modeleIds = Object.values(modeleIdParCode);
+  const { error: delCompatErr } = await supabase.from("compatibilites").delete().in("modele_id", modeleIds);
+  if (delCompatErr) throw delCompatErr;
+
   const statutMap = { O: "OPTION", S: "SERIE" };
   const rows = [];
   for (const o of OPTIONS) {
