@@ -157,6 +157,34 @@ async function main() {
   zip.file("xl/workbook.xml", workbookXml);
   zip.file("xl/_rels/workbook.xml.rels", relsXml);
 
+  // --- REF ODOO (C8) : nombre simple, sans le symbole € ---
+  {
+    let stylesXml = await zip.file("xl/styles.xml").async("string");
+    const cellXfsMatch = stylesXml.match(/<cellXfs count="(\d+)">([\s\S]*?)<\/cellXfs>/);
+    const currentCount = parseInt(cellXfsMatch[1], 10);
+    const xfList = cellXfsMatch[2].match(/<xf\b[^>]*\/>|<xf\b[^>]*>[\s\S]*?<\/xf>/g);
+
+    const finalVnSheetXml = await zip.file(sheetFile).async("string");
+    const c8Match = finalVnSheetXml.match(/<c r="C8"[^>]*s="(\d+)"/);
+    const c8StyleIdx = parseInt(c8Match[1], 10);
+    const c8Xf = xfList[c8StyleIdx];
+
+    // Clone le style de C8 en remplaçant son format numérique par un nombre simple (numFmtId 2 = "0.00")
+    const newXf = c8Xf.replace(/numFmtId="\d+"/, 'numFmtId="1"');
+    const newStylesXml = stylesXml.replace(
+      /<cellXfs count="\d+">/,
+      `<cellXfs count="${currentCount + 1}">`
+    ).replace("</cellXfs>", `${newXf}</cellXfs>`);
+    zip.file("xl/styles.xml", newStylesXml);
+
+    const patchedVnSheetXml = finalVnSheetXml.replace(
+      /<c r="C8"([^>]*?)s="\d+"/,
+      `<c r="C8"$1s="${currentCount}"`
+    );
+    zip.file(sheetFile, patchedVnSheetXml);
+    console.log("Format REF ODOO (C8) changé en nombre simple.");
+  }
+
   const outPath = path.join(__dirname, "..", "public", "templates", "trame_renta_template.xlsx");
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
   const outBuffer = await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE", compressionOptions: { level: 6 } });

@@ -68,7 +68,8 @@ export async function GET(request, { params }) {
 
   const values = {
     // Bloc informations
-    C5: num(excelDateSerial(new Date(dossier.created_at))),
+    C4: num(excelDateSerial(new Date(dossier.created_at))), // date de commande = date de création du dossier (proposition)
+    C5: num(excelDateSerial(new Date())), // date de la trame = date de génération de ce document
     C6: str(dossier.client_nom || ""),
     C7: str(dossier.utilisateurs?.nom || ""),
 
