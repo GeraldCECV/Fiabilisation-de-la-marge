@@ -377,10 +377,6 @@ export default function CalculateurPage() {
                       <td className="py-1.5 text-right">{calc.destockage ? "Déstockage" : fmtPct(calc.D28)}</td>
                     </tr>
                     <tr className="border-t border-border">
-                      <td className="py-1.5 text-sub">Remise / catalogue</td>
-                      <td className="py-1.5 text-right">{fmt(calc.E27)} ({fmtPct(calc.D27)})</td>
-                    </tr>
-                    <tr className="border-t border-border">
                       <td className="py-1.5 text-sub">Taux de marge réel</td>
                       <td className="py-1.5 text-right font-bold" style={{ color: calc.D34 >= (calc.D28 || 0) ? "#3F6B4F" : "#A6423B" }}>{fmtPct(calc.D34)}</td>
                     </tr>
@@ -390,6 +386,11 @@ export default function CalculateurPage() {
                     </tr>
                   </tbody>
                 </table>
+              </div>
+
+              <div className="bg-surface border border-border rounded-lg p-5 flex items-center justify-between">
+                <span className="text-lg font-bold" style={{ color: "#A6423B" }}>Remise</span>
+                <span className="text-2xl font-extrabold" style={{ color: "#A6423B" }}>{fmt(calc.E27)} ({fmtPct(calc.D27)})</span>
               </div>
 
               <div className="flex gap-3">
