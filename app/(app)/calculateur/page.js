@@ -76,7 +76,14 @@ export default function CalculateurPage() {
       setOptions(liste);
       setOptionsChoisiesIds([]);
       const modele = modeles.find((mo) => mo.id === modeleId);
-      if (modele) { setPrixNegocie(modele.prix_public_ttc); setPrixAffichParc(modele.prix_public_ttc); }
+      if (modele) {
+        const isCC = modele.type === "CAMPING_CAR";
+        const cle = isCC ? "carte_grise_cc" : "carte_grise_caravane";
+        const forfaitMiseALaRoute = Number(forfaits.find((f) => f.cle === cle)?.valeur) || (isCC ? 790 : 380);
+        const prixParDefaut = Number(modele.prix_public_ttc) + forfaitMiseALaRoute;
+        setPrixNegocie(prixParDefaut);
+        setPrixAffichParc(prixParDefaut);
+      }
     })();
   }, [modeleId]);
 
