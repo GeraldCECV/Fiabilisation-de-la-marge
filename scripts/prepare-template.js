@@ -36,8 +36,8 @@ async function main() {
   const buffer = fs.readFileSync(SOURCE);
   const zip = await JSZip.loadAsync(buffer);
 
-  const workbookXml = await zip.file("xl/workbook.xml").async("string");
-  const relsXml = await zip.file("xl/_rels/workbook.xml.rels").async("string");
+  let workbookXml = await zip.file("xl/workbook.xml").async("string");
+  let relsXml = await zip.file("xl/_rels/workbook.xml.rels").async("string");
 
   const sheetRe = /<sheet\b[^>]*\/>/g;
   let sm, rId = null;
@@ -80,6 +80,82 @@ async function main() {
   sheetXml = setDataValidationList(sheetXml, "C13:E13", '"2027,2026,2025,2024 & < = DESTOCKAGE"');
 
   zip.file(sheetFile, sheetXml);
+
+  // --- Suppression complète de l'onglet "RENTA VO" (on ne garde que "RENTA VN") ---
+  const sheetToRemoveRe = /<sheet\b[^>]*name="RENTA VO"[^>]*\/>/;
+  const sheetToRemoveMatch = workbookXml.match(sheetToRemoveRe);
+  if (sheetToRemoveMatch) {
+    const rIdToRemove = sheetToRemoveMatch[0].match(/r:id="(rId\d+)"/)[1];
+
+    // Fichier de la feuille VO + ses annexes (rels, commentaires, dessin VML)
+    let voRelEl;
+    let voTarget = null;
+    const relRe2 = /<Relationship\b[^>]*\/>/g;
+    while ((voRelEl = relRe2.exec(relsXml))) {
+      if (voRelEl[0].includes(`Id="${rIdToRemove}"`)) {
+        voTarget = voRelEl[0].match(/Target="([^"]*)"/)[1];
+        break;
+      }
+    }
+    const voSheetFile = `xl/${voTarget}`; // ex: xl/worksheets/sheet2.xml
+    const voSheetName = voTarget.split("/").pop(); // ex: sheet2.xml
+    const voSheetRelsFile = `xl/worksheets/_rels/${voSheetName}.rels`;
+
+    let voCommentsFiles = [];
+    if (zip.file(voSheetRelsFile)) {
+      const voSheetRelsXml = await zip.file(voSheetRelsFile).async("string");
+      const commentMatch = voSheetRelsXml.match(/Target="\.\.\/(comments\d+\.xml)"/);
+      const vmlMatch = voSheetRelsXml.match(/Target="\.\.\/(drawings\/vmlDrawing\d+\.vml)"/);
+      if (commentMatch) voCommentsFiles.push(`xl/${commentMatch[1]}`);
+      if (vmlMatch) voCommentsFiles.push(`xl/${vmlMatch[1]}`);
+    }
+
+    [voSheetFile, voSheetRelsFile, ...voCommentsFiles].forEach((f) => {
+      if (zip.file(f)) zip.remove(f);
+    });
+
+    // Retire l'entrée <sheet> du classeur
+    workbookXml = workbookXml.replace(sheetToRemoveRe, "");
+    // Retire la relation associée
+    relsXml = relsXml.replace(new RegExp(`<Relationship\\b[^>]*Id="${rIdToRemove}"[^>]*\\/>`), "");
+    // Retire les déclarations de type de contenu associées
+    let contentTypesXml = await zip.file("[Content_Types].xml").async("string");
+    contentTypesXml = contentTypesXml
+      .replace(new RegExp(`<Override\\b[^>]*PartName="/${voSheetFile.replace("xl/", "xl\\/")}"[^>]*\\/>`), "")
+      .replace(/<Override\b[^>]*PartName="\/xl\/comments\d+\.xml"[^>]*\/>/g, (m) =>
+        voCommentsFiles.some((f) => m.includes(f.replace("xl/", ""))) ? "" : m
+      );
+    zip.file("[Content_Types].xml", contentTypesXml);
+
+    console.log(`Onglet "RENTA VO" retiré (${voSheetFile}).`);
+  }
+
+  // S'assure que "RENTA VN" est bien l'onglet actif à l'ouverture
+  workbookXml = workbookXml.includes("<workbookView")
+    ? workbookXml.replace(/<workbookView\b[^>]*\/>/, (m) =>
+        m.includes("activeTab") ? m.replace(/activeTab="\d+"/, 'activeTab="0"') : m.replace("/>", ' activeTab="0"/>')
+      )
+    : workbookXml;
+
+  let vnSheetXml = await zip.file(sheetFile).async("string");
+  if (vnSheetXml.includes("<sheetView")) {
+    vnSheetXml = /tabSelected="1"/.test(vnSheetXml)
+      ? vnSheetXml
+      : vnSheetXml.replace(/<sheetView\b/, '<sheetView tabSelected="1" ');
+  }
+  zip.file(sheetFile, vnSheetXml);
+
+  // Le calcChain devient obsolète après suppression d'un onglet ; Excel le régénère seul.
+  if (zip.file("xl/calcChain.xml")) {
+    zip.remove("xl/calcChain.xml");
+    relsXml = relsXml.replace(/<Relationship\b[^>]*Target="calcChain\.xml"[^>]*\/>/, "");
+    let ct = await zip.file("[Content_Types].xml").async("string");
+    ct = ct.replace(/<Override\b[^>]*PartName="\/xl\/calcChain\.xml"[^>]*\/>/, "");
+    zip.file("[Content_Types].xml", ct);
+  }
+
+  zip.file("xl/workbook.xml", workbookXml);
+  zip.file("xl/_rels/workbook.xml.rels", relsXml);
 
   const outPath = path.join(__dirname, "..", "public", "templates", "trame_renta_template.xlsx");
   fs.mkdirSync(path.dirname(outPath), { recursive: true });
