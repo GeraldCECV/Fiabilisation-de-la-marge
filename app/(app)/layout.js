@@ -22,7 +22,7 @@ export default async function AppLayout({ children }) {
             <img src="/images/logo-ypocamp.png" alt="Ypocamp" className="h-10 w-auto" />
             <span className="font-extrabold text-sm text-sub">Trame de rentabilité VN</span>
             <nav className="flex gap-4 text-sm text-sub">
-              <Link href="/" className="hover:text-ink">Tableau de bord</Link>
+              <Link href="/tableau-de-bord" className="hover:text-ink">Tableau de bord</Link>
               <Link href="/calculateur" className="hover:text-ink">Calculateur</Link>
               <Link href="/dossiers" className="hover:text-ink">Dossiers</Link>
             </nav>
