@@ -40,6 +40,8 @@ export default function CalculateurPage() {
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState("");
   const [saving, setSaving] = useState(false);
+  const [dossierIdActuel, setDossierIdActuel] = useState(null);
+  const [dernierStatut, setDernierStatut] = useState("PROPOSITION");
 
   useEffect(() => {
     (async () => {
@@ -75,6 +77,8 @@ export default function CalculateurPage() {
       const liste = (data || []).filter((row) => row.options).map((row) => ({ ...row.options, statut: row.statut }));
       setOptions(liste);
       setOptionsChoisiesIds([]);
+      setDossierIdActuel(null);
+      setMsg("");
       const modele = modeles.find((mo) => mo.id === modeleId);
       if (modele) {
         const isCC = modele.type === "CAMPING_CAR";
@@ -146,12 +150,57 @@ export default function CalculateurPage() {
       remise_pct: calc.D27,
       taux_marge_reel: calc.D34,
       verrouille: statut === "VENDU",
+      updated_at: new Date().toISOString(),
     };
-    const { data, error } = await supabase.from("dossiers_vente").insert(payload).select().single();
-    if (error) { setMsg("Erreur d'enregistrement : " + error.message); setSaving(false); return; }
-    await supabase.from("historique_dossier").insert({ dossier_id: data.id, version: 1, auteur_id: session.user.id, snapshot: payload });
-    setMsg("Dossier enregistré.");
+
+    if (dossierIdActuel) {
+      // Dossier déjà créé pendant cette session : on le met à jour, jamais de doublon.
+      const { error } = await supabase.from("dossiers_vente").update(payload).eq("id", dossierIdActuel);
+      if (error) { setMsg("Erreur d'enregistrement : " + error.message); setSaving(false); return; }
+      const { data: histo } = await supabase
+        .from("historique_dossier").select("version").eq("dossier_id", dossierIdActuel)
+        .order("version", { ascending: false }).limit(1);
+      const prochaineVersion = (histo?.[0]?.version || 0) + 1;
+      await supabase.from("historique_dossier").insert({ dossier_id: dossierIdActuel, version: prochaineVersion, auteur_id: session.user.id, snapshot: payload });
+      setMsg("Dossier mis à jour.");
+    } else {
+      const { data, error } = await supabase.from("dossiers_vente").insert(payload).select().single();
+      if (error) { setMsg("Erreur d'enregistrement : " + error.message); setSaving(false); return; }
+      setDossierIdActuel(data.id);
+      await supabase.from("historique_dossier").insert({ dossier_id: data.id, version: 1, auteur_id: session.user.id, snapshot: payload });
+      setMsg("Dossier enregistré.");
+    }
+    setDernierStatut(statut);
     setSaving(false);
+  }
+
+  async function nouvelleProposition() {
+    // Sauvegarde d'abord ce qui est en cours (si un véhicule est sélectionné), pour ne rien perdre.
+    if (modele && calc) {
+      await enregistrer(dernierStatut);
+    }
+    // Puis on vide le formulaire pour une nouvelle proposition, à un autre nom.
+    setClient("");
+    setStockStatut("COMMANDE");
+    setNumeroChassis("");
+    setFraisSortieUsine(0);
+    setTransportUsine(0);
+    setCessionOdoo(0);
+    setTransportIntersite(0);
+    setExpo("PAS_EXPO");
+    setBatterieChoix("Camping car avec batterie");
+    setOptionsChoisiesIds([]);
+    setFinancementActif(false);
+    setFinancementMontant(0);
+    setFinancementOrganisme("");
+    setRachatActif(false);
+    setRachatMontant(0);
+    setPrixAffichParc(0);
+    setCommentaires("");
+    setDossierIdActuel(null);
+    setDernierStatut("PROPOSITION");
+    if (modele) setPrixNegocie(modele.prix_public_ttc);
+    setMsg("Proposition précédente enregistrée. Formulaire prêt pour un nouveau client.");
   }
 
   if (loading) return <div className="text-sub text-sm">Chargement…</div>;
@@ -168,13 +217,13 @@ export default function CalculateurPage() {
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <label className="text-xs text-sub uppercase font-bold">Marque</label>
-                <select value={marqueId || ""} onChange={(e) => setMarqueId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
+                <select value={marqueId || ""} onChange={(e) => setMarqueId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
                   {marques.map((m) => <option key={m.id} value={m.id}>{m.nom}</option>)}
                 </select>
               </div>
               <div className="col-span-2">
                 <label className="text-xs text-sub uppercase font-bold">Véhicule</label>
-                <select value={modeleId || ""} onChange={(e) => setModeleId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
+                <select value={modeleId || ""} onChange={(e) => setModeleId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
                   {modeles.map((m) => <option key={m.id} value={m.id}>{m.nom}</option>)}
                 </select>
               </div>
@@ -182,7 +231,7 @@ export default function CalculateurPage() {
             <div className="grid grid-cols-2 gap-3 mt-3">
               <div>
                 <label className="text-xs text-sub">Statut stock</label>
-                <select value={stockStatut} onChange={(e) => setStockStatut(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
+                <select value={stockStatut} onChange={(e) => setStockStatut(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
                   <option value="COMMANDE">Commande usine</option>
                   <option value="STOCK">En stock</option>
                   <option value="REASSORT">Réassort</option>
@@ -190,7 +239,7 @@ export default function CalculateurPage() {
               </div>
               <div>
                 <label className="text-xs text-sub">Durée d'exposition</label>
-                <select value={expo} onChange={(e) => setExpo(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
+                <select value={expo} onChange={(e) => setExpo(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
                   <option value="PAS_EXPO">Pas d'expo</option>
                   <option value="EXPO_ANNEE">Expo de l'année</option>
                   <option value="EXPO_1_AN">Expo 1 an</option>
@@ -201,7 +250,7 @@ export default function CalculateurPage() {
             {stockStatut === "STOCK" && (
               <div className="mt-3">
                 <label className="text-xs text-sub">N° de série / châssis</label>
-                <input value={numeroChassis} onChange={(e) => setNumeroChassis(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+                <input value={numeroChassis} onChange={(e) => setNumeroChassis(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
               </div>
             )}
             {modele && (
@@ -217,24 +266,24 @@ export default function CalculateurPage() {
             <div className="grid grid-cols-2 gap-3 mt-2">
               <div>
                 <div className="text-xs text-sub">Frais sortie usine</div>
-                <input type="number" value={fraisSortieUsine} onChange={(e) => setFraisSortieUsine(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+                <input type="number" value={fraisSortieUsine} onChange={(e) => setFraisSortieUsine(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
               </div>
               <div>
                 <div className="text-xs text-sub">Transport usine</div>
-                <input type="number" value={transportUsine} onChange={(e) => setTransportUsine(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+                <input type="number" value={transportUsine} onChange={(e) => setTransportUsine(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
               </div>
               <div>
                 <div className="text-xs text-sub">Cession Odoo / travaux ext.</div>
-                <input type="number" value={cessionOdoo} onChange={(e) => setCessionOdoo(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+                <input type="number" value={cessionOdoo} onChange={(e) => setCessionOdoo(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
               </div>
               <div>
                 <div className="text-xs text-sub">Transport inter-site</div>
-                <input type="number" value={transportIntersite} onChange={(e) => setTransportIntersite(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+                <input type="number" value={transportIntersite} onChange={(e) => setTransportIntersite(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
               </div>
             </div>
             <div className="mt-3">
               <div className="text-xs text-sub">Batterie</div>
-              <select value={batterieChoix} onChange={(e) => setBatterieChoix(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
+              <select value={batterieChoix} onChange={(e) => setBatterieChoix(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
                 {Object.keys(BATTERIE_COUTS).map((nom) => (
                   <option key={nom} value={nom}>{nom}</option>
                 ))}
@@ -244,7 +293,7 @@ export default function CalculateurPage() {
 
           <div className="bg-surface border border-border rounded-lg p-5">
             <label className="text-xs text-sub uppercase font-bold">Options usine ({optionsSelectionnables.length} disponibles)</label>
-            <select className="w-full mt-2 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" value=""
+            <select className="w-full mt-2 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" value=""
               onChange={(e) => { const id = e.target.value; if (id) setOptionsChoisiesIds((prev) => (prev.includes(id) ? prev : [...prev, id])); }}>
               <option value="">+ Ajouter une option usine…</option>
               {optionsSelectionnables.filter((o) => !optionsChoisiesIds.includes(o.id)).map((o) => (
@@ -253,7 +302,7 @@ export default function CalculateurPage() {
             </select>
             <div className="mt-3 space-y-1.5">
               {optionsChoisies.map((o) => (
-                <div key={o.id} className="flex items-center gap-2 text-sm bg-[#FCFBF8] border border-border rounded-md px-2 py-1.5">
+                <div key={o.id} className="flex items-center gap-2 text-sm bg-[#FAF8F0] border border-border rounded-md px-2 py-1.5">
                   <span className="flex-1">{o.designation}</span>
                   <span className="text-sub">{fmt(o.prix_ttc)}</span>
                   <button onClick={() => setOptionsChoisiesIds((prev) => prev.filter((id) => id !== o.id))} className="text-neg px-1">×</button>
@@ -264,7 +313,7 @@ export default function CalculateurPage() {
               <div className="mt-3 pt-3 border-t border-border">
                 <div className="text-[11px] text-sub mb-1.5">Inclus de série sur ce modèle</div>
                 <div className="flex flex-wrap gap-1.5">
-                  {optionsDeSerie.map((o) => <span key={o.id} className="text-[11px] px-2 py-0.5 rounded-full bg-[#EEF4EF] text-pos">{o.designation}</span>)}
+                  {optionsDeSerie.map((o) => <span key={o.id} className="text-[11px] px-2 py-0.5 rounded-full bg-[#EFF1E3] text-pos">{o.designation}</span>)}
                 </div>
               </div>
             )}
@@ -274,12 +323,12 @@ export default function CalculateurPage() {
             <label className="text-xs text-sub uppercase font-bold">Négociation</label>
             <div>
               <div className="text-xs text-sub">Prix négocié TTC (hors carte grise)</div>
-              <input type="number" value={prixNegocie} onChange={(e) => setPrixNegocie(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+              <input type="number" value={prixNegocie} onChange={(e) => setPrixNegocie(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
             </div>
             <div className="grid grid-cols-2 gap-3 mt-3">
               <div>
                 <div className="text-xs text-sub">Financement</div>
-                <select value={financementActif ? "OUI" : "NON"} onChange={(e) => setFinancementActif(e.target.value === "OUI")} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
+                <select value={financementActif ? "OUI" : "NON"} onChange={(e) => setFinancementActif(e.target.value === "OUI")} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
                   <option value="NON">Non</option>
                   <option value="OUI">Oui</option>
                 </select>
@@ -287,14 +336,14 @@ export default function CalculateurPage() {
               {financementActif && (
                 <div>
                   <div className="text-xs text-sub">Montant financé</div>
-                  <input type="number" value={financementMontant} onChange={(e) => setFinancementMontant(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+                  <input type="number" value={financementMontant} onChange={(e) => setFinancementMontant(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
                 </div>
               )}
             </div>
             {financementActif && (
               <div className="mt-3">
                 <div className="text-xs text-sub">Organisme</div>
-                <select value={financementOrganisme} onChange={(e) => setFinancementOrganisme(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
+                <select value={financementOrganisme} onChange={(e) => setFinancementOrganisme(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
                   <option value="">—</option>
                   <option>CETELEM</option>
                   <option>FINANCO</option>
@@ -307,7 +356,7 @@ export default function CalculateurPage() {
             <div className="grid grid-cols-2 gap-3 mt-3">
               <div>
                 <div className="text-xs text-sub">Rachat véhicule client</div>
-                <select value={rachatActif ? "OUI" : "NON"} onChange={(e) => setRachatActif(e.target.value === "OUI")} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]">
+                <select value={rachatActif ? "OUI" : "NON"} onChange={(e) => setRachatActif(e.target.value === "OUI")} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
                   <option value="NON">Non</option>
                   <option value="OUI">Oui</option>
                 </select>
@@ -315,23 +364,23 @@ export default function CalculateurPage() {
               {rachatActif && (
                 <div>
                   <div className="text-xs text-sub">Montant rachat</div>
-                  <input type="number" value={rachatMontant} onChange={(e) => setRachatMontant(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+                  <input type="number" value={rachatMontant} onChange={(e) => setRachatMontant(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
                 </div>
               )}
             </div>
             {rachatActif && (
               <div className="mt-3">
                 <div className="text-xs text-sub">Prix affiché sur parc</div>
-                <input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+                <input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
               </div>
             )}
             <div className="mt-3">
               <div className="text-xs text-sub">Client</div>
-              <input value={client} onChange={(e) => setClient(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+              <input value={client} onChange={(e) => setClient(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
             </div>
             <div className="mt-3">
               <div className="text-xs text-sub">Bon de préparation / commentaires</div>
-              <textarea value={commentaires} onChange={(e) => setCommentaires(e.target.value)} rows={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FCFBF8]" />
+              <textarea value={commentaires} onChange={(e) => setCommentaires(e.target.value)} rows={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
             </div>
           </div>
         </div>
@@ -340,15 +389,15 @@ export default function CalculateurPage() {
           {calc && (
             <>
               <div className="bg-ink text-white rounded-lg p-5">
-                <div className="text-[11px] text-[#B9C4CA] uppercase font-bold">Marge totale de l'affaire</div>
+                <div className="text-[11px] text-[#A9C7C8] uppercase font-bold">Marge totale de l'affaire</div>
                 <div className="flex gap-8 mt-2">
                   <div>
-                    <div className="text-[11px] text-[#B9C4CA]">Attendue (barème)</div>
+                    <div className="text-[11px] text-[#A9C7C8]">Attendue (barème)</div>
                     <div className="text-2xl font-extrabold">{calc.destockage ? "Déstockage" : fmt(calc.E29)}</div>
                   </div>
                   <div>
-                    <div className="text-[11px] text-[#B9C4CA]">Réelle</div>
-                    <div className="text-2xl font-extrabold" style={{ color: calc.E33 >= 0 ? "#8FD19E" : "#E39C97" }}>{fmt(calc.E33)}</div>
+                    <div className="text-[11px] text-[#A9C7C8]">Réelle</div>
+                    <div className="text-2xl font-extrabold" style={{ color: calc.E33 >= 0 ? "#C4CB7E" : "#F3958D" }}>{fmt(calc.E33)}</div>
                   </div>
                 </div>
               </div>
@@ -379,7 +428,7 @@ export default function CalculateurPage() {
                     </tr>
                     <tr className="border-t border-border">
                       <td className="py-1.5 text-sub">Taux de marge réel</td>
-                      <td className="py-1.5 text-right font-bold" style={{ color: calc.D34 >= (calc.D28 || 0) ? "#3F6B4F" : "#A6423B" }}>{fmtPct(calc.D34)}</td>
+                      <td className="py-1.5 text-right font-bold" style={{ color: calc.D34 >= (calc.D28 || 0) ? "#B5BC61" : "#EC655D" }}>{fmtPct(calc.D34)}</td>
                     </tr>
                     <tr className="border-t border-border">
                       <td className="py-1.5 text-sub">Commission vendeur</td>
@@ -390,14 +439,21 @@ export default function CalculateurPage() {
               </div>
 
               <div className="bg-surface border border-border rounded-lg p-5 flex items-center justify-between">
-                <span className="text-lg font-bold" style={{ color: "#A6423B" }}>Remise</span>
-                <span className="text-2xl font-extrabold" style={{ color: "#A6423B" }}>{fmt(calc.E27)} ({fmtPct(calc.D27)})</span>
+                <span className="text-lg font-bold" style={{ color: "#EC655D" }}>Remise</span>
+                <span className="text-2xl font-extrabold" style={{ color: "#EC655D" }}>{fmt(calc.E27)} ({fmtPct(calc.D27)})</span>
               </div>
 
               <div className="flex gap-3">
                 <button onClick={() => enregistrer("PROPOSITION")} disabled={saving} className="flex-1 py-2.5 rounded-md border border-border bg-white font-bold text-sm disabled:opacity-60">Enregistrer en proposition</button>
-                <button onClick={() => enregistrer("VENDU")} disabled={saving} className="flex-1 py-2.5 rounded-md bg-accent text-white font-bold text-sm disabled:opacity-60">Marquer vendu</button>
+                <button onClick={() => enregistrer("VENDU")} disabled={saving} className="flex-1 py-2.5 rounded-md bg-ink text-white font-bold text-sm disabled:opacity-60">Marquer vendu</button>
               </div>
+              <button
+                onClick={nouvelleProposition}
+                disabled={saving}
+                className="w-full py-2 rounded-md border border-border bg-white text-sm font-bold text-sub disabled:opacity-60"
+              >
+                ⟳ Nouvelle proposition (enregistre celle-ci avant de vider le formulaire)
+              </button>
               {msg && <div className="text-xs text-sub">{msg}</div>}
             </>
           )}

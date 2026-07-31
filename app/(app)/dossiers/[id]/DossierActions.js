@@ -42,7 +42,7 @@ export default function DossierActions({ dossierId, statut }) {
           onClick={marquerVendu}
           disabled={busy}
           className="px-4 py-2 rounded-md bg-pos text-white font-bold text-sm disabled:opacity-60"
-          style={{ background: "#3F6B4F" }}
+          style={{ background: "#8A9548" }}
         >
           Marquer vendu
         </button>
@@ -53,14 +53,14 @@ export default function DossierActions({ dossierId, statut }) {
           onClick={() => setConfirmSuppression(true)}
           disabled={busy}
           className="px-4 py-2 rounded-md border border-neg text-neg font-bold text-sm disabled:opacity-60"
-          style={{ borderColor: "#A6423B", color: "#A6423B" }}
+          style={{ borderColor: "#EC655D", color: "#EC655D" }}
         >
           Supprimer
         </button>
       ) : (
         <div className="flex items-center gap-2 text-sm">
-          <span className="text-neg" style={{ color: "#A6423B" }}>Confirmer la suppression ?</span>
-          <button onClick={supprimer} disabled={busy} className="px-3 py-1.5 rounded-md text-white text-xs font-bold" style={{ background: "#A6423B" }}>
+          <span className="text-neg" style={{ color: "#EC655D" }}>Confirmer la suppression ?</span>
+          <button onClick={supprimer} disabled={busy} className="px-3 py-1.5 rounded-md text-white text-xs font-bold" style={{ background: "#EC655D" }}>
             Oui, supprimer
           </button>
           <button onClick={() => setConfirmSuppression(false)} className="px-3 py-1.5 rounded-md border border-border text-xs font-bold">

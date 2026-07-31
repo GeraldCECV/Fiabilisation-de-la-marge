@@ -29,7 +29,7 @@ export default async function AppLayout({ children }) {
           </div>
           <div className="flex items-center gap-3 text-sm">
             <span className="text-sub">{profil?.nom || session.user.email}</span>
-            <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#EEF4EF] text-pos font-bold">
+            <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#EFF1E3] text-pos font-bold">
               {profil?.role || "COMMERCIAL"}
             </span>
             <SignOutButton />

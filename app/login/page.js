@@ -38,7 +38,7 @@ export default function LoginPage() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-4 px-3 py-2 rounded-md border border-border bg-[#FCFBF8] text-sm"
+          className="w-full mb-4 px-3 py-2 rounded-md border border-border bg-[#FAF8F0] text-sm"
         />
 
         <label className="block text-xs text-sub mb-1">Mot de passe</label>
@@ -47,7 +47,7 @@ export default function LoginPage() {
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-4 px-3 py-2 rounded-md border border-border bg-[#FCFBF8] text-sm"
+          className="w-full mb-4 px-3 py-2 rounded-md border border-border bg-[#FAF8F0] text-sm"
         />
 
         {error && <div className="text-neg text-xs mb-4">{error}</div>}
@@ -55,7 +55,7 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-2.5 rounded-md bg-accent text-white font-bold text-sm disabled:opacity-60"
+          className="w-full py-2.5 rounded-md bg-ink text-white font-bold text-sm disabled:opacity-60"
         >
           {loading ? "Connexion…" : "Se connecter"}
         </button>

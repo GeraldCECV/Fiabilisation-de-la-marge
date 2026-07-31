@@ -52,7 +52,7 @@ export default async function DossierDetailPage({ params }) {
             <div className="text-sm text-sub mt-1">{dossier.modeles?.gamme} — {STOCK_LABELS[dossier.stock_statut] || dossier.stock_statut}{dossier.numero_chassis && ` — N° ${dossier.numero_chassis}`}</div>
           </div>
           <div className="text-right text-sm">
-            <span className={`inline-block text-[11px] font-bold px-2.5 py-1 rounded-full ${dossier.statut === "VENDU" ? "bg-[#E4EEE6] text-pos" : "bg-[#EFEBE0] text-accent"}`}>{dossier.statut}</span>
+            <span className={`inline-block text-[11px] font-bold px-2.5 py-1 rounded-full ${dossier.statut === "VENDU" ? "bg-[#EFF1E3] text-pos" : "bg-[#E7F2F2] text-accent"}`}>{dossier.statut}</span>
             <div className="text-sub mt-2">{fmtDate(dossier.created_at)}</div>
           </div>
         </div>
@@ -106,19 +106,19 @@ export default async function DossierDetailPage({ params }) {
         </div>
 
         <div className="bg-ink text-white rounded-lg p-5 print:bg-white print:text-ink print:border print:border-ink">
-          <div className="text-[11px] uppercase font-bold text-[#B9C4CA] print:text-sub">Marge de l'affaire</div>
+          <div className="text-[11px] uppercase font-bold text-[#A9C7C8] print:text-sub">Marge de l'affaire</div>
           <div className="flex gap-10 mt-2">
-            <div><div className="text-[11px] text-[#B9C4CA] print:text-sub">Attendue (barème)</div><div className="text-xl font-extrabold">{fmt(dossier.marge_attendue)}</div></div>
-            <div><div className="text-[11px] text-[#B9C4CA] print:text-sub">Réelle</div><div className="text-xl font-extrabold">{fmt(dossier.marge_reelle)}</div></div>
-            <div><div className="text-[11px] text-[#B9C4CA] print:text-sub">Taux réel</div><div className="text-xl font-extrabold">{dossier.taux_marge_reel != null ? fmtPct(dossier.taux_marge_reel) : "—"}</div></div>
-            <div><div className="text-[11px] text-[#B9C4CA] print:text-sub">Commission vendeur</div><div className="text-xl font-extrabold">{fmt(dossier.commission_vendeur)}</div></div>
+            <div><div className="text-[11px] text-[#A9C7C8] print:text-sub">Attendue (barème)</div><div className="text-xl font-extrabold">{fmt(dossier.marge_attendue)}</div></div>
+            <div><div className="text-[11px] text-[#A9C7C8] print:text-sub">Réelle</div><div className="text-xl font-extrabold">{fmt(dossier.marge_reelle)}</div></div>
+            <div><div className="text-[11px] text-[#A9C7C8] print:text-sub">Taux réel</div><div className="text-xl font-extrabold">{dossier.taux_marge_reel != null ? fmtPct(dossier.taux_marge_reel) : "—"}</div></div>
+            <div><div className="text-[11px] text-[#A9C7C8] print:text-sub">Commission vendeur</div><div className="text-xl font-extrabold">{fmt(dossier.commission_vendeur)}</div></div>
           </div>
         </div>
 
         {dossier.commentaires && (
           <div className="mt-6">
             <div className="text-[11px] text-sub uppercase font-bold mb-2">Bon de préparation / commentaires</div>
-            <div className="text-sm bg-[#FCFBF8] border border-border rounded-md p-3 whitespace-pre-wrap">{dossier.commentaires}</div>
+            <div className="text-sm bg-[#FAF8F0] border border-border rounded-md p-3 whitespace-pre-wrap">{dossier.commentaires}</div>
           </div>
         )}
 
