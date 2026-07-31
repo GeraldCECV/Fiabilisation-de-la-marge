@@ -1,19 +1,53 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { supabaseServer } from "@/lib/supabaseServer";
+import MoisFilter from "./MoisFilter";
 
 const fmt = (n) => (Number(n) || 0).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
 
-export default async function DossiersPage() {
+const MOIS_LABELS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+
+function optionsMois() {
+  // Génère les 12 derniers mois (le mois en cours + 11 précédents)
+  const options = [];
+  const now = new Date();
+  for (let i = 0; i < 12; i++) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const value = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const label = `${MOIS_LABELS[d.getMonth()]} ${d.getFullYear()}`;
+    options.push({ value, label });
+  }
+  return options;
+}
+
+export default async function DossiersPage({ searchParams }) {
   const supabase = supabaseServer();
-  const { data: dossiers } = await supabase
+  const moisParam = searchParams?.mois; // format "YYYY-MM"
+
+  let query = supabase
     .from("dossiers_vente")
     .select("id, statut, client_nom, prix_negocie_ttc, marge_reelle, created_at, modeles ( nom ), utilisateurs ( nom )")
-    .order("created_at", { ascending: false })
-    .limit(100);
+    .order("created_at", { ascending: false });
+
+  if (moisParam && /^\d{4}-\d{2}$/.test(moisParam)) {
+    const [annee, mois] = moisParam.split("-").map(Number);
+    const debut = new Date(annee, mois - 1, 1).toISOString();
+    const fin = new Date(annee, mois, 1).toISOString();
+    query = query.gte("created_at", debut).lt("created_at", fin);
+  } else {
+    query = query.limit(100);
+  }
+
+  const { data: dossiers } = await query;
 
   return (
     <div>
-      <h1 className="text-2xl font-extrabold mb-6">Dossiers de vente</h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-extrabold">Dossiers de vente</h1>
+        <Suspense fallback={null}>
+          <MoisFilter options={optionsMois()} />
+        </Suspense>
+      </div>
       <div className="bg-surface border border-border rounded-lg overflow-hidden">
         <table className="w-full text-sm">
           <thead>
@@ -44,7 +78,7 @@ export default async function DossiersPage() {
               </tr>
             ))}
             {(!dossiers || dossiers.length === 0) && (
-              <tr><td colSpan={7} className="px-3 py-6 text-center text-sub">Aucun dossier pour le moment.</td></tr>
+              <tr><td colSpan={7} className="px-3 py-6 text-center text-sub">Aucun dossier pour cette période.</td></tr>
             )}
           </tbody>
         </table>
