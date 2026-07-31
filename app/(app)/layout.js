@@ -19,7 +19,8 @@ export default async function AppLayout({ children }) {
       <header className="border-b border-border bg-surface">
         <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-6">
-            <span className="font-extrabold text-sm">Trame de rentabilité VN</span>
+            <img src="/images/logo-ypocamp.png" alt="Ypocamp" className="h-10 w-auto" />
+            <span className="font-extrabold text-sm text-sub">Trame de rentabilité VN</span>
             <nav className="flex gap-4 text-sm text-sub">
               <Link href="/" className="hover:text-ink">Tableau de bord</Link>
               <Link href="/calculateur" className="hover:text-ink">Calculateur</Link>

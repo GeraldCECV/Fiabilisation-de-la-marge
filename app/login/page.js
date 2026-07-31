@@ -28,8 +28,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <form onSubmit={handleSubmit} className="w-full max-w-sm bg-surface border border-border rounded-xl p-8 shadow-sm">
-        <div className="text-[11px] tracking-widest text-accent font-bold uppercase mb-1">Trame de rentabilité VN</div>
-        <h1 className="text-xl font-extrabold mb-6">Connexion</h1>
+        <img src="/images/logo-ypocamp.png" alt="Ypocamp" className="h-20 w-auto mx-auto mb-5" />
+        <div className="text-[11px] tracking-widest text-accent font-bold uppercase mb-1 text-center">Trame de rentabilité VN</div>
+        <h1 className="text-xl font-extrabold mb-6 text-center">Connexion</h1>
 
         <label className="block text-xs text-sub mb-1">Email</label>
         <input
