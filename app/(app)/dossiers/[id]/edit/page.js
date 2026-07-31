@@ -134,6 +134,7 @@ export default function EditDossierPage() {
       commentaires,
       marge_attendue: calc.E29,
       marge_reelle: calc.E33,
+      marge_financement_reelle: calc.E35,
       commission_vendeur: calc.commission,
       remise_pct: calc.D27,
       taux_marge_reel: calc.D34,
