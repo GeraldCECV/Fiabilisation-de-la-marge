@@ -42,7 +42,7 @@ export default async function AppLayout({ children }) {
         <div className="px-4 py-4 border-t border-border">
           <div className="text-sm text-ink font-semibold truncate">{profil?.nom || session.user.email}</div>
           <div className="flex items-center justify-between mt-2">
-            <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#EFF1E3] text-pos font-bold">
+            <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#E0F3F0] text-pos font-bold">
               {profil?.role || "COMMERCIAL"}
             </span>
             <SignOutButton />

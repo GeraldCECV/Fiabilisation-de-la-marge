@@ -86,11 +86,11 @@ export default async function DossiersPage({ searchParams }) {
           </thead>
           <tbody>
             {(dossiers || []).map((d) => (
-              <tr key={d.id} className="border-t border-border hover:bg-[#FAF8F0] cursor-pointer">
+              <tr key={d.id} className="border-t border-border hover:bg-[#F0FFFE] cursor-pointer">
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{new Date(d.created_at).toLocaleDateString("fr-FR")}</Link></td>
                 <td className="px-3 py-2">
                   <Link href={`/dossiers/${d.id}`} className="block">
-                    <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${d.statut === "VENDU" ? "bg-[#EFF1E3] text-pos" : "bg-[#E7F2F2] text-accent"}`}>{d.statut}</span>
+                    <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${d.statut === "VENDU" ? "bg-[#E0F3F0] text-pos" : "bg-[#E7F2F2] text-accent"}`}>{d.statut}</span>
                   </Link>
                 </td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{(d.client_nom || "—").toUpperCase()}</Link></td>

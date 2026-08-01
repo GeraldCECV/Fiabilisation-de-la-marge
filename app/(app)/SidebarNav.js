@@ -17,7 +17,7 @@ export default function SidebarNav({ liens }) {
               "px-3 py-2.5 rounded-md text-sm font-semibold transition-colors " +
               (actif
                 ? "bg-ink text-white"
-                : "text-sub hover:bg-[#EFEBD8] hover:text-ink")
+                : "text-sub hover:bg-[#E8F9F7] hover:text-ink")
             }
           >
             {lien.label}

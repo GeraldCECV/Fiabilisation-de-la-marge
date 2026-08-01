@@ -52,7 +52,7 @@ export default async function DossierDetailPage({ params }) {
             <div className="text-sm text-sub mt-1">{dossier.modeles?.gamme} — {STOCK_LABELS[dossier.stock_statut] || dossier.stock_statut}{dossier.numero_chassis && ` — N° ${dossier.numero_chassis}`}</div>
           </div>
           <div className="text-right text-sm">
-            <span className={`inline-block text-[11px] font-bold px-2.5 py-1 rounded-full ${dossier.statut === "VENDU" ? "bg-[#EFF1E3] text-pos" : "bg-[#E7F2F2] text-accent"}`}>{dossier.statut}</span>
+            <span className={`inline-block text-[11px] font-bold px-2.5 py-1 rounded-full ${dossier.statut === "VENDU" ? "bg-[#E0F3F0] text-pos" : "bg-[#E7F2F2] text-accent"}`}>{dossier.statut}</span>
             <div className="text-sub mt-2">{fmtDate(dossier.created_at)}</div>
           </div>
         </div>
@@ -118,7 +118,7 @@ export default async function DossierDetailPage({ params }) {
         {dossier.commentaires && (
           <div className="mt-6">
             <div className="text-[11px] text-sub uppercase font-bold mb-2">Bon de préparation / commentaires</div>
-            <div className="text-sm bg-[#FAF8F0] border border-border rounded-md p-3 whitespace-pre-wrap">{dossier.commentaires}</div>
+            <div className="text-sm bg-[#F0FFFE] border border-border rounded-md p-3 whitespace-pre-wrap">{dossier.commentaires}</div>
           </div>
         )}
 

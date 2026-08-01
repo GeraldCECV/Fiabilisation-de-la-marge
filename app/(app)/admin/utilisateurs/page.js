@@ -137,7 +137,7 @@ export default function AdminUtilisateursPage() {
               required
               value={form.nom}
               onChange={(e) => setForm({ ...form, nom: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-border bg-[#FAF8F0] text-sm"
+              className="w-full px-3 py-2 rounded-md border border-border bg-[#F0FFFE] text-sm"
               placeholder="Prénom Nom"
             />
           </div>
@@ -148,7 +148,7 @@ export default function AdminUtilisateursPage() {
               type="email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-border bg-[#FAF8F0] text-sm"
+              className="w-full px-3 py-2 rounded-md border border-border bg-[#F0FFFE] text-sm"
               placeholder="prenom.nom@ypocamp.fr"
             />
           </div>
@@ -157,7 +157,7 @@ export default function AdminUtilisateursPage() {
             <select
               value={form.role}
               onChange={(e) => setForm({ ...form, role: e.target.value })}
-              className="w-full px-3 py-2 rounded-md border border-border bg-[#FAF8F0] text-sm"
+              className="w-full px-3 py-2 rounded-md border border-border bg-[#F0FFFE] text-sm"
             >
               <option value="COMMERCIAL">Commercial</option>
               <option value="RESPONSABLE">Responsable</option>
@@ -180,7 +180,7 @@ export default function AdminUtilisateursPage() {
       <div className="bg-surface border border-border rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-xs text-sub uppercase tracking-wide bg-[#FAF8F0]">
+            <tr className="text-left text-xs text-sub uppercase tracking-wide bg-[#F0FFFE]">
               <th className="px-4 py-2.5">Nom</th>
               <th className="px-4 py-2.5">Email</th>
               <th className="px-4 py-2.5">Rôle</th>
@@ -193,7 +193,7 @@ export default function AdminUtilisateursPage() {
                 <td className="px-4 py-2.5 text-ink">{u.nom}</td>
                 <td className="px-4 py-2.5 text-sub">{u.email}</td>
                 <td className="px-4 py-2.5">
-                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#EFF1E3] text-pos font-bold">
+                  <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#E0F3F0] text-pos font-bold">
                     {u.role}
                   </span>
                 </td>

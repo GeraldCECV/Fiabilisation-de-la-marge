@@ -252,15 +252,15 @@ export default function CalculateurPage() {
         <div className="grid grid-cols-3 gap-3 mt-2">
           <div>
             <div className="text-xs text-sub">Nom</div>
-            <input value={client} onChange={(e) => setClient(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+            <input value={client} onChange={(e) => setClient(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
           </div>
           <div>
             <div className="text-xs text-sub">Département</div>
-            <input value={departement} onChange={(e) => setDepartement(e.target.value)} placeholder="ex : 44" maxLength={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+            <input value={departement} onChange={(e) => setDepartement(e.target.value)} placeholder="ex : 44" maxLength={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
           </div>
           <div>
             <div className="text-xs text-sub">Opération commerciale</div>
-            <select value={operationId} onChange={(e) => setOperationId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+            <select value={operationId} onChange={(e) => setOperationId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
               <option value="">Aucune</option>
               {operations.map((o) => <option key={o.id} value={o.id}>{o.nom}</option>)}
             </select>
@@ -274,13 +274,13 @@ export default function CalculateurPage() {
             <div className="grid grid-cols-3 gap-3">
               <div>
                 <label className="text-xs text-sub uppercase font-bold">Marque</label>
-                <select value={marqueId || ""} onChange={(e) => setMarqueId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+                <select value={marqueId || ""} onChange={(e) => setMarqueId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
                   {marques.map((m) => <option key={m.id} value={m.id}>{m.nom}</option>)}
                 </select>
               </div>
               <div>
                 <label className="text-xs text-sub uppercase font-bold">Type</label>
-                <select value={typeCarrosserie} onChange={(e) => setTypeCarrosserie(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+                <select value={typeCarrosserie} onChange={(e) => setTypeCarrosserie(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
                   {[...new Set(tousModeles.map((m) => m.type_carrosserie).filter(Boolean))].map((t) => (
                     <option key={t} value={t}>{t === "FOURGON" ? "Fourgon" : t === "PROFILE" ? "Profilé" : t === "CAPUCINE" ? "Capucine" : "Intégral"}</option>
                   ))}
@@ -288,7 +288,7 @@ export default function CalculateurPage() {
               </div>
               <div>
                 <label className="text-xs text-sub uppercase font-bold">Véhicule</label>
-                <select value={modeleId || ""} onChange={(e) => setModeleId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+                <select value={modeleId || ""} onChange={(e) => setModeleId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
                   {modeles.map((m) => <option key={m.id} value={m.id}>{m.nom}</option>)}
                 </select>
               </div>
@@ -296,7 +296,7 @@ export default function CalculateurPage() {
             <div className="grid grid-cols-2 gap-3 mt-3">
               <div>
                 <label className="text-xs text-sub">Statut stock</label>
-                <select value={stockStatut} onChange={(e) => setStockStatut(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+                <select value={stockStatut} onChange={(e) => setStockStatut(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
                   <option value="COMMANDE">Commande usine</option>
                   <option value="STOCK">En stock</option>
                   <option value="REASSORT">Réassort</option>
@@ -304,7 +304,7 @@ export default function CalculateurPage() {
               </div>
               <div>
                 <label className="text-xs text-sub">Durée d'exposition</label>
-                <select value={expo} onChange={(e) => setExpo(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+                <select value={expo} onChange={(e) => setExpo(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
                   <option value="PAS_EXPO">Pas d'expo</option>
                   <option value="EXPO_ANNEE">Expo de l'année</option>
                   <option value="EXPO_1_AN">Expo 1 an</option>
@@ -315,7 +315,7 @@ export default function CalculateurPage() {
             {stockStatut === "STOCK" && (
               <div className="mt-3">
                 <label className="text-xs text-sub">N° de série / châssis</label>
-                <input value={numeroChassis} onChange={(e) => setNumeroChassis(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+                <input value={numeroChassis} onChange={(e) => setNumeroChassis(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
               </div>
             )}
             {modele && (
@@ -331,24 +331,24 @@ export default function CalculateurPage() {
             <div className="grid grid-cols-2 gap-3 mt-2">
               <div>
                 <div className="text-xs text-sub">Frais sortie usine</div>
-                <input type="number" value={fraisSortieUsine} onChange={(e) => setFraisSortieUsine(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+                <input type="number" value={fraisSortieUsine} onChange={(e) => setFraisSortieUsine(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
               </div>
               <div>
                 <div className="text-xs text-sub">Transport usine</div>
-                <input type="number" value={transportUsine} onChange={(e) => setTransportUsine(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+                <input type="number" value={transportUsine} onChange={(e) => setTransportUsine(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
               </div>
               <div>
                 <div className="text-xs text-sub">Cession Odoo / travaux ext.</div>
-                <input type="number" value={cessionOdoo} onChange={(e) => setCessionOdoo(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+                <input type="number" value={cessionOdoo} onChange={(e) => setCessionOdoo(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
               </div>
               <div>
                 <div className="text-xs text-sub">Transport inter-site</div>
-                <input type="number" value={transportIntersite} onChange={(e) => setTransportIntersite(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+                <input type="number" value={transportIntersite} onChange={(e) => setTransportIntersite(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
               </div>
             </div>
             <div className="mt-3">
               <div className="text-xs text-sub">Batterie</div>
-              <select value={batterieChoix} onChange={(e) => setBatterieChoix(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+              <select value={batterieChoix} onChange={(e) => setBatterieChoix(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
                 {Object.entries(BATTERIE_COUTS).map(([nom, cout]) => (
                   <option key={nom} value={nom}>{nom}{cout.prixTtc > 0 ? ` (+${cout.prixTtc} €)` : ""}</option>
                 ))}
@@ -358,7 +358,7 @@ export default function CalculateurPage() {
 
           <div className="bg-surface border border-border rounded-lg p-5">
             <label className="text-xs text-sub uppercase font-bold">Options usine ({optionsSelectionnables.length} disponibles)</label>
-            <select className="w-full mt-2 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" value=""
+            <select className="w-full mt-2 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" value=""
               onChange={(e) => { const id = e.target.value; if (id) setOptionsChoisiesIds((prev) => (prev.includes(id) ? prev : [...prev, id])); }}>
               <option value="">+ Ajouter une option usine…</option>
               {optionsSelectionnables.filter((o) => !optionsChoisiesIds.includes(o.id)).map((o) => (
@@ -367,7 +367,7 @@ export default function CalculateurPage() {
             </select>
             <div className="mt-3 space-y-1.5">
               {optionsChoisies.map((o) => (
-                <div key={o.id} className="flex items-center gap-2 text-sm bg-[#FAF8F0] border border-border rounded-md px-2 py-1.5">
+                <div key={o.id} className="flex items-center gap-2 text-sm bg-[#F0FFFE] border border-border rounded-md px-2 py-1.5">
                   <span className="flex-1">{o.designation}</span>
                   <span className="text-sub">{fmt(o.prix_ttc)}</span>
                   <button onClick={() => setOptionsChoisiesIds((prev) => prev.filter((id) => id !== o.id))} className="text-neg px-1">×</button>
@@ -378,7 +378,7 @@ export default function CalculateurPage() {
               <div className="mt-3 pt-3 border-t border-border">
                 <div className="text-[11px] text-sub mb-1.5">Inclus de série sur ce modèle</div>
                 <div className="flex flex-wrap gap-1.5">
-                  {optionsDeSerie.map((o) => <span key={o.id} className="text-[11px] px-2 py-0.5 rounded-full bg-[#EFF1E3] text-pos">{o.designation}</span>)}
+                  {optionsDeSerie.map((o) => <span key={o.id} className="text-[11px] px-2 py-0.5 rounded-full bg-[#E0F3F0] text-pos">{o.designation}</span>)}
                 </div>
               </div>
             )}
@@ -399,13 +399,13 @@ export default function CalculateurPage() {
                 type="number"
                 value={prixNegocie}
                 onChange={(e) => { setPrixNegocie(e.target.value); setPrixNegocieAuto(false); }}
-                className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]"
+                className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]"
               />
             </div>
             <div className="grid grid-cols-2 gap-3 mt-3">
               <div>
                 <div className="text-xs text-sub">Financement</div>
-                <select value={financementActif ? "OUI" : "NON"} onChange={(e) => setFinancementActif(e.target.value === "OUI")} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+                <select value={financementActif ? "OUI" : "NON"} onChange={(e) => setFinancementActif(e.target.value === "OUI")} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
                   <option value="NON">Non</option>
                   <option value="OUI">Oui</option>
                 </select>
@@ -413,14 +413,14 @@ export default function CalculateurPage() {
               {financementActif && (
                 <div>
                   <div className="text-xs text-sub">Montant financé</div>
-                  <input type="number" value={financementMontant} onChange={(e) => setFinancementMontant(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+                  <input type="number" value={financementMontant} onChange={(e) => setFinancementMontant(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
                 </div>
               )}
             </div>
             {financementActif && (
               <div className="mt-3">
                 <div className="text-xs text-sub">Organisme</div>
-                <select value={financementOrganisme} onChange={(e) => setFinancementOrganisme(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+                <select value={financementOrganisme} onChange={(e) => setFinancementOrganisme(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
                   <option value="">—</option>
                   <option>CETELEM</option>
                   <option>ARKEA</option>
@@ -431,7 +431,7 @@ export default function CalculateurPage() {
             <div className="grid grid-cols-2 gap-3 mt-3">
               <div>
                 <div className="text-xs text-sub">Rachat véhicule client</div>
-                <select value={rachatActif ? "OUI" : "NON"} onChange={(e) => setRachatActif(e.target.value === "OUI")} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+                <select value={rachatActif ? "OUI" : "NON"} onChange={(e) => setRachatActif(e.target.value === "OUI")} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
                   <option value="NON">Non</option>
                   <option value="OUI">Oui</option>
                 </select>
@@ -439,19 +439,19 @@ export default function CalculateurPage() {
               {rachatActif && (
                 <div>
                   <div className="text-xs text-sub">Montant rachat</div>
-                  <input type="number" value={rachatMontant} onChange={(e) => setRachatMontant(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+                  <input type="number" value={rachatMontant} onChange={(e) => setRachatMontant(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
                 </div>
               )}
             </div>
             {rachatActif && (
               <div className="mt-3">
                 <div className="text-xs text-sub">Prix affiché sur parc</div>
-                <input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+                <input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
               </div>
             )}
             <div className="mt-3">
               <div className="text-xs text-sub">Bon de préparation / commentaires</div>
-              <textarea value={commentaires} onChange={(e) => setCommentaires(e.target.value)} rows={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+              <textarea value={commentaires} onChange={(e) => setCommentaires(e.target.value)} rows={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
             </div>
           </div>
         </div>

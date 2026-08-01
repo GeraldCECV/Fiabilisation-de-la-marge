@@ -43,15 +43,15 @@ export default function OperationForm() {
       <div className="grid grid-cols-4 gap-3 mt-2 items-end">
         <div className="col-span-2">
           <div className="text-xs text-sub">Nom</div>
-          <input value={nom} onChange={(e) => setNom(e.target.value)} placeholder="ex : Salon de Rennes 2027" className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+          <input value={nom} onChange={(e) => setNom(e.target.value)} placeholder="ex : Salon de Rennes 2027" className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
         </div>
         <div>
           <div className="text-xs text-sub">Début</div>
-          <input type="date" value={dateDebut} onChange={(e) => setDateDebut(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+          <input type="date" value={dateDebut} onChange={(e) => setDateDebut(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
         </div>
         <div>
           <div className="text-xs text-sub">Fin</div>
-          <input type="date" value={dateFin} onChange={(e) => setDateFin(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+          <input type="date" value={dateFin} onChange={(e) => setDateFin(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
         </div>
       </div>
       {error && <div className="text-neg text-xs mt-2">{error}</div>}

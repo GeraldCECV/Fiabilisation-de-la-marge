@@ -68,7 +68,7 @@ export default async function OperationsPage() {
                     <td className="px-3 py-2 text-right font-bold text-pos">{s.nbVendus > 0 ? fmt(s.marge) : "—"}</td>
                     <td className="px-3 py-2 text-right">{s.nbVendus > 0 ? fmt(margeMoyenne) : "—"}</td>
                     <td className="px-3 py-2">
-                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${op.actif ? "bg-[#EFF1E3] text-pos" : "bg-[#F1EEDC] text-sub"}`}>
+                      <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${op.actif ? "bg-[#E0F3F0] text-pos" : "bg-[#F1EEDC] text-sub"}`}>
                         {op.actif ? "Active" : "Archivée"}
                       </span>
                     </td>
