@@ -2,14 +2,13 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { supabaseServer } from "@/lib/supabaseServer";
 import MoisFilter from "./MoisFilter";
+import MarqueFilter from "./MarqueFilter";
 
 const fmt = (n) => (Number(n) || 0).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
-const fmtPct = (n) => (Number.isFinite(Number(n)) ? (Number(n) * 100).toFixed(1) : "0") + " %";
 
 const MOIS_LABELS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
 
 function optionsMois() {
-  // Génère les 12 derniers mois (le mois en cours + 11 précédents)
   const options = [];
   const now = new Date();
   for (let i = 0; i < 12; i++) {
@@ -24,10 +23,15 @@ function optionsMois() {
 export default async function DossiersPage({ searchParams }) {
   const supabase = supabaseServer();
   const moisParam = searchParams?.mois; // format "YYYY-MM"
+  const marqueParam = searchParams?.marque; // id de la marque
+
+  const { data: marques } = await supabase.from("marques").select("id, nom").order("nom");
 
   let query = supabase
     .from("dossiers_vente")
-    .select("id, statut, client_nom, prix_negocie_ttc, marge_reelle, marge_financement_reelle, remise_montant, created_at, modeles ( nom ), utilisateurs ( nom )")
+    .select(
+      "id, statut, client_nom, prix_negocie_ttc, marge_reelle, marge_financement_reelle, remise_montant, created_at, modeles!inner ( nom, marque_id, marques ( nom ) ), utilisateurs ( nom )"
+    )
     .order("created_at", { ascending: false });
 
   if (moisParam && /^\d{4}-\d{2}$/.test(moisParam)) {
@@ -35,8 +39,12 @@ export default async function DossiersPage({ searchParams }) {
     const debut = new Date(annee, mois - 1, 1).toISOString();
     const fin = new Date(annee, mois, 1).toISOString();
     query = query.gte("created_at", debut).lt("created_at", fin);
-  } else {
+  } else if (!marqueParam) {
     query = query.limit(100);
+  }
+
+  if (marqueParam) {
+    query = query.eq("modeles.marque_id", marqueParam);
   }
 
   const { data: dossiers } = await query;
@@ -46,7 +54,10 @@ export default async function DossiersPage({ searchParams }) {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-extrabold">Dossiers de vente</h1>
         <Suspense fallback={null}>
-          <MoisFilter options={optionsMois()} />
+          <div className="flex gap-3">
+            <MarqueFilter marques={marques || []} />
+            <MoisFilter options={optionsMois()} />
+          </div>
         </Suspense>
       </div>
       <div className="bg-surface border border-border rounded-lg overflow-hidden">
@@ -57,6 +68,7 @@ export default async function DossiersPage({ searchParams }) {
               <th className="text-left px-3 py-2">Statut</th>
               <th className="text-left px-3 py-2">Client</th>
               <th className="text-left px-3 py-2">Vendeur</th>
+              <th className="text-left px-3 py-2">Marque</th>
               <th className="text-left px-3 py-2">Véhicule</th>
               <th className="text-right px-3 py-2">Prix négocié</th>
               <th className="text-right px-3 py-2">Remise</th>
@@ -75,6 +87,7 @@ export default async function DossiersPage({ searchParams }) {
                 </td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.client_nom || "—"}</Link></td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.utilisateurs?.nom || "—"}</Link></td>
+                <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.modeles?.marques?.nom || "—"}</Link></td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.modeles?.nom || "—"}</Link></td>
                 <td className="px-3 py-2 text-right"><Link href={`/dossiers/${d.id}`} className="block">{fmt(d.prix_negocie_ttc)}</Link></td>
                 <td className="px-3 py-2 text-right"><Link href={`/dossiers/${d.id}`} className="block">{d.remise_montant != null ? fmt(d.remise_montant) : "—"}</Link></td>
@@ -87,7 +100,7 @@ export default async function DossiersPage({ searchParams }) {
               </tr>
             ))}
             {(!dossiers || dossiers.length === 0) && (
-              <tr><td colSpan={9} className="px-3 py-6 text-center text-sub">Aucun dossier pour cette période.</td></tr>
+              <tr><td colSpan={10} className="px-3 py-6 text-center text-sub">Aucun dossier pour cette sélection.</td></tr>
             )}
           </tbody>
         </table>

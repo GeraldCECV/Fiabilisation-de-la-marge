@@ -1,17 +1,17 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function MoisFilter({ options }) {
+export default function MarqueFilter({ marques }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const moisActuel = searchParams.get("mois") || "TOUS";
+  const marqueActuelle = searchParams.get("marque") || "TOUTES";
 
-  function naviguer(nouveauMois) {
+  function naviguer(nouvelleMarque) {
     const params = new URLSearchParams(searchParams.toString());
-    if (nouveauMois === "TOUS") {
-      params.delete("mois");
+    if (nouvelleMarque === "TOUTES") {
+      params.delete("marque");
     } else {
-      params.set("mois", nouveauMois);
+      params.set("marque", nouvelleMarque);
     }
     const query = params.toString();
     router.push(query ? `/dossiers?${query}` : "/dossiers");
@@ -19,13 +19,13 @@ export default function MoisFilter({ options }) {
 
   return (
     <select
-      value={moisActuel}
+      value={marqueActuelle}
       onChange={(e) => naviguer(e.target.value)}
       className="border border-border rounded-md px-3 py-1.5 text-sm bg-white"
     >
-      <option value="TOUS">Tous les mois</option>
-      {options.map((o) => (
-        <option key={o.value} value={o.value}>{o.label}</option>
+      <option value="TOUTES">Toutes les marques</option>
+      {marques.map((m) => (
+        <option key={m.id} value={m.id}>{m.nom}</option>
       ))}
     </select>
   );
