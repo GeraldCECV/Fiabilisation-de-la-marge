@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { supabaseServer } from "@/lib/supabaseServer";
 import MoisFilter from "./MoisFilter";
 import MarqueFilter from "./MarqueFilter";
+import OperationFilter from "./OperationFilter";
 
 const fmt = (n) => (Number(n) || 0).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
 
@@ -24,13 +25,15 @@ export default async function DossiersPage({ searchParams }) {
   const supabase = supabaseServer();
   const moisParam = searchParams?.mois; // format "YYYY-MM"
   const marqueParam = searchParams?.marque; // id de la marque
+  const operationParam = searchParams?.operation; // id de l'opération
 
   const { data: marques } = await supabase.from("marques").select("id, nom").order("nom");
+  const { data: operations } = await supabase.from("operations_commerciales").select("id, nom").order("nom");
 
   let query = supabase
     .from("dossiers_vente")
     .select(
-      "id, statut, client_nom, prix_negocie_ttc, marge_reelle, marge_financement_reelle, remise_montant, created_at, modeles!inner ( nom, marque_id, marques ( nom ) ), utilisateurs ( nom )"
+      "id, statut, client_nom, prix_negocie_ttc, marge_reelle, marge_financement_reelle, remise_montant, created_at, operation_id, operations_commerciales ( nom ), modeles!inner ( nom, marque_id, marques ( nom ) ), utilisateurs ( nom )"
     )
     .order("created_at", { ascending: false });
 
@@ -39,12 +42,15 @@ export default async function DossiersPage({ searchParams }) {
     const debut = new Date(annee, mois - 1, 1).toISOString();
     const fin = new Date(annee, mois, 1).toISOString();
     query = query.gte("created_at", debut).lt("created_at", fin);
-  } else if (!marqueParam) {
+  } else if (!marqueParam && !operationParam) {
     query = query.limit(100);
   }
 
   if (marqueParam) {
     query = query.eq("modeles.marque_id", marqueParam);
+  }
+  if (operationParam) {
+    query = query.eq("operation_id", operationParam);
   }
 
   const { data: dossiers } = await query;
@@ -56,6 +62,7 @@ export default async function DossiersPage({ searchParams }) {
         <Suspense fallback={null}>
           <div className="flex gap-3">
             <MarqueFilter marques={marques || []} />
+            <OperationFilter operations={operations || []} />
             <MoisFilter options={optionsMois()} />
           </div>
         </Suspense>
@@ -70,6 +77,7 @@ export default async function DossiersPage({ searchParams }) {
               <th className="text-left px-3 py-2">Vendeur</th>
               <th className="text-left px-3 py-2">Marque</th>
               <th className="text-left px-3 py-2">Véhicule</th>
+              <th className="text-left px-3 py-2">Opération</th>
               <th className="text-right px-3 py-2">Prix négocié</th>
               <th className="text-right px-3 py-2">Remise</th>
               <th className="text-right px-3 py-2">Marge VDL</th>
@@ -89,6 +97,7 @@ export default async function DossiersPage({ searchParams }) {
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.utilisateurs?.nom || "—"}</Link></td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.modeles?.marques?.nom || "—"}</Link></td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.modeles?.nom || "—"}</Link></td>
+                <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.operations_commerciales?.nom || "—"}</Link></td>
                 <td className="px-3 py-2 text-right"><Link href={`/dossiers/${d.id}`} className="block">{fmt(d.prix_negocie_ttc)}</Link></td>
                 <td className="px-3 py-2 text-right"><Link href={`/dossiers/${d.id}`} className="block">{d.remise_montant != null ? fmt(d.remise_montant) : "—"}</Link></td>
                 <td className={`px-3 py-2 text-right font-bold ${d.marge_reelle >= 0 ? "text-pos" : "text-neg"}`}>
@@ -100,7 +109,7 @@ export default async function DossiersPage({ searchParams }) {
               </tr>
             ))}
             {(!dossiers || dossiers.length === 0) && (
-              <tr><td colSpan={10} className="px-3 py-6 text-center text-sub">Aucun dossier pour cette sélection.</td></tr>
+              <tr><td colSpan={11} className="px-3 py-6 text-center text-sub">Aucun dossier pour cette sélection.</td></tr>
             )}
           </tbody>
         </table>

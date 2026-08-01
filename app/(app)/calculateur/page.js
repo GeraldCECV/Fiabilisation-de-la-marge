@@ -11,6 +11,8 @@ export default function CalculateurPage() {
   const supabase = supabaseBrowser();
 
   const [marques, setMarques] = useState([]);
+  const [operations, setOperations] = useState([]);
+  const [operationId, setOperationId] = useState("");
   const [marqueId, setMarqueId] = useState(null);
   const [tousModeles, setTousModeles] = useState([]);
   const [typeCarrosserie, setTypeCarrosserie] = useState("");
@@ -49,14 +51,16 @@ export default function CalculateurPage() {
 
   useEffect(() => {
     (async () => {
-      const [{ data: m }, { data: b }, { data: f }] = await Promise.all([
+      const [{ data: m }, { data: b }, { data: f }, { data: ops }] = await Promise.all([
         supabase.from("marques").select("id, nom").order("nom"),
         supabase.from("baremes_marge").select("*"),
         supabase.from("forfaits_fixes").select("*"),
+        supabase.from("operations_commerciales").select("id, nom").eq("actif", true).order("nom"),
       ]);
       setMarques(m || []);
       setBaremes(b || []);
       setForfaits(f || []);
+      setOperations(ops || []);
       if (m && m.length) setMarqueId(m[0].id);
       setLoading(false);
     })();
@@ -151,6 +155,7 @@ export default function CalculateurPage() {
       statut,
       client_nom: client,
       departement,
+      operation_id: operationId || null,
       vendeur_id: session.user.id,
       modele_id: modele.id,
       options_choisies: optionsChoisiesIds,
@@ -209,6 +214,7 @@ export default function CalculateurPage() {
     // Puis on vide le formulaire pour une nouvelle proposition, à un autre nom.
     setClient("");
     setDepartement("");
+    setOperationId("");
     setStockStatut("COMMANDE");
     setNumeroChassis("");
     setFraisSortieUsine(0);
@@ -243,7 +249,7 @@ export default function CalculateurPage() {
 
       <div className="bg-surface border border-border rounded-lg p-5 mb-6">
         <label className="text-xs text-sub uppercase font-bold">Informations client</label>
-        <div className="grid grid-cols-2 gap-3 mt-2">
+        <div className="grid grid-cols-3 gap-3 mt-2">
           <div>
             <div className="text-xs text-sub">Nom</div>
             <input value={client} onChange={(e) => setClient(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
@@ -251,6 +257,13 @@ export default function CalculateurPage() {
           <div>
             <div className="text-xs text-sub">Département</div>
             <input value={departement} onChange={(e) => setDepartement(e.target.value)} placeholder="ex : 44" maxLength={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+          </div>
+          <div>
+            <div className="text-xs text-sub">Opération commerciale</div>
+            <select value={operationId} onChange={(e) => setOperationId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+              <option value="">Aucune</option>
+              {operations.map((o) => <option key={o.id} value={o.id}>{o.nom}</option>)}
+            </select>
           </div>
         </div>
       </div>

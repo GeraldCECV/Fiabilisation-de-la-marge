@@ -25,6 +25,7 @@ export default async function AppLayout({ children }) {
               <Link href="/tableau-de-bord" className="hover:text-ink">Tableau de bord</Link>
               <Link href="/calculateur" className="hover:text-ink">Calculateur</Link>
               <Link href="/dossiers" className="hover:text-ink">Dossiers</Link>
+              <Link href="/operations" className="hover:text-ink">Opérations</Link>
             </nav>
           </div>
           <div className="flex items-center gap-3 text-sm">

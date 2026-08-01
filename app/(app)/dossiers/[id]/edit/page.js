@@ -26,6 +26,8 @@ export default function EditDossierPage() {
   const [peutModifier, setPeutModifier] = useState(true);
 
   const [client, setClient] = useState("");
+  const [operations, setOperations] = useState([]);
+  const [operationId, setOperationId] = useState("");
   const [statut, setStatut] = useState("PROPOSITION");
   const [stockStatut, setStockStatut] = useState("COMMANDE");
   const [numeroChassis, setNumeroChassis] = useState("");
@@ -53,12 +55,15 @@ export default function EditDossierPage() {
       if (d.verrouille && profil?.role !== "RESPONSABLE") setPeutModifier(false);
 
       const { data: m } = await supabase.from("modeles").select("*").eq("id", d.modele_id).single();
-      const [{ data: b }, { data: f }, { data: compat }] = await Promise.all([
+      const [{ data: b }, { data: f }, { data: compat }, { data: ops }] = await Promise.all([
         supabase.from("baremes_marge").select("*"),
         supabase.from("forfaits_fixes").select("*"),
         supabase.from("compatibilites").select("statut, options ( id, designation, achat_ht, cession_pose, prix_ttc, poids_kg )").eq("modele_id", d.modele_id),
+        supabase.from("operations_commerciales").select("id, nom").order("nom"),
       ]);
 
+      setOperations(ops || []);
+      setOperationId(d.operation_id || "");
       setDossier(d);
       setModele(m);
       setBaremes(b || []);
@@ -117,6 +122,7 @@ export default function EditDossierPage() {
 
     const payload = {
       statut, client_nom: client,
+      operation_id: operationId || null,
       options_choisies: optionsChoisiesIds,
       stock_statut: stockStatut,
       numero_chassis: stockStatut === "STOCK" ? numeroChassis : null,
@@ -211,6 +217,13 @@ export default function EditDossierPage() {
             <div className="mt-3">
               <label className="text-xs text-sub uppercase font-bold">Client</label>
               <input value={client} onChange={(e) => setClient(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+            </div>
+            <div className="mt-3">
+              <label className="text-xs text-sub uppercase font-bold">Opération commerciale</label>
+              <select value={operationId} onChange={(e) => setOperationId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+                <option value="">Aucune</option>
+                {operations.map((o) => <option key={o.id} value={o.id}>{o.nom}</option>)}
+              </select>
             </div>
           </div>
 
