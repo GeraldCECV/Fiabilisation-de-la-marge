@@ -77,7 +77,51 @@ const RAPIDO_VEHICULES_VANS = [
   { id: "r_v65xl", nom: "V65 XL", prixUsineHt: 51086.73, prixPublicTtc: 69900 },
 ].map((v) => ({ ...v, marque: "Rapido", gamme: "Vans (Fourgons)", type: "CAMPING_CAR", collection: 2027 }));
 
-const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS];
+// Source : Tarifs_HT_Camping-cars.pdf / Tarifs_public_Camping-cars.pdf — Adria, collection 2027 (tarif au 01/07/2026)
+const ADRIA_VEHICULES_CC = [
+  { id: "adria_compact_dc_citroen", nom: "Profilé COMPACT DC (Citroën Jumper Select)", prixUsineHt: 53763, prixPublicTtc: 75900 },
+  { id: "adria_compact_dl_citroen", nom: "Profilé COMPACT DL (Citroën Jumper Select)", prixUsineHt: 53054, prixPublicTtc: 74900 },
+  { id: "adria_compact_dl_fiat_supreme", nom: "Profilé COMPACT DL (Fiat Ducato Supreme)", prixUsineHt: 59429, prixPublicTtc: 83900 },
+  { id: "adria_matrix_650dl_citroen", nom: "Profilé MATRIX 650 DL (Citroën Jumper Select)", prixUsineHt: 55604, prixPublicTtc: 78500 },
+  { id: "adria_matrix_670dc_citroen", nom: "Profilé MATRIX 670 DC (Citroën Jumper Select)", prixUsineHt: 56596, prixPublicTtc: 79900 },
+  { id: "adria_matrix_670dl_citroen", nom: "Profilé MATRIX 670 DL (Citroën Jumper Select)", prixUsineHt: 56596, prixPublicTtc: 79900 },
+  { id: "adria_matrix_670dc_fiat_supreme", nom: "Profilé MATRIX 670 DC (Fiat Ducato Supreme)", prixUsineHt: 67221, prixPublicTtc: 94900 },
+  { id: "adria_matrix_670dl_fiat_supreme", nom: "Profilé MATRIX 670 DL (Fiat Ducato Supreme)", prixUsineHt: 67221, prixPublicTtc: 94900 },
+  { id: "adria_coral_670dc_citroen", nom: "Profilé CORAL 670 DC (Citroën Jumper Select)", prixUsineHt: 56596, prixPublicTtc: 79900 },
+  { id: "adria_coral_670dl_citroen", nom: "Profilé CORAL 670 DL (Citroën Jumper Select)", prixUsineHt: 56596, prixPublicTtc: 79900 },
+  { id: "adria_coral_670dc_fiat_supreme", nom: "Profilé CORAL 670 DC (Fiat Ducato Supreme)", prixUsineHt: 67221, prixPublicTtc: 94900 },
+  { id: "adria_coral_670dl_fiat_supreme", nom: "Profilé CORAL 670 DL (Fiat Ducato Supreme)", prixUsineHt: 67221, prixPublicTtc: 94900 },
+  { id: "adria_coralxl_650dk_citroen", nom: "Capucine CORAL XL 650 DK (Citroën Jumper Select)", prixUsineHt: 55179, prixPublicTtc: 77900 },
+  { id: "adria_coralxl_660sl_citroen", nom: "Capucine CORAL XL 660 SL (Citroën Jumper Select)", prixUsineHt: 55888, prixPublicTtc: 78900 },
+  { id: "adria_sonic_700dc_fiat_select", nom: "Intégral SONIC 700 DC (Fiat Ducato Select, 140cv MAN.)", prixUsineHt: 70472, prixPublicTtc: 99490 },
+  { id: "adria_sonic_700dl_fiat_select", nom: "Intégral SONIC 700 DL (Fiat Ducato Select, 140cv MAN.)", prixUsineHt: 70472, prixPublicTtc: 99490 },
+  { id: "adria_sonic_700dl_fiat_supreme", nom: "Intégral SONIC 700 DL (Fiat Ducato Supreme, 44H 160cv AUT.)", prixUsineHt: 82096, prixPublicTtc: 115900 },
+  { id: "adria_sonic_700dc_fiat_supreme", nom: "Intégral SONIC 700 DC (Fiat Ducato Supreme, 44H 160cv AUT.)", prixUsineHt: 82096, prixPublicTtc: 115900 },
+  { id: "adria_supersonic_780dc", nom: "Intégral SUPERSONIC 780 DC (Mercedes Benz 44H 170cv AUT.)", prixUsineHt: 116804, prixPublicTtc: 164900 },
+  { id: "adria_supersonic_780dl", nom: "Intégral SUPERSONIC 780 DL (Mercedes Benz 44H 170cv AUT.)", prixUsineHt: 116804, prixPublicTtc: 164900 },
+  { id: "adria_supersonic_780sl", nom: "Intégral SUPERSONIC 780 SL (Mercedes Benz 44H 170cv AUT.)", prixUsineHt: 116804, prixPublicTtc: 164900 },
+  { id: "adria_supersonic_890lc", nom: "Intégral SUPERSONIC 890 LC (Mercedes Benz 44H 170cv AUT.)", prixUsineHt: 124596, prixPublicTtc: 175900 },
+  { id: "adria_supersonic_890ll", nom: "Intégral SUPERSONIC 890 LL (Mercedes Benz 44H 170cv AUT.)", prixUsineHt: 124596, prixPublicTtc: 175900 },
+].map((v) => ({ ...v, marque: "Adria", gamme: "Camping-cars", type: "CAMPING_CAR", collection: 2027 }));
+
+// Source : Tarifs_HT_Fourgons.pdf / Tarifs_public_Fourgons.pdf — Adria, collection 2027 (tarif au 01/07/2026)
+const ADRIA_VEHICULES_FOURGONS = [
+  { id: "adria_twin_540spb_citroen", nom: "TWIN 540 SPB — Gamme Select (Citroën Jumper, 35L 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 43846, prixPublicTtc: 61900 },
+  { id: "adria_twin_600spb_citroen_ptr", nom: "TWIN 600 SPB PTR — Gamme Select (Citroën Jumper, 35L 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 45263, prixPublicTtc: 63900 },
+  { id: "adria_twin_600spb_family_citroen", nom: "TWIN 600 SPB FAMILY — Gamme Select (Citroën Jumper, 35L 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 45971, prixPublicTtc: 64900 },
+  { id: "adria_twin_640slb_citroen_ptr", nom: "TWIN 640 SLB PTR — Gamme Select (Citroën Jumper, 35H 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 46679, prixPublicTtc: 65900 },
+  { id: "adria_twin_640sgx_citroen_ptr", nom: "TWIN 640 SGX PTR — Gamme Select (Citroën Jumper, 35H 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 48804, prixPublicTtc: 68900 },
+  { id: "adria_twin_540spb_fiat_supreme_ptr", nom: "TWIN 540 SPB PTR — Gamme Supreme (Fiat Ducato, 35L 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 53763, prixPublicTtc: 75900 },
+  { id: "adria_twin_600spb_fiat_supreme_ptr", nom: "TWIN 600 SPB PTR — Gamme Supreme (Fiat Ducato, 35L 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 50929, prixPublicTtc: 71900 },
+  { id: "adria_twin_640spb_family_fiat_supreme", nom: "TWIN 640 SPB FAMILY — Gamme Supreme (Fiat Ducato, 35H 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 52346, prixPublicTtc: 73900 },
+  { id: "adria_twin_640slb_fiat_supreme_ptr", nom: "TWIN 640 SLB PTR — Gamme Supreme (Fiat Ducato, 35H 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 52346, prixPublicTtc: 73900 },
+  { id: "adria_twin_640sgx_fiat_supreme_ptr", nom: "TWIN 640 SGX PTR — Gamme Supreme (Fiat Ducato, 35H 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 54471, prixPublicTtc: 76900 },
+  { id: "adria_supertwin_600spb_ptr", nom: "SUPERTWIN 600 SPB PTR — Gamme Supertwin (Mercedes, 4X4 190cv AUT.)", gammeTwin: "Supertwin", prixUsineHt: 105471, prixPublicTtc: 148900 },
+  { id: "adria_supertwin_700sgx_ptr", nom: "SUPERTWIN 700 SGX PTR — Gamme Supertwin (Mercedes, 4X4 190cv AUT.)", gammeTwin: "Supertwin", prixUsineHt: 110471, prixPublicTtc: 155900 },
+].map((v) => ({ ...v, marque: "Adria", gamme: `Fourgons — ${v.gammeTwin}`, type: "CAMPING_CAR", collection: 2027 }));
+
+
+const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS];
 
 // ---------------------------------------------------------------------------
 // OPTIONS (statut par véhicule : "O" option payante, "S" de série, "-"/absent indisponible)

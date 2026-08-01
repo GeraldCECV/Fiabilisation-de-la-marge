@@ -234,8 +234,8 @@ export default function EditDossierPage() {
               <div>
                 <div className="text-xs text-sub">Batterie</div>
                 <select value={batterieChoix} onChange={(e) => setBatterieChoix(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
-                  {Object.keys(BATTERIE_COUTS).map((nom) => (
-                    <option key={nom} value={nom}>{nom}</option>
+                  {Object.entries(BATTERIE_COUTS).map(([nom, cout]) => (
+                    <option key={nom} value={nom}>{nom}{cout.prixTtc > 0 ? ` (+${cout.prixTtc} €)` : ""}</option>
                   ))}
                 </select>
               </div>

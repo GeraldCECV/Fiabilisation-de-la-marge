@@ -28,6 +28,7 @@ export default function CalculateurPage() {
   const [expo, setExpo] = useState("PAS_EXPO");
   const [batterieChoix, setBatterieChoix] = useState("Camping car avec batterie");
   const [prixNegocie, setPrixNegocie] = useState(0);
+  const [prixNegocieAuto, setPrixNegocieAuto] = useState(true);
   const [prixAffichParc, setPrixAffichParc] = useState(0);
   const [financementActif, setFinancementActif] = useState(false);
   const [financementMontant, setFinancementMontant] = useState(0);
@@ -84,10 +85,10 @@ export default function CalculateurPage() {
         const isCC = modele.type === "CAMPING_CAR";
         const cle = isCC ? "carte_grise_cc" : "carte_grise_caravane";
         const forfaitMiseALaRoute = Number(forfaits.find((f) => f.cle === cle)?.valeur) || (isCC ? 790 : 380);
-        const prixParDefaut = Number(modele.prix_public_ttc) + forfaitMiseALaRoute;
-        setPrixNegocie(prixParDefaut);
-        setPrixAffichParc(prixParDefaut);
+        setPrixNegocie(Number(modele.prix_public_ttc) + forfaitMiseALaRoute);
+        setPrixAffichParc(Number(modele.prix_public_ttc) + forfaitMiseALaRoute);
       }
+      setPrixNegocieAuto(true);
     })();
   }, [modeleId]);
 
@@ -116,6 +117,14 @@ export default function CalculateurPage() {
       batterieChoix,
     });
   }, [modele, optionsChoisies, baremes, forfaits, prixNegocie, financementActif, financementMontant, fraisSortieUsine, transportUsine, cessionOdoo, transportIntersite, expo, batterieChoix]);
+
+  // Tant que le prix négocié n'a pas été modifié à la main, il suit automatiquement
+  // le prix catalogue (qui inclut déjà les options usine et la batterie sélectionnées).
+  useEffect(() => {
+    if (prixNegocieAuto && calc) {
+      setPrixNegocie(calc.E25);
+    }
+  }, [calc?.E25, prixNegocieAuto]);
 
   async function enregistrer(statut) {
     if (!modele || !calc) return;
@@ -199,6 +208,7 @@ export default function CalculateurPage() {
     setCommentaires("");
     setDossierIdActuel(null);
     setDernierStatut("PROPOSITION");
+    setPrixNegocieAuto(true);
     if (modele) setPrixNegocie(modele.prix_public_ttc);
     setMsg("Proposition précédente enregistrée. Formulaire prêt pour un nouveau client.");
   }
@@ -284,8 +294,8 @@ export default function CalculateurPage() {
             <div className="mt-3">
               <div className="text-xs text-sub">Batterie</div>
               <select value={batterieChoix} onChange={(e) => setBatterieChoix(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
-                {Object.keys(BATTERIE_COUTS).map((nom) => (
-                  <option key={nom} value={nom}>{nom}</option>
+                {Object.entries(BATTERIE_COUTS).map(([nom, cout]) => (
+                  <option key={nom} value={nom}>{nom}{cout.prixTtc > 0 ? ` (+${cout.prixTtc} €)` : ""}</option>
                 ))}
               </select>
             </div>
@@ -322,8 +332,20 @@ export default function CalculateurPage() {
           <div className="bg-surface border border-border rounded-lg p-5">
             <label className="text-xs text-sub uppercase font-bold">Négociation</label>
             <div>
-              <div className="text-xs text-sub">Prix négocié TTC (hors carte grise)</div>
-              <input type="number" value={prixNegocie} onChange={(e) => setPrixNegocie(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+              <div className="text-xs text-sub flex items-center justify-between">
+                <span>Prix négocié TTC (hors carte grise){prixNegocieAuto && <span className="ml-1 text-[10px] uppercase font-bold" style={{ color: "#78BDC0" }}>(auto)</span>}</span>
+                {!prixNegocieAuto && (
+                  <button type="button" onClick={() => setPrixNegocieAuto(true)} className="text-[10px] font-bold underline text-sub">
+                    Recalculer auto
+                  </button>
+                )}
+              </div>
+              <input
+                type="number"
+                value={prixNegocie}
+                onChange={(e) => { setPrixNegocie(e.target.value); setPrixNegocieAuto(false); }}
+                className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]"
+              />
             </div>
             <div className="grid grid-cols-2 gap-3 mt-3">
               <div>

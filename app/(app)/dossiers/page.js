@@ -26,7 +26,7 @@ export default async function DossiersPage({ searchParams }) {
 
   let query = supabase
     .from("dossiers_vente")
-    .select("id, statut, client_nom, prix_negocie_ttc, marge_reelle, created_at, modeles ( nom ), utilisateurs ( nom )")
+    .select("id, statut, client_nom, prix_negocie_ttc, marge_reelle, marge_financement_reelle, created_at, modeles ( nom ), utilisateurs ( nom )")
     .order("created_at", { ascending: false });
 
   if (moisParam && /^\d{4}-\d{2}$/.test(moisParam)) {
@@ -58,7 +58,8 @@ export default async function DossiersPage({ searchParams }) {
               <th className="text-left px-3 py-2">Vendeur</th>
               <th className="text-left px-3 py-2">Véhicule</th>
               <th className="text-right px-3 py-2">Prix négocié</th>
-              <th className="text-right px-3 py-2">Marge réelle</th>
+              <th className="text-right px-3 py-2">Marge VDL</th>
+              <th className="text-right px-3 py-2">Marge financement</th>
             </tr>
           </thead>
           <tbody>
@@ -74,11 +75,16 @@ export default async function DossiersPage({ searchParams }) {
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.utilisateurs?.nom || "—"}</Link></td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.modeles?.nom || "—"}</Link></td>
                 <td className="px-3 py-2 text-right"><Link href={`/dossiers/${d.id}`} className="block">{fmt(d.prix_negocie_ttc)}</Link></td>
-                <td className={`px-3 py-2 text-right font-bold ${d.marge_reelle >= 0 ? "text-pos" : "text-neg"}`}><Link href={`/dossiers/${d.id}`} className="block">{fmt(d.marge_reelle)}</Link></td>
+                <td className={`px-3 py-2 text-right font-bold ${d.marge_reelle >= 0 ? "text-pos" : "text-neg"}`}>
+                  <Link href={`/dossiers/${d.id}`} className="block">{fmt((d.marge_reelle || 0) - (d.marge_financement_reelle || 0))}</Link>
+                </td>
+                <td className="px-3 py-2 text-right font-bold text-pos">
+                  <Link href={`/dossiers/${d.id}`} className="block">{d.marge_financement_reelle ? fmt(d.marge_financement_reelle) : "—"}</Link>
+                </td>
               </tr>
             ))}
             {(!dossiers || dossiers.length === 0) && (
-              <tr><td colSpan={7} className="px-3 py-6 text-center text-sub">Aucun dossier pour cette période.</td></tr>
+              <tr><td colSpan={8} className="px-3 py-6 text-center text-sub">Aucun dossier pour cette période.</td></tr>
             )}
           </tbody>
         </table>
