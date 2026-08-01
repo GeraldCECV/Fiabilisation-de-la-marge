@@ -12,6 +12,8 @@ export default function CalculateurPage() {
 
   const [marques, setMarques] = useState([]);
   const [marqueId, setMarqueId] = useState(null);
+  const [tousModeles, setTousModeles] = useState([]);
+  const [typeCarrosserie, setTypeCarrosserie] = useState("");
   const [modeles, setModeles] = useState([]);
   const [modeleId, setModeleId] = useState(null);
   const [options, setOptions] = useState([]);
@@ -36,6 +38,7 @@ export default function CalculateurPage() {
   const [rachatActif, setRachatActif] = useState(false);
   const [rachatMontant, setRachatMontant] = useState(0);
   const [client, setClient] = useState("");
+  const [departement, setDepartement] = useState("");
   const [commentaires, setCommentaires] = useState("");
 
   const [loading, setLoading] = useState(true);
@@ -63,10 +66,23 @@ export default function CalculateurPage() {
     if (!marqueId) return;
     (async () => {
       const { data } = await supabase.from("modeles").select("*").eq("marque_id", marqueId).eq("actif", true).order("gamme").order("nom");
-      setModeles(data || []);
-      if (data && data.length) setModeleId(data[0].id);
+      const liste = data || [];
+      setTousModeles(liste);
+      const typesDisponibles = [...new Set(liste.map((m) => m.type_carrosserie).filter(Boolean))];
+      const typeParDefaut = typesDisponibles[0] || "";
+      setTypeCarrosserie(typeParDefaut);
+      const filtres = typeParDefaut ? liste.filter((m) => m.type_carrosserie === typeParDefaut) : liste;
+      setModeles(filtres);
+      if (filtres.length) setModeleId(filtres[0].id);
     })();
   }, [marqueId]);
+
+  useEffect(() => {
+    if (!typeCarrosserie) { setModeles(tousModeles); return; }
+    const filtres = tousModeles.filter((m) => m.type_carrosserie === typeCarrosserie);
+    setModeles(filtres);
+    if (filtres.length) setModeleId(filtres[0].id);
+  }, [typeCarrosserie]);
 
   useEffect(() => {
     if (!modeleId) return;
@@ -134,6 +150,7 @@ export default function CalculateurPage() {
     const payload = {
       statut,
       client_nom: client,
+      departement,
       vendeur_id: session.user.id,
       modele_id: modele.id,
       options_choisies: optionsChoisiesIds,
@@ -191,6 +208,7 @@ export default function CalculateurPage() {
     }
     // Puis on vide le formulaire pour une nouvelle proposition, à un autre nom.
     setClient("");
+    setDepartement("");
     setStockStatut("COMMANDE");
     setNumeroChassis("");
     setFraisSortieUsine(0);
@@ -222,6 +240,21 @@ export default function CalculateurPage() {
   return (
     <div>
       <h1 className="text-2xl font-extrabold mb-6">Calculateur de marge</h1>
+
+      <div className="bg-surface border border-border rounded-lg p-5 mb-6">
+        <label className="text-xs text-sub uppercase font-bold">Informations client</label>
+        <div className="grid grid-cols-2 gap-3 mt-2">
+          <div>
+            <div className="text-xs text-sub">Nom</div>
+            <input value={client} onChange={(e) => setClient(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+          </div>
+          <div>
+            <div className="text-xs text-sub">Département</div>
+            <input value={departement} onChange={(e) => setDepartement(e.target.value)} placeholder="ex : 44" maxLength={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-2 gap-6">
         <div className="space-y-4">
           <div className="bg-surface border border-border rounded-lg p-5">
@@ -232,7 +265,15 @@ export default function CalculateurPage() {
                   {marques.map((m) => <option key={m.id} value={m.id}>{m.nom}</option>)}
                 </select>
               </div>
-              <div className="col-span-2">
+              <div>
+                <label className="text-xs text-sub uppercase font-bold">Type</label>
+                <select value={typeCarrosserie} onChange={(e) => setTypeCarrosserie(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
+                  {[...new Set(tousModeles.map((m) => m.type_carrosserie).filter(Boolean))].map((t) => (
+                    <option key={t} value={t}>{t === "FOURGON" ? "Fourgon" : t === "PROFILE" ? "Profilé" : t === "CAPUCINE" ? "Capucine" : "Intégral"}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
                 <label className="text-xs text-sub uppercase font-bold">Véhicule</label>
                 <select value={modeleId || ""} onChange={(e) => setModeleId(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
                   {modeles.map((m) => <option key={m.id} value={m.id}>{m.nom}</option>)}
@@ -397,10 +438,6 @@ export default function CalculateurPage() {
                 <input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
               </div>
             )}
-            <div className="mt-3">
-              <div className="text-xs text-sub">Client</div>
-              <input value={client} onChange={(e) => setClient(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />
-            </div>
             <div className="mt-3">
               <div className="text-xs text-sub">Bon de préparation / commentaires</div>
               <textarea value={commentaires} onChange={(e) => setCommentaires(e.target.value)} rows={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]" />

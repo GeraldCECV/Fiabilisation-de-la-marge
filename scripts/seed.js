@@ -57,6 +57,7 @@ async function main() {
           gamme: v.gamme,
           type: v.type,
           collection: v.collection,
+          type_carrosserie: v.typeCarrosserie || null,
           prix_usine_ht: v.prixUsineHt,
           prix_public_ttc: v.prixPublicTtc,
           actif: true,

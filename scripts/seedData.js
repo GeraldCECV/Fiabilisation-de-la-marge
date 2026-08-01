@@ -31,7 +31,7 @@ const DREAMER_VEHICULES = [
   { id: "cfp", nom: "CAMPER FIVE FUN+ 140cv", prixUsineHt: 49337.0, prixPublicTtc: 67500 },
   { id: "cs", nom: "CAMPER SPORT FUN 140cv", prixUsineHt: 46403.67, prixPublicTtc: 63500 },
   { id: "csp", nom: "CAMPER SPORT FUN+ 140cv", prixUsineHt: 49337.0, prixPublicTtc: 67500 },
-].map((v) => ({ ...v, marque: "Dreamer", gamme: "FUN", type: "CAMPING_CAR", collection: 2027 }));
+].map((v) => ({ ...v, marque: "Dreamer", gamme: "FUN", type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2027 }));
 
 const RAPIDO_VEHICULE_IDS = ["r_c03", "r_c50", "r_c55", "r_c66ol", "r_c86ol", "r_606f", "r_666fol", "r_686f", "r_696fol"];
 
@@ -45,7 +45,7 @@ const RAPIDO_VEHICULES = [
   { id: "r_666fol", nom: "666F Optimum Line", prixUsineHt: 60591.60, prixPublicTtc: 83800 },
   { id: "r_686f", nom: "686F", prixUsineHt: 55516.60, prixPublicTtc: 76800 },
   { id: "r_696fol", nom: "696F Optimum Line", prixUsineHt: 60591.60, prixPublicTtc: 83800 },
-].map((v) => ({ ...v, marque: "Rapido", gamme: "Profilés (Séries C / 6F)", type: "CAMPING_CAR", collection: 2027 }));
+].map((v) => ({ ...v, marque: "Rapido", gamme: "Profilés (Séries C / 6F)", type: "CAMPING_CAR", typeCarrosserie: "PROFILE", collection: 2027 }));
 
 const RAPIDO_INTEGRAUX_IDS = ["r_c55i", "r_c66iol", "r_c86iol", "r_850f", "r_866fol", "r_896fol", "r_8066dfalko", "r_8086dfalko", "r_8096dfalko", "r_i66mtruma", "r_i66malde", "r_i96mtruma", "r_i96malde", "r_i166malde", "r_i196malde"];
 
@@ -65,7 +65,7 @@ const RAPIDO_VEHICULES_INTEGRAUX = [
   { id: "r_i96malde", nom: "I96M ALDE (Mercedes)", prixUsineHt: 102258.13, prixPublicTtc: 142900 },
   { id: "r_i166malde", nom: "I166M ALDE (Mercedes)", prixUsineHt: 115158.13, prixPublicTtc: 160900 },
   { id: "r_i196malde", nom: "I196M ALDE (Mercedes)", prixUsineHt: 115158.13, prixPublicTtc: 160900 },
-].map((v) => ({ ...v, marque: "Rapido", gamme: "Intégraux (Séries C / 8F / 80dF / Distinction)", type: "CAMPING_CAR", collection: 2027 }));
+].map((v) => ({ ...v, marque: "Rapido", gamme: "Intégraux (Séries C / 8F / 80dF / Distinction)", type: "CAMPING_CAR", typeCarrosserie: "INTEGRAL", collection: 2027 }));
 
 const RAPIDO_VANS_IDS = ["r_v55ol", "r_v62ol", "r_v64", "r_v65xl", "r_v68"];
 
@@ -75,7 +75,7 @@ const RAPIDO_VEHICULES_VANS = [
   { id: "r_v62ol", nom: "V62 Optimum Line", prixUsineHt: 54020.07, prixPublicTtc: 73900 },
   { id: "r_v64", nom: "V64", prixUsineHt: 50353.40, prixPublicTtc: 68900 },
   { id: "r_v65xl", nom: "V65 XL", prixUsineHt: 51086.73, prixPublicTtc: 69900 },
-].map((v) => ({ ...v, marque: "Rapido", gamme: "Vans (Fourgons)", type: "CAMPING_CAR", collection: 2027 }));
+].map((v) => ({ ...v, marque: "Rapido", gamme: "Vans (Fourgons)", type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2027 }));
 
 // Source : Tarifs_HT_Camping-cars.pdf / Tarifs_public_Camping-cars.pdf — Adria, collection 2027 (tarif au 01/07/2026)
 const ADRIA_VEHICULES_CC = [
@@ -102,7 +102,14 @@ const ADRIA_VEHICULES_CC = [
   { id: "adria_supersonic_780sl", nom: "Intégral SUPERSONIC 780 SL (Mercedes Benz 44H 170cv AUT.)", prixUsineHt: 116804, prixPublicTtc: 164900 },
   { id: "adria_supersonic_890lc", nom: "Intégral SUPERSONIC 890 LC (Mercedes Benz 44H 170cv AUT.)", prixUsineHt: 124596, prixPublicTtc: 175900 },
   { id: "adria_supersonic_890ll", nom: "Intégral SUPERSONIC 890 LL (Mercedes Benz 44H 170cv AUT.)", prixUsineHt: 124596, prixPublicTtc: 175900 },
-].map((v) => ({ ...v, marque: "Adria", gamme: "Camping-cars", type: "CAMPING_CAR", collection: 2027 }));
+].map((v) => ({
+  ...v,
+  marque: "Adria",
+  gamme: "Camping-cars",
+  type: "CAMPING_CAR",
+  typeCarrosserie: v.nom.startsWith("Intégral") ? "INTEGRAL" : v.nom.startsWith("Capucine") ? "CAPUCINE" : "PROFILE",
+  collection: 2027,
+}));
 
 // Source : Tarifs_HT_Fourgons.pdf / Tarifs_public_Fourgons.pdf — Adria, collection 2027 (tarif au 01/07/2026)
 const ADRIA_VEHICULES_FOURGONS = [
@@ -118,7 +125,7 @@ const ADRIA_VEHICULES_FOURGONS = [
   { id: "adria_twin_640sgx_fiat_supreme_ptr", nom: "TWIN 640 SGX PTR — Gamme Supreme (Fiat Ducato, 35H 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 54471, prixPublicTtc: 76900 },
   { id: "adria_supertwin_600spb_ptr", nom: "SUPERTWIN 600 SPB PTR — Gamme Supertwin (Mercedes, 4X4 190cv AUT.)", gammeTwin: "Supertwin", prixUsineHt: 105471, prixPublicTtc: 148900 },
   { id: "adria_supertwin_700sgx_ptr", nom: "SUPERTWIN 700 SGX PTR — Gamme Supertwin (Mercedes, 4X4 190cv AUT.)", gammeTwin: "Supertwin", prixUsineHt: 110471, prixPublicTtc: 155900 },
-].map((v) => ({ ...v, marque: "Adria", gamme: `Fourgons — ${v.gammeTwin}`, type: "CAMPING_CAR", collection: 2027 }));
+].map((v) => ({ ...v, marque: "Adria", gamme: `Fourgons — ${v.gammeTwin}`, type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2027 }));
 
 
 const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS];
