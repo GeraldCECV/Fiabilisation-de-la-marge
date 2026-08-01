@@ -32,28 +32,47 @@ function genererMotDePasse() {
   return mdp.split("").sort(() => Math.random() - 0.5).join("");
 }
 
+function verifierCleServiceRole() {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return NextResponse.json(
+      { error: "SUPABASE_SERVICE_ROLE_KEY n'est pas configurée sur le serveur (Vercel > Settings > Environment Variables)." },
+      { status: 500 }
+    );
+  }
+  return null;
+}
+
 export async function GET() {
   const erreur = await verifierResponsable();
   if (erreur) return erreur;
+  const erreurCle = verifierCleServiceRole();
+  if (erreurCle) return erreurCle;
 
-  const admin = supabaseAdmin();
-  const { data, error } = await admin
-    .from("utilisateurs")
-    .select("id, nom, role, marques_autorisees, created_at")
-    .order("created_at", { ascending: false });
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  try {
+    const admin = supabaseAdmin();
+    const { data, error } = await admin
+      .from("utilisateurs")
+      .select("id, nom, role, marques_autorisees, created_at")
+      .order("created_at", { ascending: false });
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  // On récupère les emails depuis auth.users (pas stockés dans la table utilisateurs)
-  const { data: authList } = await admin.auth.admin.listUsers({ perPage: 1000 });
-  const emailParId = Object.fromEntries((authList?.users || []).map((u) => [u.id, u.email]));
-  const resultats = data.map((u) => ({ ...u, email: emailParId[u.id] || null }));
+    // On récupère les emails depuis auth.users (pas stockés dans la table utilisateurs)
+    const { data: authList, error: errAuthList } = await admin.auth.admin.listUsers({ perPage: 1000 });
+    if (errAuthList) return NextResponse.json({ error: errAuthList.message }, { status: 500 });
+    const emailParId = Object.fromEntries((authList?.users || []).map((u) => [u.id, u.email]));
+    const resultats = data.map((u) => ({ ...u, email: emailParId[u.id] || null }));
 
-  return NextResponse.json({ utilisateurs: resultats });
+    return NextResponse.json({ utilisateurs: resultats });
+  } catch (e) {
+    return NextResponse.json({ error: e?.message || "Erreur serveur inattendue." }, { status: 500 });
+  }
 }
 
 export async function POST(request) {
   const erreur = await verifierResponsable();
   if (erreur) return erreur;
+  const erreurCle = verifierCleServiceRole();
+  if (erreurCle) return erreurCle;
 
   const body = await request.json();
   const { nom, email, role, marques_autorisees } = body;
@@ -96,6 +115,8 @@ export async function POST(request) {
 export async function PATCH(request) {
   const erreur = await verifierResponsable();
   if (erreur) return erreur;
+  const erreurCle = verifierCleServiceRole();
+  if (erreurCle) return erreurCle;
 
   const { userId } = await request.json();
   if (!userId) return NextResponse.json({ error: "userId requis." }, { status: 400 });

@@ -15,21 +15,40 @@ export default function AdminUtilisateursPage() {
 
   useEffect(() => {
     (async () => {
-      const supabase = supabaseBrowser();
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) { router.push("/login"); return; }
-      const { data: profil } = await supabase.from("utilisateurs").select("role").eq("id", session.user.id).single();
-      if (profil?.role !== "RESPONSABLE") { setAutorise(false); setLoading(false); return; }
-      setAutorise(true);
-      await chargerListe();
-      setLoading(false);
+      try {
+        const supabase = supabaseBrowser();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) { router.push("/login"); return; }
+        const { data: profil } = await supabase.from("utilisateurs").select("role").eq("id", session.user.id).single();
+        if (profil?.role !== "RESPONSABLE") { setAutorise(false); return; }
+        setAutorise(true);
+        await chargerListe();
+      } catch (e) {
+        setErreur("Erreur au chargement de la page : " + (e?.message || "erreur inconnue"));
+        setAutorise(true);
+      } finally {
+        setLoading(false);
+      }
     })();
   }, []);
 
   async function chargerListe() {
-    const res = await fetch("/api/admin/users");
-    const data = await res.json();
-    if (res.ok) setUtilisateurs(data.utilisateurs);
+    try {
+      const res = await fetch("/api/admin/users");
+      const texte = await res.text();
+      let data;
+      try { data = JSON.parse(texte); } catch { data = null; }
+      if (!res.ok) {
+        setErreur(
+          (data && data.error) ||
+          `Le serveur a renvoyé une erreur (${res.status}). Vérifiez que SUPABASE_SERVICE_ROLE_KEY est bien configurée sur Vercel.`
+        );
+        return;
+      }
+      setUtilisateurs(data.utilisateurs || []);
+    } catch (e) {
+      setErreur("Impossible de contacter le serveur : " + (e?.message || "erreur réseau"));
+    }
   }
 
   async function creerUtilisateur(e) {
