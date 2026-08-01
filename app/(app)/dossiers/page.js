@@ -4,6 +4,7 @@ import { supabaseServer } from "@/lib/supabaseServer";
 import MoisFilter from "./MoisFilter";
 
 const fmt = (n) => (Number(n) || 0).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
+const fmtPct = (n) => (Number.isFinite(Number(n)) ? (Number(n) * 100).toFixed(1) : "0") + " %";
 
 const MOIS_LABELS = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
 
@@ -26,7 +27,7 @@ export default async function DossiersPage({ searchParams }) {
 
   let query = supabase
     .from("dossiers_vente")
-    .select("id, statut, client_nom, prix_negocie_ttc, marge_reelle, marge_financement_reelle, created_at, modeles ( nom ), utilisateurs ( nom )")
+    .select("id, statut, client_nom, prix_negocie_ttc, marge_reelle, marge_financement_reelle, remise_montant, created_at, modeles ( nom ), utilisateurs ( nom )")
     .order("created_at", { ascending: false });
 
   if (moisParam && /^\d{4}-\d{2}$/.test(moisParam)) {
@@ -58,6 +59,7 @@ export default async function DossiersPage({ searchParams }) {
               <th className="text-left px-3 py-2">Vendeur</th>
               <th className="text-left px-3 py-2">Véhicule</th>
               <th className="text-right px-3 py-2">Prix négocié</th>
+              <th className="text-right px-3 py-2">Remise</th>
               <th className="text-right px-3 py-2">Marge VDL</th>
               <th className="text-right px-3 py-2">Marge financement</th>
             </tr>
@@ -75,6 +77,7 @@ export default async function DossiersPage({ searchParams }) {
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.utilisateurs?.nom || "—"}</Link></td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.modeles?.nom || "—"}</Link></td>
                 <td className="px-3 py-2 text-right"><Link href={`/dossiers/${d.id}`} className="block">{fmt(d.prix_negocie_ttc)}</Link></td>
+                <td className="px-3 py-2 text-right"><Link href={`/dossiers/${d.id}`} className="block">{d.remise_montant != null ? fmt(d.remise_montant) : "—"}</Link></td>
                 <td className={`px-3 py-2 text-right font-bold ${d.marge_reelle >= 0 ? "text-pos" : "text-neg"}`}>
                   <Link href={`/dossiers/${d.id}`} className="block">{fmt((d.marge_reelle || 0) - (d.marge_financement_reelle || 0))}</Link>
                 </td>
@@ -84,7 +87,7 @@ export default async function DossiersPage({ searchParams }) {
               </tr>
             ))}
             {(!dossiers || dossiers.length === 0) && (
-              <tr><td colSpan={8} className="px-3 py-6 text-center text-sub">Aucun dossier pour cette période.</td></tr>
+              <tr><td colSpan={9} className="px-3 py-6 text-center text-sub">Aucun dossier pour cette période.</td></tr>
             )}
           </tbody>
         </table>

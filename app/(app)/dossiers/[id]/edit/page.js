@@ -137,6 +137,7 @@ export default function EditDossierPage() {
       marge_financement_reelle: calc.E35,
       commission_vendeur: calc.commission,
       remise_pct: calc.D27,
+      remise_montant: calc.E27,
       taux_marge_reel: calc.D34,
       verrouille: statut === "VENDU",
       updated_at: new Date().toISOString(),
