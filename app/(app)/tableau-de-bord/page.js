@@ -1,12 +1,22 @@
+import { Suspense } from "react";
 import { supabaseServer } from "@/lib/supabaseServer";
+import DashboardOperationFilter from "./DashboardOperationFilter";
 
 function fmt(n) {
   return (Number(n) || 0).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }) {
   const supabase = supabaseServer();
-  const { data: dossiers } = await supabase.from("dossiers_vente").select("statut, marge_reelle");
+  const operationParam = searchParams?.operation;
+
+  const { data: operations } = await supabase.from("operations_commerciales").select("id, nom").order("nom");
+
+  let query = supabase.from("dossiers_vente").select("statut, marge_reelle, operation_id");
+  if (operationParam) {
+    query = query.eq("operation_id", operationParam);
+  }
+  const { data: dossiers } = await query;
 
   const nbPropositions = dossiers?.length || 0;
   const vendus = (dossiers || []).filter((d) => d.statut === "VENDU");
@@ -20,10 +30,19 @@ export default async function DashboardPage() {
     ["Marge moyenne / vente", fmt(margeMoyenne)],
   ];
 
+  const operationSelectionnee = operations?.find((o) => o.id === operationParam);
+
   return (
     <div>
-      <h1 className="text-2xl font-extrabold mb-1">Tableau de bord</h1>
-      <p className="text-sub text-sm mb-6">Vue d'ensemble de l'activité VN.</p>
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="text-2xl font-extrabold">Tableau de bord</h1>
+        <Suspense fallback={null}>
+          <DashboardOperationFilter operations={operations || []} />
+        </Suspense>
+      </div>
+      <p className="text-sub text-sm mb-6">
+        {operationSelectionnee ? `Activité VN — opération "${operationSelectionnee.nom}"` : "Vue d'ensemble de l'activité VN (toutes opérations confondues)."}
+      </p>
       <div className="grid grid-cols-4 gap-4">
         {cards.map(([label, value]) => (
           <div key={label} className="bg-surface border border-border rounded-lg p-4">
