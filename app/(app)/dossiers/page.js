@@ -85,7 +85,7 @@ export default async function DossiersPage({ searchParams }) {
                     <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${d.statut === "VENDU" ? "bg-[#EFF1E3] text-pos" : "bg-[#E7F2F2] text-accent"}`}>{d.statut}</span>
                   </Link>
                 </td>
-                <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.client_nom || "—"}</Link></td>
+                <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{(d.client_nom || "—").toUpperCase()}</Link></td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.utilisateurs?.nom || "—"}</Link></td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.modeles?.marques?.nom || "—"}</Link></td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.modeles?.nom || "—"}</Link></td>
