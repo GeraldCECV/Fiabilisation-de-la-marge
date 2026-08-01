@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { supabaseServer } from "@/lib/supabaseServer";
 import SignOutButton from "./SignOutButton";
+import SidebarNav from "./SidebarNav";
 
 export default async function AppLayout({ children }) {
   const supabase = supabaseServer();
@@ -14,35 +15,42 @@ export default async function AppLayout({ children }) {
     .eq("id", session.user.id)
     .single();
 
+  const liens = [
+    { href: "/calculateur", label: "Calculateur" },
+    { href: "/tableau-de-bord", label: "Tableau de bord" },
+    { href: "/dossiers", label: "Dossiers" },
+    { href: "/operations", label: "Opérations" },
+  ];
+  if (profil?.role === "RESPONSABLE") {
+    liens.push({ href: "/admin/utilisateurs", label: "Administration" });
+  }
+
   return (
-    <div>
-      <header className="border-b border-border bg-surface">
-        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center">
-              <img src="/images/logo-ypocamp.png" alt="Ypocamp" className="h-10 w-auto" />
-            </Link>
-            <span className="font-extrabold text-sm text-sub">Trame de rentabilité VN</span>
-            <nav className="flex gap-4 text-sm text-sub">
-              <Link href="/calculateur" className="hover:text-ink">Calculateur</Link>
-              <Link href="/tableau-de-bord" className="hover:text-ink">Tableau de bord</Link>
-              <Link href="/dossiers" className="hover:text-ink">Dossiers</Link>
-              <Link href="/operations" className="hover:text-ink">Opérations</Link>
-              {profil?.role === "RESPONSABLE" && (
-                <Link href="/admin/utilisateurs" className="hover:text-ink">Administration</Link>
-              )}
-            </nav>
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <span className="text-sub">{profil?.nom || session.user.email}</span>
+    <div className="min-h-screen flex">
+      <aside className="w-60 shrink-0 border-r border-border bg-surface flex flex-col min-h-screen sticky top-0">
+        <div className="px-5 py-5 border-b border-border">
+          <Link href="/" className="flex items-center">
+            <img src="/images/logo-ypocamp.png" alt="Ypocamp" className="h-10 w-auto" />
+          </Link>
+          <div className="font-extrabold text-sm text-sub mt-2">Trame de rentabilité VN</div>
+        </div>
+
+        <div className="flex-1 px-3 py-4 overflow-y-auto">
+          <SidebarNav liens={liens} />
+        </div>
+
+        <div className="px-4 py-4 border-t border-border">
+          <div className="text-sm text-ink font-semibold truncate">{profil?.nom || session.user.email}</div>
+          <div className="flex items-center justify-between mt-2">
             <span className="text-[11px] px-2 py-0.5 rounded-full bg-[#EFF1E3] text-pos font-bold">
               {profil?.role || "COMMERCIAL"}
             </span>
             <SignOutButton />
           </div>
         </div>
-      </header>
-      <main className="max-w-6xl mx-auto px-6 py-8">{children}</main>
+      </aside>
+
+      <main className="flex-1 px-8 py-8 max-w-6xl">{children}</main>
     </div>
   );
 }
