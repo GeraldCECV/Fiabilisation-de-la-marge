@@ -98,12 +98,12 @@ export default async function DossiersPage({ searchParams }) {
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.modeles?.marques?.nom || "—"}</Link></td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.modeles?.nom || "—"}</Link></td>
                 <td className="px-3 py-2"><Link href={`/dossiers/${d.id}`} className="block">{d.operations_commerciales?.nom || "—"}</Link></td>
-                <td className="px-3 py-2 text-right"><Link href={`/dossiers/${d.id}`} className="block">{fmt(d.prix_negocie_ttc)}</Link></td>
-                <td className="px-3 py-2 text-right"><Link href={`/dossiers/${d.id}`} className="block">{d.remise_montant != null ? fmt(d.remise_montant) : "—"}</Link></td>
-                <td className={`px-3 py-2 text-right font-bold ${d.marge_reelle >= 0 ? "text-pos" : "text-neg"}`}>
+                <td className="px-3 py-2 text-right whitespace-nowrap"><Link href={`/dossiers/${d.id}`} className="block">{fmt(d.prix_negocie_ttc)}</Link></td>
+                <td className="px-3 py-2 text-right whitespace-nowrap"><Link href={`/dossiers/${d.id}`} className="block">{d.remise_montant != null ? fmt(d.remise_montant) : "—"}</Link></td>
+                <td className={`px-3 py-2 text-right whitespace-nowrap font-bold ${d.marge_reelle >= 0 ? "text-pos" : "text-neg"}`}>
                   <Link href={`/dossiers/${d.id}`} className="block">{fmt((d.marge_reelle || 0) - (d.marge_financement_reelle || 0))}</Link>
                 </td>
-                <td className="px-3 py-2 text-right font-bold text-pos">
+                <td className="px-3 py-2 text-right whitespace-nowrap font-bold text-pos">
                   <Link href={`/dossiers/${d.id}`} className="block">{d.marge_financement_reelle ? fmt(d.marge_financement_reelle) : "—"}</Link>
                 </td>
               </tr>
