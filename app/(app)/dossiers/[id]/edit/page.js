@@ -306,7 +306,7 @@ export default function EditDossierPage() {
                 <div className="text-xs text-sub">Organisme</div>
                 <select value={financementOrganisme} onChange={(e) => setFinancementOrganisme(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#FAF8F0]">
                   <option value="">—</option>
-                  <option>CETELEM</option><option>FINANCO</option><option>LOISIRS FI</option><option>SANTANDER</option><option>VIAXEL</option>
+                  <option>CETELEM</option><option>ARKEA</option><option>LOISIRS FINANCE</option>
                 </select>
               </div>
             )}
