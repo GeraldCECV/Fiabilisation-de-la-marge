@@ -59,6 +59,15 @@ export async function GET(request, { params }) {
     options = data || [];
   }
 
+  let equipementsYpocamp = [];
+  if (dossier.equipements_ypocamp_choisis?.length) {
+    const { data } = await supabase
+      .from("equipements_ypocamp")
+      .select("id, designation, achat_ht, pose_ventilee_ht, prix_ttc")
+      .in("id", dossier.equipements_ypocamp_choisis);
+    equipementsYpocamp = data || [];
+  }
+
   const templatePath = path.join(process.cwd(), "public", "templates", "trame_renta_template.xlsx");
   const templateBuffer = await fs.readFile(templatePath);
 
@@ -115,6 +124,17 @@ export async function GET(request, { params }) {
     values[`I${row}`] = num(o.achat_ht || 0);
     values[`J${row}`] = num(o.cession_pose || 0);
     values[`K${row}`] = num(o.prix_ttc || 0);
+  });
+
+  // Équipements Ypocamp / Top Accessoires (jusqu'à 9 lignes, lignes 36 à 44 — suite du bloc
+  // "PREPARATION YPOCAMP / TOP ACCESSOIRES / SOUS-TRAITANT" dont le total ligne 45 est déjà
+  // intégré aux formules de marge du gabarit)
+  equipementsYpocamp.slice(0, 9).forEach((e, i) => {
+    const row = 36 + i;
+    values[`G${row}`] = str(e.designation);
+    values[`I${row}`] = num(e.achat_ht || 0);
+    values[`J${row}`] = num(e.pose_ventilee_ht || 0);
+    values[`K${row}`] = num(e.prix_ttc || 0);
   });
 
   const buffer = await fillTemplate(templateBuffer, "RENTA VN", values);

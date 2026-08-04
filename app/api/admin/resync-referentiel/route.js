@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { VEHICULES, OPTIONS } from "@/scripts/seedData";
+import { EQUIPEMENTS_YPOCAMP } from "@/scripts/equipementsYpocampData";
 
 export const maxDuration = 60;
 
@@ -119,9 +120,28 @@ export async function POST(request) {
     }
     console.log(`[RESYNC] ${compatRows.length} lignes de compatibilité réinsérées`);
 
+    // 5. Équipements Ypocamp — catalogue indépendant (pas lié aux modèles), repart de zéro
+    const { error: delEquipErr } = await admin.from("equipements_ypocamp").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+    if (delEquipErr) throw new Error("Suppression équipements Ypocamp: " + delEquipErr.message);
+
+    const equipRows = EQUIPEMENTS_YPOCAMP.map((e) => ({
+      categorie: e.categorie,
+      sous_categorie: e.sousCategorie,
+      designation: e.designation,
+      achat_ht: e.achatHt,
+      pose_ventilee_ht: e.poseVentileeHt,
+      prix_ttc: e.prixTtc,
+      actif: true,
+    }));
+    for (const batch of chunk(equipRows, 50)) {
+      const { error } = await admin.from("equipements_ypocamp").insert(batch);
+      if (error) throw new Error("Équipements Ypocamp: " + error.message);
+    }
+    console.log(`[RESYNC] ${equipRows.length} équipements Ypocamp réinsérés`);
+
     return NextResponse.json({
       success: true,
-      message: `✅ Référentiel resynchronisé : ${VEHICULES.length} modèles, ${OPTIONS.length} options, ${compatRows.length} compatibilités (${marqueNoms.join(", ")}).`,
+      message: `✅ Référentiel resynchronisé : ${VEHICULES.length} modèles, ${OPTIONS.length} options, ${compatRows.length} compatibilités (${marqueNoms.join(", ")}), ${equipRows.length} équipements Ypocamp.`,
     });
   } catch (err) {
     console.error("[RESYNC] ❌ Erreur :", err);

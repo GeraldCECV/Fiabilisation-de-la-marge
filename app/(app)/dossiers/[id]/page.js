@@ -27,9 +27,16 @@ export default async function DossierDetailPage({ params }) {
     options = data || [];
   }
 
+  let equipementsYpocamp = [];
+  if (dossier.equipements_ypocamp_choisis?.length) {
+    const { data } = await supabase.from("equipements_ypocamp").select("id, designation, prix_ttc, achat_ht").in("id", dossier.equipements_ypocamp_choisis);
+    equipementsYpocamp = data || [];
+  }
+
   const totalOptionsTtc = options.reduce((s, o) => s + Number(o.prix_ttc || 0), 0);
+  const totalEquipementsYpocampTtc = equipementsYpocamp.reduce((s, e) => s + Number(e.prix_ttc || 0), 0);
   const carteGrise = dossier.modeles?.type === "CAMPING_CAR" ? 790 : 380;
-  const prixAvecOptions = (Number(dossier.modeles?.prix_public_ttc) || 0) + totalOptionsTtc + carteGrise;
+  const prixAvecOptions = (Number(dossier.modeles?.prix_public_ttc) || 0) + totalOptionsTtc + totalEquipementsYpocampTtc + carteGrise;
   const remise = prixAvecOptions - Number(dossier.prix_negocie_ttc || 0);
 
   return (
@@ -86,6 +93,20 @@ export default async function DossierDetailPage({ params }) {
                   <tr key={o.id} className="border-t border-border"><td className="py-1.5">{o.designation}</td><td className="py-1.5 text-right">{fmt(o.prix_ttc)}</td></tr>
                 ))}
                 <tr className="border-t border-border font-bold"><td className="py-1.5">Total options TTC</td><td className="py-1.5 text-right">{fmt(totalOptionsTtc)}</td></tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {equipementsYpocamp.length > 0 && (
+          <div className="mb-6">
+            <div className="text-[11px] text-sub uppercase font-bold mb-2">Équipements Ypocamp ({equipementsYpocamp.length})</div>
+            <table className="w-full text-sm">
+              <tbody>
+                {equipementsYpocamp.map((e) => (
+                  <tr key={e.id} className="border-t border-border"><td className="py-1.5">{e.designation}</td><td className="py-1.5 text-right">{fmt(e.prix_ttc)}</td></tr>
+                ))}
+                <tr className="border-t border-border font-bold"><td className="py-1.5">Total équipements Ypocamp TTC</td><td className="py-1.5 text-right">{fmt(totalEquipementsYpocampTtc)}</td></tr>
               </tbody>
             </table>
           </div>

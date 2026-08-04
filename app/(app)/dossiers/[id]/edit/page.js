@@ -23,6 +23,8 @@ export default function EditDossierPage() {
   const [forfaits, setForfaits] = useState([]);
   const [options, setOptions] = useState([]);
   const [optionsChoisiesIds, setOptionsChoisiesIds] = useState([]);
+  const [equipementsYpocamp, setEquipementsYpocamp] = useState([]);
+  const [equipementsYpocampChoisisIds, setEquipementsYpocampChoisisIds] = useState([]);
   const [peutModifier, setPeutModifier] = useState(true);
 
   const [client, setClient] = useState("");
@@ -55,11 +57,12 @@ export default function EditDossierPage() {
       if (d.verrouille && profil?.role !== "RESPONSABLE") setPeutModifier(false);
 
       const { data: m } = await supabase.from("modeles").select("*").eq("id", d.modele_id).single();
-      const [{ data: b }, { data: f }, { data: compat }, { data: ops }] = await Promise.all([
+      const [{ data: b }, { data: f }, { data: compat }, { data: ops }, { data: equip }] = await Promise.all([
         supabase.from("baremes_marge").select("*"),
         supabase.from("forfaits_fixes").select("*"),
         supabase.from("compatibilites").select("statut, options ( id, designation, achat_ht, cession_pose, prix_ttc, poids_kg )").eq("modele_id", d.modele_id),
         supabase.from("operations_commerciales").select("id, nom").order("nom"),
+        supabase.from("equipements_ypocamp").select("*").eq("actif", true).order("categorie").order("sous_categorie").order("designation"),
       ]);
 
       setOperations(ops || []);
@@ -72,6 +75,8 @@ export default function EditDossierPage() {
       listeOptions.sort((a, b) => a.designation.localeCompare(b.designation, "fr", { sensitivity: "base" }));
       setOptions(listeOptions);
       setOptionsChoisiesIds(d.options_choisies || []);
+      setEquipementsYpocamp(equip || []);
+      setEquipementsYpocampChoisisIds(d.equipements_ypocamp_choisis || []);
       setClient(d.client_nom || "");
       setStatut(d.statut);
       setStockStatut(d.stock_statut || "STOCK");
@@ -97,11 +102,12 @@ export default function EditDossierPage() {
   const optionsSelectionnables = options.filter((o) => o.statut === "OPTION");
   const optionsDeSerie = options.filter((o) => o.statut === "SERIE");
   const optionsChoisies = optionsSelectionnables.filter((o) => optionsChoisiesIds.includes(o.id));
+  const equipementsYpocampChoisies = equipementsYpocamp.filter((e) => equipementsYpocampChoisisIds.includes(e.id));
 
   const calc = useMemo(() => {
     if (!modele) return null;
     return calculerMarge({
-      modele, optionsChoisies, baremes, forfaits,
+      modele, optionsChoisies, equipementsYpocampChoisies, baremes, forfaits,
       prixNegocieTtc: Number(prixNegocie) || 0,
       financement: { actif: financementActif, montant: Number(financementMontant) || 0 },
       anneeCourante: ANNEE_COURANTE,
@@ -114,7 +120,7 @@ export default function EditDossierPage() {
       expo,
       batterieChoix,
     });
-  }, [modele, optionsChoisies, baremes, forfaits, prixNegocie, financementActif, financementMontant, fraisSortieUsine, transportUsine, cessionOdoo, transportIntersite, expo, batterieChoix]);
+  }, [modele, optionsChoisies, equipementsYpocampChoisies, baremes, forfaits, prixNegocie, financementActif, financementMontant, fraisSortieUsine, transportUsine, cessionOdoo, transportIntersite, expo, batterieChoix]);
 
   async function enregistrer() {
     if (!calc || !dossier) return;
@@ -126,6 +132,7 @@ export default function EditDossierPage() {
       statut, client_nom: client,
       operation_id: operationId || null,
       options_choisies: optionsChoisiesIds,
+      equipements_ypocamp_choisis: equipementsYpocampChoisisIds,
       stock_statut: stockStatut,
       numero_chassis: stockStatut === "STOCK" ? numeroChassis : null,
       frais_sortie_usine: Number(fraisSortieUsine) || 0,
@@ -284,6 +291,51 @@ export default function EditDossierPage() {
                 </div>
               </div>
             )}
+          </div>
+
+          <div className="bg-surface border border-border rounded-lg p-5">
+            <label className="text-xs text-sub uppercase font-bold">
+              Équipements Ypocamp ({equipementsYpocampChoisisIds.length}/9)
+            </label>
+            <select
+              className="w-full mt-2 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE] disabled:opacity-50 disabled:cursor-not-allowed"
+              value=""
+              disabled={equipementsYpocampChoisisIds.length >= 9}
+              onChange={(e) => {
+                const id = e.target.value;
+                if (!id) return;
+                setEquipementsYpocampChoisisIds((prev) => (prev.includes(id) || prev.length >= 9 ? prev : [...prev, id]));
+              }}
+            >
+              <option value="">
+                {equipementsYpocampChoisisIds.length >= 9 ? "Maximum de 9 équipements atteint" : "+ Ajouter un équipement Ypocamp…"}
+              </option>
+              {Object.entries(
+                equipementsYpocamp
+                  .filter((e) => !equipementsYpocampChoisisIds.includes(e.id))
+                  .reduce((acc, e) => {
+                    (acc[e.categorie] ??= []).push(e);
+                    return acc;
+                  }, {})
+              ).map(([categorie, liste]) => (
+                <optgroup key={categorie} label={categorie}>
+                  {liste.map((e) => (
+                    <option key={e.id} value={e.id}>
+                      {e.sous_categorie ? `${e.sous_categorie} — ` : ""}{e.designation} — {fmt(e.prix_ttc)}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            <div className="mt-3 space-y-1.5">
+              {equipementsYpocampChoisies.map((e) => (
+                <div key={e.id} className="flex items-center gap-2 text-sm bg-[#F0FFFE] border border-border rounded-md px-2 py-1.5">
+                  <span className="flex-1">{e.designation}</span>
+                  <span className="text-sub">{fmt(e.prix_ttc)}</span>
+                  <button onClick={() => setEquipementsYpocampChoisisIds((prev) => prev.filter((id) => id !== e.id))} className="text-neg px-1">×</button>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="bg-surface border border-border rounded-lg p-5">

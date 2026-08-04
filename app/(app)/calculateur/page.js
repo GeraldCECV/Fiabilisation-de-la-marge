@@ -20,6 +20,8 @@ export default function CalculateurPage() {
   const [modeleId, setModeleId] = useState(null);
   const [options, setOptions] = useState([]);
   const [optionsChoisiesIds, setOptionsChoisiesIds] = useState([]);
+  const [equipementsYpocamp, setEquipementsYpocamp] = useState([]);
+  const [equipementsYpocampChoisisIds, setEquipementsYpocampChoisisIds] = useState([]);
   const [baremes, setBaremes] = useState([]);
   const [forfaits, setForfaits] = useState([]);
 
@@ -51,16 +53,18 @@ export default function CalculateurPage() {
 
   useEffect(() => {
     (async () => {
-      const [{ data: m }, { data: b }, { data: f }, { data: ops }] = await Promise.all([
+      const [{ data: m }, { data: b }, { data: f }, { data: ops }, { data: equip }] = await Promise.all([
         supabase.from("marques").select("id, nom").order("nom"),
         supabase.from("baremes_marge").select("*"),
         supabase.from("forfaits_fixes").select("*"),
         supabase.from("operations_commerciales").select("id, nom").eq("actif", true).order("nom"),
+        supabase.from("equipements_ypocamp").select("*").eq("actif", true).order("categorie").order("sous_categorie").order("designation"),
       ]);
       setMarques(m || []);
       setBaremes(b || []);
       setForfaits(f || []);
       setOperations(ops || []);
+      setEquipementsYpocamp(equip || []);
       if (m && m.length) setMarqueId(m[0].id);
       setLoading(false);
     })();
@@ -99,6 +103,7 @@ export default function CalculateurPage() {
       liste.sort((a, b) => a.designation.localeCompare(b.designation, "fr", { sensitivity: "base" }));
       setOptions(liste);
       setOptionsChoisiesIds([]);
+      setEquipementsYpocampChoisisIds([]);
       setDossierIdActuel(null);
       setMsg("");
       const modele = modeles.find((mo) => mo.id === modeleId);
@@ -117,12 +122,14 @@ export default function CalculateurPage() {
   const optionsSelectionnables = options.filter((o) => o.statut === "OPTION");
   const optionsDeSerie = options.filter((o) => o.statut === "SERIE");
   const optionsChoisies = optionsSelectionnables.filter((o) => optionsChoisiesIds.includes(o.id));
+  const equipementsYpocampChoisies = equipementsYpocamp.filter((e) => equipementsYpocampChoisisIds.includes(e.id));
 
   const calc = useMemo(() => {
     if (!modele) return null;
     return calculerMarge({
       modele,
       optionsChoisies,
+      equipementsYpocampChoisies,
       baremes,
       forfaits,
       prixNegocieTtc: Number(prixNegocie) || 0,
@@ -137,7 +144,7 @@ export default function CalculateurPage() {
       expo,
       batterieChoix,
     });
-  }, [modele, optionsChoisies, baremes, forfaits, prixNegocie, financementActif, financementMontant, fraisSortieUsine, transportUsine, cessionOdoo, transportIntersite, expo, batterieChoix]);
+  }, [modele, optionsChoisies, equipementsYpocampChoisies, baremes, forfaits, prixNegocie, financementActif, financementMontant, fraisSortieUsine, transportUsine, cessionOdoo, transportIntersite, expo, batterieChoix]);
 
   // Tant que le prix négocié n'a pas été modifié à la main, il suit automatiquement
   // le prix catalogue (qui inclut déjà les options usine et la batterie sélectionnées).
@@ -160,6 +167,7 @@ export default function CalculateurPage() {
       vendeur_id: session.user.id,
       modele_id: modele.id,
       options_choisies: optionsChoisiesIds,
+      equipements_ypocamp_choisis: equipementsYpocampChoisisIds,
       stock_statut: stockStatut,
       numero_chassis: stockStatut === "STOCK" ? numeroChassis : null,
       frais_sortie_usine: Number(fraisSortieUsine) || 0,
@@ -225,6 +233,7 @@ export default function CalculateurPage() {
     setExpo("PAS_EXPO");
     setBatterieChoix("Camping car avec batterie");
     setOptionsChoisiesIds([]);
+    setEquipementsYpocampChoisisIds([]);
     setFinancementActif(false);
     setFinancementMontant(0);
     setFinancementOrganisme("");
@@ -386,6 +395,51 @@ export default function CalculateurPage() {
           </div>
 
           <div className="bg-surface border border-border rounded-lg p-5">
+            <label className="text-xs text-sub uppercase font-bold">
+              Équipements Ypocamp ({equipementsYpocampChoisisIds.length}/9)
+            </label>
+            <select
+              className="w-full mt-2 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE] disabled:opacity-50 disabled:cursor-not-allowed"
+              value=""
+              disabled={equipementsYpocampChoisisIds.length >= 9}
+              onChange={(e) => {
+                const id = e.target.value;
+                if (!id) return;
+                setEquipementsYpocampChoisisIds((prev) => (prev.includes(id) || prev.length >= 9 ? prev : [...prev, id]));
+              }}
+            >
+              <option value="">
+                {equipementsYpocampChoisisIds.length >= 9 ? "Maximum de 9 équipements atteint" : "+ Ajouter un équipement Ypocamp…"}
+              </option>
+              {Object.entries(
+                equipementsYpocamp
+                  .filter((e) => !equipementsYpocampChoisisIds.includes(e.id))
+                  .reduce((acc, e) => {
+                    (acc[e.categorie] ??= []).push(e);
+                    return acc;
+                  }, {})
+              ).map(([categorie, liste]) => (
+                <optgroup key={categorie} label={categorie}>
+                  {liste.map((e) => (
+                    <option key={e.id} value={e.id}>
+                      {e.sous_categorie ? `${e.sous_categorie} — ` : ""}{e.designation} — {fmt(e.prix_ttc)}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            <div className="mt-3 space-y-1.5">
+              {equipementsYpocampChoisies.map((e) => (
+                <div key={e.id} className="flex items-center gap-2 text-sm bg-[#F0FFFE] border border-border rounded-md px-2 py-1.5">
+                  <span className="flex-1">{e.designation}</span>
+                  <span className="text-sub">{fmt(e.prix_ttc)}</span>
+                  <button onClick={() => setEquipementsYpocampChoisisIds((prev) => prev.filter((id) => id !== e.id))} className="text-neg px-1">×</button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-surface border border-border rounded-lg p-5">
             <label className="text-xs text-sub uppercase font-bold">Négociation</label>
             <div>
               <div className="text-xs text-sub flex items-center justify-between">
@@ -486,7 +540,8 @@ export default function CalculateurPage() {
                       ["Forfait admin", fmt(calc.I4)],
                       ["Forfait heures atelier", fmt(calc.I7)],
                       ["Options usine (achat HT)", fmt(calc.I27)],
-                      ["Provision SAV + expo", fmt(calc.I45)],
+                      ["Équipements Ypocamp (achat HT)", fmt(calc.I36_44)],
+                      ["Provision SAV + expo + batterie", fmt(calc.I45 - calc.I36_44)],
                       ["Somme des coûts", fmt(calc.sommeCouts)],
                     ].map(([k, v]) => (
                       <tr key={k} className="border-t border-border">
