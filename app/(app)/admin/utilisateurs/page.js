@@ -11,7 +11,6 @@ export default function AdminUtilisateursPage() {
   const [erreur, setErreur] = useState("");
   const [resultat, setResultat] = useState(null); // { email, motDePasse } affiché après création/reset
   const [creation, setCreation] = useState(false);
-  const [seedEnCours, setSeedEnCours] = useState(false);
   const [resyncEnCours, setResyncEnCours] = useState(false);
   const [form, setForm] = useState({ nom: "", email: "", role: "COMMERCIAL" });
 
@@ -157,67 +156,18 @@ export default function AdminUtilisateursPage() {
       )}
 
       <div className="bg-surface border border-border rounded-xl p-6 mb-8">
-        <h2 className="font-bold text-ink mb-3">Intégration données</h2>
-        <button
-          disabled={seedEnCours}
-          onClick={async () => {
-            if (!confirm("Seeder Benimar 2027 (38 modèles + 9 options) ? Cette action est idempotente.")) return;
-            setResultat(null);
-            setErreur("");
-            setSeedEnCours(true);
-            try {
-              console.log("Début du seed Benimar...");
-              const controller = new AbortController();
-              const timeout = setTimeout(() => controller.abort(), 45000); // timeout 45s
-              
-              const res = await fetch("/api/admin/seed-benimar", { 
-                method: "POST",
-                signal: controller.signal,
-              });
-              clearTimeout(timeout);
-              
-              console.log("Réponse reçue :", res.status);
-              const text = await res.text();
-              console.log("Contenu :", text);
-              
-              let data;
-              try { data = JSON.parse(text); } catch { data = null; }
-              
-              if (!res.ok) {
-                const errMsg = data?.error || text || `Erreur ${res.status}`;
-                console.error("Erreur seed :", errMsg);
-                setErreur(errMsg);
-                return;
-              }
-              
-              console.log("Seed réussi :", data);
-              setResultat({ email: "Benimar", motDePasse: data.message, type: "seed" });
-              await chargerListe(); // Recharger la liste
-            } catch (err) {
-              console.error("Erreur fetch :", err);
-              if (err.name === 'AbortError') {
-                setErreur("Timeout : le serveur a mis trop longtemps à répondre (45s). Vérifiez SUPABASE_SERVICE_ROLE_KEY sur Vercel, ou réessayez : l'opération est idempotente.");
-              } else {
-                setErreur("Erreur : " + (err?.message || "réseau"));
-              }
-            } finally {
-              setSeedEnCours(false);
-            }
-          }}
-          className="px-5 py-2.5 rounded-md bg-pos text-white font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {seedEnCours ? "Intégration en cours..." : "Intégrer Benimar 2027"}
-        </button>
-
+        <h2 className="font-bold text-ink mb-3">Référentiel véhicules</h2>
+        <p className="text-sm text-sub mb-4">
+          Synchronise toutes les marques (modèles, options, packs, compatibilités) depuis <code className="bg-bg px-1 rounded">scripts/seedData.js</code> vers la base de production. Idempotent : les modèles sont mis à jour, les options et compatibilités sont reconstruites intégralement.
+        </p>
         <button
           disabled={resyncEnCours}
           onClick={async () => {
-            if (!confirm("Resynchroniser le référentiel Dreamer/Rapido (modèles, options, packs, compatibilités) depuis scripts/seedData.js ? Cette action est idempotente : les modèles sont mis à jour, les options/compatibilités sont reconstruites intégralement.")) return;
+            if (!confirm("Synchroniser tout le référentiel (toutes marques confondues) depuis scripts/seedData.js ?")) return;
             setResultat(null);
             setErreur("");
             setResyncEnCours(true);
             try {
-              console.log("Début resync référentiel...");
               const controller = new AbortController();
               const timeout = setTimeout(() => controller.abort(), 45000);
 
@@ -248,9 +198,9 @@ export default function AdminUtilisateursPage() {
               setResyncEnCours(false);
             }
           }}
-          className="ml-3 px-5 py-2.5 rounded-md bg-accent text-white font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-5 py-2.5 rounded-md bg-pos text-white font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {resyncEnCours ? "Resynchronisation..." : "Resynchroniser Dreamer/Rapido"}
+          {resyncEnCours ? "Synchronisation..." : "Synchroniser le référentiel"}
         </button>
       </div>
 
