@@ -169,7 +169,7 @@ export default function AdminUtilisateursPage() {
             setResyncEnCours(true);
             try {
               const controller = new AbortController();
-              const timeout = setTimeout(() => controller.abort(), 45000);
+              const timeout = setTimeout(() => controller.abort(), 60000);
 
               const res = await fetch("/api/admin/resync-referentiel", {
                 method: "POST",
@@ -190,7 +190,7 @@ export default function AdminUtilisateursPage() {
               await chargerListe();
             } catch (err) {
               if (err.name === "AbortError") {
-                setErreur("Timeout : le serveur a mis trop longtemps à répondre (45s). Réessayez : l'opération est idempotente.");
+                setErreur("Timeout : le serveur a mis trop longtemps à répondre (60s). Réessayez : l'opération est idempotente.");
               } else {
                 setErreur("Erreur : " + (err?.message || "réseau"));
               }
