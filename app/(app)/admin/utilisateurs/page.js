@@ -12,6 +12,7 @@ export default function AdminUtilisateursPage() {
   const [resultat, setResultat] = useState(null); // { email, motDePasse } affiché après création/reset
   const [creation, setCreation] = useState(false);
   const [seedEnCours, setSeedEnCours] = useState(false);
+  const [resyncEnCours, setResyncEnCours] = useState(false);
   const [form, setForm] = useState({ nom: "", email: "", role: "COMMERCIAL" });
 
   useEffect(() => {
@@ -206,6 +207,50 @@ export default function AdminUtilisateursPage() {
           className="px-5 py-2.5 rounded-md bg-pos text-white font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {seedEnCours ? "Intégration en cours..." : "Intégrer Benimar 2027"}
+        </button>
+
+        <button
+          disabled={resyncEnCours}
+          onClick={async () => {
+            if (!confirm("Resynchroniser le référentiel Dreamer/Rapido (modèles, options, packs, compatibilités) depuis scripts/seedData.js ? Cette action est idempotente : les modèles sont mis à jour, les options/compatibilités sont reconstruites intégralement.")) return;
+            setResultat(null);
+            setErreur("");
+            setResyncEnCours(true);
+            try {
+              console.log("Début resync référentiel...");
+              const controller = new AbortController();
+              const timeout = setTimeout(() => controller.abort(), 45000);
+
+              const res = await fetch("/api/admin/resync-referentiel", {
+                method: "POST",
+                signal: controller.signal,
+              });
+              clearTimeout(timeout);
+
+              const text = await res.text();
+              let data;
+              try { data = JSON.parse(text); } catch { data = null; }
+
+              if (!res.ok) {
+                setErreur(data?.error || text || `Erreur ${res.status}`);
+                return;
+              }
+
+              setResultat({ email: "Référentiel", motDePasse: data.message, type: "seed" });
+              await chargerListe();
+            } catch (err) {
+              if (err.name === "AbortError") {
+                setErreur("Timeout : le serveur a mis trop longtemps à répondre (45s). Réessayez : l'opération est idempotente.");
+              } else {
+                setErreur("Erreur : " + (err?.message || "réseau"));
+              }
+            } finally {
+              setResyncEnCours(false);
+            }
+          }}
+          className="ml-3 px-5 py-2.5 rounded-md bg-accent text-white font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {resyncEnCours ? "Resynchronisation..." : "Resynchroniser Dreamer/Rapido"}
         </button>
       </div>
 
