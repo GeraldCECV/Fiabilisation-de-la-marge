@@ -354,7 +354,7 @@ const DREAMER_OPTIONS = [
   { id: "bva_180_35t_hd_vs140_d", nom: "FIAT/Peugeot 180ch BVA 3,5T Heavy Duty (vs 140ch BVM 3,5T)", achatHt: 5100, cessionPose: 0, prixTtc: 6800, poids: 5,
     compat: zipCompat(DREAMER_VEHICULE_IDS, ["-","O","-","O","-","-","-","-","-","-","-","-","-","-","-","-"]) },
   { id: "bva_180_35t_ld_vs140_d", nom: "FIAT/Peugeot 180ch BVA 3,5T Light Duty (vs 140ch BVM 3,5T)", achatHt: 4875, cessionPose: 0, prixTtc: 6500, poids: 5,
-    compat: zipCompat(DREAMER_VEHICULE_IDS, ["-","-","-","-","S","O","S","O","O","O","O","O","-","-","-","-"]) },
+    compat: zipCompat(DREAMER_VEHICULE_IDS, ["-","-","-","-","O","O","O","O","O","O","O","O","-","-","-","-"]) },
   { id: "bva_180_35t_35h_ld_vs140_d", nom: "FIAT/Peugeot 180ch BVA 3,5T 35H Light Duty (vs 140ch BVM 3,5T)", achatHt: 5175, cessionPose: 0, prixTtc: 6900, poids: 45,
     compat: zipCompat(DREAMER_VEHICULE_IDS, ["-","-","-","-","-","-","-","-","-","-","-","-","O","O","O","O"]) },
   { id: "bva_180_425t_hd_vs140_d", nom: "FIAT/Peugeot 180ch BVA 4,25T Heavy Duty (vs 140ch BVM 3,5T)", achatHt: 5850, cessionPose: 0, prixTtc: 7800, poids: 45,
