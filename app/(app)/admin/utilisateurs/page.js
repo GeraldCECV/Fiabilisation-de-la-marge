@@ -11,6 +11,7 @@ export default function AdminUtilisateursPage() {
   const [erreur, setErreur] = useState("");
   const [resultat, setResultat] = useState(null); // { email, motDePasse } affiché après création/reset
   const [creation, setCreation] = useState(false);
+  const [seedEnCours, setSeedEnCours] = useState(false);
   const [form, setForm] = useState({ nom: "", email: "", role: "COMMERCIAL" });
 
   useEffect(() => {
@@ -157,14 +158,16 @@ export default function AdminUtilisateursPage() {
       <div className="bg-surface border border-border rounded-xl p-6 mb-8">
         <h2 className="font-bold text-ink mb-3">Intégration données</h2>
         <button
+          disabled={seedEnCours}
           onClick={async () => {
             if (!confirm("Seeder Benimar 2027 (38 modèles + 9 options) ? Cette action est idempotente.")) return;
             setResultat(null);
             setErreur("");
+            setSeedEnCours(true);
             try {
               console.log("Début du seed Benimar...");
               const controller = new AbortController();
-              const timeout = setTimeout(() => controller.abort(), 30000); // timeout 30s
+              const timeout = setTimeout(() => controller.abort(), 45000); // timeout 45s
               
               const res = await fetch("/api/admin/seed-benimar", { 
                 method: "POST",
@@ -192,15 +195,17 @@ export default function AdminUtilisateursPage() {
             } catch (err) {
               console.error("Erreur fetch :", err);
               if (err.name === 'AbortError') {
-                setErreur("Timeout : le serveur a mis trop longtemps à répondre (30s)");
+                setErreur("Timeout : le serveur a mis trop longtemps à répondre (45s). Vérifiez SUPABASE_SERVICE_ROLE_KEY sur Vercel, ou réessayez : l'opération est idempotente.");
               } else {
                 setErreur("Erreur : " + (err?.message || "réseau"));
               }
+            } finally {
+              setSeedEnCours(false);
             }
           }}
-          className="px-5 py-2.5 rounded-md bg-pos text-white font-bold text-sm"
+          className="px-5 py-2.5 rounded-md bg-pos text-white font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Intégrer Benimar 2027
+          {seedEnCours ? "Intégration en cours..." : "Intégrer Benimar 2027"}
         </button>
       </div>
 

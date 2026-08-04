@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
+export const maxDuration = 60; // évite le timeout par défaut de Vercel (10s sur Hobby)
+
 export async function POST(request) {
   try {
     console.log("[SEED] Début du seed Benimar");
@@ -82,12 +84,9 @@ export async function POST(request) {
       { nom: "Benivan 160 Stormline", gamme: "Benivan", type: "FOURGON", type_carrosserie: "FOURGON", prix_usine_ht: 51990, prix_public_ttc: 67990 },
     ].map((m) => ({ ...m, marque_id: benimarId, collection: 2027, actif: true }));
 
-    for (let i = 0; i < modelesData.length; i += 5) {
-      const batch = modelesData.slice(i, i + 5);
-      const { error } = await admin.from("modeles").upsert(batch, { onConflict: "marque_id,nom" });
-      if (error) throw new Error(`Modèles batch ${i}: ${error.message}`);
-      console.log(`[SEED] Inserted modèles ${i} à ${Math.min(i + 5, modelesData.length)}`);
-    }
+    const { error: errModeles } = await admin.from("modeles").upsert(modelesData, { onConflict: "marque_id,nom" });
+    if (errModeles) throw new Error("Modèles: " + errModeles.message);
+    console.log(`[SEED] ${modelesData.length} modèles insérés en un seul appel`);
 
     // 3. Options — même schéma que le seed qui fonctionne : marque_id, designation, achat_ht, prix_ttc
     console.log("[SEED] Insertion options...");
