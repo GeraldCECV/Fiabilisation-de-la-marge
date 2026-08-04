@@ -114,16 +114,45 @@ export async function POST(request) {
     if (errOpt) throw new Error("Options: " + errOpt.message);
 
     // 4. Compatibilités — sans ligne ici, le Calculateur n'affiche AUCUNE option pour le modèle
-    // (voir schema.sql : "Une ligne absente = indisponible"). Par défaut on relie toutes les
-    // options à tous les modèles Benimar en statut OPTION ; à affiner ensuite au cas par cas.
+    // (voir schema.sql : "Une ligne absente = indisponible"). Correspondance construite à partir
+    // du dossier technique Benimar 2027 (p.122-126 : tableau des bases moteur et poids des options).
     console.log("[SEED] Insertion compatibilités...");
+
+    // Base FIAT 140cv (Amphitryon, Mileo) + Benivan variantes FIAT (100/120/144/160/160SL)
+    const MODELES_FIAT = [
+      "Amphitryon 968", "Amphitryon 981", "Amphitryon 998",
+      "Mileo 262", "Mileo 263", "Mileo 268", "Mileo 298",
+      "Benivan 100", "Benivan 120", "Benivan 144", "Benivan 160", "Benivan 160 Stormline",
+    ];
+    // Base FORD 130cv (éligibles à l'upgrade Moteur FORD 165ch) : Tessoro Standard + Yrteo
+    // (Tessoro UP et Sport sont déjà en FORD 165cv de série, donc exclus de cette option)
+    const MODELES_FORD_130 = [
+      "Tessoro 425", "Tessoro 443", "Tessoro 444", "Tessoro 461", "Tessoro 463",
+      "Tessoro 468", "Tessoro 481", "Tessoro 483", "Tessoro 488", "Tessoro 498",
+      "Yrteo 841", "Yrteo 862", "Yrteo 881", "Yrteo 885",
+    ];
+    // Accessoires universels sans restriction de base moteur (climatisation, four, panneau
+    // solaire, pieds stabilisateurs, porte-vélos, boîte automatique disponible sur chaque base)
+    const OPTIONS_UNIVERSELLES = [
+      "Boîte automatique", "Climatisation", "Four", "Panneau solaire 200W",
+      "Pieds stabilisateurs", "Porte-vélos 4 rails",
+    ];
+
     const modeleIds = modelesEnBase.map((m) => m.id);
     await admin.from("compatibilites").delete().in("modele_id", modeleIds);
 
     const compatRows = [];
     for (const modele of modelesEnBase) {
       for (const opt of optionsEnBase) {
-        compatRows.push({ modele_id: modele.id, option_id: opt.id, statut: "OPTION" });
+        let applicable = false;
+        if (OPTIONS_UNIVERSELLES.includes(opt.designation)) {
+          applicable = true;
+        } else if (opt.designation === "Moteur FIAT 160 ch" || opt.designation === "Moteur FIAT 180 ch") {
+          applicable = MODELES_FIAT.includes(modele.nom);
+        } else if (opt.designation === "Moteur FORD 165 ch") {
+          applicable = MODELES_FORD_130.includes(modele.nom);
+        }
+        if (applicable) compatRows.push({ modele_id: modele.id, option_id: opt.id, statut: "OPTION" });
       }
     }
     const chunkSize = 500;
@@ -131,7 +160,7 @@ export async function POST(request) {
       const { error: errCompat } = await admin.from("compatibilites").insert(compatRows.slice(i, i + chunkSize));
       if (errCompat) throw new Error("Compatibilités: " + errCompat.message);
     }
-    console.log(`[SEED] ${compatRows.length} compatibilités insérées`);
+    console.log(`[SEED] ${compatRows.length} compatibilités insérées (correspondance réelle par base moteur)`);
 
     console.log("[SEED] ✅ Seed complété avec succès");
     return NextResponse.json({
