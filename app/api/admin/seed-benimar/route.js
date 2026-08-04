@@ -16,61 +16,62 @@ export async function POST(request) {
     const admin = supabaseAdmin();
     const { randomUUID } = await import('crypto');
 
-    // 1. Marque
+    // 1. Marque (avec UUID)
+    const benimarId = randomUUID();
     console.log("[SEED] Insertion marque...");
-    await admin.from("marques").upsert({ id: "benimar", nom: "Benimar", type_principal: "camping-car" });
+    await admin.from("marques").upsert({ id: benimarId, nom: "Benimar", type_principal: "camping-car" });
 
     // 2. Modèles (en batch de 5)
     console.log("[SEED] Insertion modèles...");
     const modeles = [
       // MILEO
-      { id: randomUUID(), marque_id: "benimar", nom: "Mileo 262", gamme: "Mileo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 53490, prix_public_ttc: 71990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Mileo 263", gamme: "Mileo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 54590, prix_public_ttc: 73490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Mileo 268", gamme: "Mileo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 55490, prix_public_ttc: 74490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Mileo 298", gamme: "Mileo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 55490, prix_public_ttc: 74490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Mileo 262", gamme: "Mileo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 53490, prix_public_ttc: 71990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Mileo 263", gamme: "Mileo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 54590, prix_public_ttc: 73490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Mileo 268", gamme: "Mileo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 55490, prix_public_ttc: 74490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Mileo 298", gamme: "Mileo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 55490, prix_public_ttc: 74490, actif: true },
       // AMPHITRYON
-      { id: randomUUID(), marque_id: "benimar", nom: "Amphitryon 968", gamme: "Amphitryon", type: "CAMPING_CAR", type_carrosserie: "integral", prix_usine_ht: 62990, prix_public_ttc: 85990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Amphitryon 981", gamme: "Amphitryon", type: "CAMPING_CAR", type_carrosserie: "integral", prix_usine_ht: 58490, prix_public_ttc: 79990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Amphitryon 998", gamme: "Amphitryon", type: "CAMPING_CAR", type_carrosserie: "integral", prix_usine_ht: 64390, prix_public_ttc: 87490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Amphitryon 968", gamme: "Amphitryon", type: "CAMPING_CAR", type_carrosserie: "integral", prix_usine_ht: 62990, prix_public_ttc: 85990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Amphitryon 981", gamme: "Amphitryon", type: "CAMPING_CAR", type_carrosserie: "integral", prix_usine_ht: 58490, prix_public_ttc: 79990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Amphitryon 998", gamme: "Amphitryon", type: "CAMPING_CAR", type_carrosserie: "integral", prix_usine_ht: 64390, prix_public_ttc: 87490, actif: true },
       // YRTEO
-      { id: randomUUID(), marque_id: "benimar", nom: "Yrteo 841", gamme: "Yrteo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 45990, prix_public_ttc: 61990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Yrteo 862", gamme: "Yrteo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 45990, prix_public_ttc: 61990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Yrteo 881", gamme: "Yrteo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 44490, prix_public_ttc: 59990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Yrteo 885", gamme: "Yrteo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 45990, prix_public_ttc: 61990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Yrteo 841", gamme: "Yrteo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 45990, prix_public_ttc: 61990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Yrteo 862", gamme: "Yrteo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 45990, prix_public_ttc: 61990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Yrteo 881", gamme: "Yrteo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 44490, prix_public_ttc: 59990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Yrteo 885", gamme: "Yrteo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 45990, prix_public_ttc: 61990, actif: true },
       // TESSORO UP
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 440 UP", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 47490, prix_public_ttc: 62990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 463 UP", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 49490, prix_public_ttc: 65990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 495 UP", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 48490, prix_public_ttc: 65990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 440 UP", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 47490, prix_public_ttc: 62990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 463 UP", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 49490, prix_public_ttc: 65990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 495 UP", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 48490, prix_public_ttc: 65990, actif: true },
       // TESSORO Standard
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 425", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 49790, prix_public_ttc: 66990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 443", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 48490, prix_public_ttc: 65490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 444", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 49290, prix_public_ttc: 66490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 461", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 48490, prix_public_ttc: 65490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 463", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 49790, prix_public_ttc: 66990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 468", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 49990, prix_public_ttc: 66490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 481", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 46490, prix_public_ttc: 62490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 483", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 47890, prix_public_ttc: 64490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 488", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 48990, prix_public_ttc: 66490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Tessoro 498", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 50690, prix_public_ttc: 67990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 425", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 49790, prix_public_ttc: 66990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 443", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 48490, prix_public_ttc: 65490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 444", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 49290, prix_public_ttc: 66490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 461", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 48490, prix_public_ttc: 65490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 463", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 49790, prix_public_ttc: 66990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 468", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 49990, prix_public_ttc: 66490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 481", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 46490, prix_public_ttc: 62490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 483", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 47890, prix_public_ttc: 64490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 488", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 48990, prix_public_ttc: 66490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Tessoro 498", gamme: "Tessoro", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 50690, prix_public_ttc: 67990, actif: true },
       // SPORT
-      { id: randomUUID(), marque_id: "benimar", nom: "Sport Capucine 325 UP", gamme: "Sport", type: "CAMPING_CAR", type_carrosserie: "capucine", prix_usine_ht: 48990, prix_public_ttc: 64990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Sport Capucine 344 UP", gamme: "Sport", type: "CAMPING_CAR", type_carrosserie: "capucine", prix_usine_ht: 49490, prix_public_ttc: 65990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Sport Capucine 363 UP", gamme: "Sport", type: "CAMPING_CAR", type_carrosserie: "capucine", prix_usine_ht: 48990, prix_public_ttc: 64990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Sport Capucine 325 UP", gamme: "Sport", type: "CAMPING_CAR", type_carrosserie: "capucine", prix_usine_ht: 48990, prix_public_ttc: 64990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Sport Capucine 344 UP", gamme: "Sport", type: "CAMPING_CAR", type_carrosserie: "capucine", prix_usine_ht: 49490, prix_public_ttc: 65990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Sport Capucine 363 UP", gamme: "Sport", type: "CAMPING_CAR", type_carrosserie: "capucine", prix_usine_ht: 48990, prix_public_ttc: 64990, actif: true },
       // KALEO
-      { id: randomUUID(), marque_id: "benimar", nom: "Kaleo 625", gamme: "Kaleo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 42990, prix_public_ttc: 55990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Kaleo 640", gamme: "Kaleo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 40490, prix_public_ttc: 52990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Kaleo 663", gamme: "Kaleo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 42990, prix_public_ttc: 56490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Kaleo 695", gamme: "Kaleo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 42990, prix_public_ttc: 56490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Kaleo 625", gamme: "Kaleo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 42990, prix_public_ttc: 55990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Kaleo 640", gamme: "Kaleo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 40490, prix_public_ttc: 52990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Kaleo 663", gamme: "Kaleo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 42990, prix_public_ttc: 56490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Kaleo 695", gamme: "Kaleo", type: "CAMPING_CAR", type_carrosserie: "profile", prix_usine_ht: 42990, prix_public_ttc: 56490, actif: true },
       // BENIVAN
-      { id: randomUUID(), marque_id: "benimar", nom: "Benivan 100 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 39990, prix_public_ttc: 52990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Benivan 120 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 41090, prix_public_ttc: 54490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Benivan 144 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 41090, prix_public_ttc: 54490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Benivan 160 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 43490, prix_public_ttc: 57990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Benivan 100", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 43990, prix_public_ttc: 58990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Benivan 120", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 44990, prix_public_ttc: 60490, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Benivan 144", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 44490, prix_public_ttc: 59990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Benivan 160", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 45990, prix_public_ttc: 61990, actif: true },
-      { id: randomUUID(), marque_id: "benimar", nom: "Benivan 160 Stormline", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 51990, prix_public_ttc: 67990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Benivan 100 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 39990, prix_public_ttc: 52990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Benivan 120 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 41090, prix_public_ttc: 54490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Benivan 144 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 41090, prix_public_ttc: 54490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Benivan 160 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 43490, prix_public_ttc: 57990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Benivan 100", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 43990, prix_public_ttc: 58990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Benivan 120", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 44990, prix_public_ttc: 60490, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Benivan 144", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 44490, prix_public_ttc: 59990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Benivan 160", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 45990, prix_public_ttc: 61990, actif: true },
+      { id: randomUUID(), marque_id: benimarId, nom: "Benivan 160 Stormline", gamme: "Benivan", type: "FOURGON", type_carrosserie: "fourgon", prix_usine_ht: 51990, prix_public_ttc: 67990, actif: true },
     ];
     
     // Insérer par batch de 5
@@ -84,15 +85,15 @@ export async function POST(request) {
     // 3. Options
     console.log("[SEED] Insertion options...");
     const options = [
-      { id: randomUUID(), marque_id: "benimar", designation: "Moteur FIAT 160 ch", achat_ht: 1050, prix_ttc: 1490 },
-      { id: randomUUID(), marque_id: "benimar", designation: "Moteur FIAT 180 ch", achat_ht: 1624, prix_ttc: 2290 },
-      { id: randomUUID(), marque_id: "benimar", designation: "Moteur FORD 165 ch", achat_ht: 1031, prix_ttc: 1490 },
-      { id: randomUUID(), marque_id: "benimar", designation: "Boîte automatique", achat_ht: 2440, prix_ttc: 3390 },
-      { id: randomUUID(), marque_id: "benimar", designation: "Climatisation", achat_ht: 1154, prix_ttc: 1690 },
-      { id: randomUUID(), marque_id: "benimar", designation: "Four", achat_ht: 334, prix_ttc: 490 },
-      { id: randomUUID(), marque_id: "benimar", designation: "Panneau solaire 200W", achat_ht: 334, prix_ttc: 490 },
-      { id: randomUUID(), marque_id: "benimar", designation: "Pieds stabilisateurs", achat_ht: 198, prix_ttc: 290 },
-      { id: randomUUID(), marque_id: "benimar", designation: "Porte-vélos 4 rails", achat_ht: 334, prix_ttc: 490 },
+      { id: randomUUID(), marque_id: benimarId, designation: "Moteur FIAT 160 ch", achat_ht: 1050, prix_ttc: 1490 },
+      { id: randomUUID(), marque_id: benimarId, designation: "Moteur FIAT 180 ch", achat_ht: 1624, prix_ttc: 2290 },
+      { id: randomUUID(), marque_id: benimarId, designation: "Moteur FORD 165 ch", achat_ht: 1031, prix_ttc: 1490 },
+      { id: randomUUID(), marque_id: benimarId, designation: "Boîte automatique", achat_ht: 2440, prix_ttc: 3390 },
+      { id: randomUUID(), marque_id: benimarId, designation: "Climatisation", achat_ht: 1154, prix_ttc: 1690 },
+      { id: randomUUID(), marque_id: benimarId, designation: "Four", achat_ht: 334, prix_ttc: 490 },
+      { id: randomUUID(), marque_id: benimarId, designation: "Panneau solaire 200W", achat_ht: 334, prix_ttc: 490 },
+      { id: randomUUID(), marque_id: benimarId, designation: "Pieds stabilisateurs", achat_ht: 198, prix_ttc: 290 },
+      { id: randomUUID(), marque_id: benimarId, designation: "Porte-vélos 4 rails", achat_ht: 334, prix_ttc: 490 },
     ];
     
     const { error: errOpt } = await admin.from("options").upsert(options);
