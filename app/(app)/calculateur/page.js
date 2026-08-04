@@ -96,6 +96,7 @@ export default function CalculateurPage() {
         .select("statut, options ( id, designation, achat_ht, cession_pose, prix_ttc, poids_kg )")
         .eq("modele_id", modeleId);
       const liste = (data || []).filter((row) => row.options).map((row) => ({ ...row.options, statut: row.statut }));
+      liste.sort((a, b) => a.designation.localeCompare(b.designation, "fr", { sensitivity: "base" }));
       setOptions(liste);
       setOptionsChoisiesIds([]);
       setDossierIdActuel(null);

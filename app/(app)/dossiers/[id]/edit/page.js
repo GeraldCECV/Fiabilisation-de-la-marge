@@ -68,7 +68,9 @@ export default function EditDossierPage() {
       setModele(m);
       setBaremes(b || []);
       setForfaits(f || []);
-      setOptions((compat || []).filter((r) => r.options).map((r) => ({ ...r.options, statut: r.statut })));
+      const listeOptions = (compat || []).filter((r) => r.options).map((r) => ({ ...r.options, statut: r.statut }));
+      listeOptions.sort((a, b) => a.designation.localeCompare(b.designation, "fr", { sensitivity: "base" }));
+      setOptions(listeOptions);
       setOptionsChoisiesIds(d.options_choisies || []);
       setClient(d.client_nom || "");
       setStatut(d.statut);
