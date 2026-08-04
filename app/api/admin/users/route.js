@@ -43,88 +43,99 @@ function verifierCleServiceRole() {
 }
 
 export async function GET() {
-  const erreur = await verifierResponsable();
-  if (erreur) return erreur;
-  const erreurCle = verifierCleServiceRole();
-  if (erreurCle) return erreurCle;
-
   try {
+    const erreur = await verifierResponsable();
+    if (erreur) return erreur;
+    const erreurCle = verifierCleServiceRole();
+    if (erreurCle) return erreurCle;
+
     const admin = supabaseAdmin();
     const { data, error } = await admin
       .from("utilisateurs")
       .select("id, nom, role, marques_autorisees, created_at")
       .order("created_at", { ascending: false });
-    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    if (error) throw new Error("Query utilisateurs: " + error.message);
 
     // On récupère les emails depuis auth.users (pas stockés dans la table utilisateurs)
     const { data: authList, error: errAuthList } = await admin.auth.admin.listUsers({ perPage: 1000 });
-    if (errAuthList) return NextResponse.json({ error: errAuthList.message }, { status: 500 });
+    if (errAuthList) throw new Error("listUsers: " + errAuthList.message);
     const emailParId = Object.fromEntries((authList?.users || []).map((u) => [u.id, u.email]));
     const resultats = data.map((u) => ({ ...u, email: emailParId[u.id] || null }));
 
     return NextResponse.json({ utilisateurs: resultats });
-  } catch (e) {
-    return NextResponse.json({ error: e?.message || "Erreur serveur inattendue." }, { status: 500 });
+  } catch (err) {
+    console.error("GET /api/admin/users error:", err);
+    return NextResponse.json({ error: err?.message || "Erreur serveur inattendue" }, { status: 500 });
   }
 }
 
 export async function POST(request) {
-  const erreur = await verifierResponsable();
-  if (erreur) return erreur;
-  const erreurCle = verifierCleServiceRole();
-  if (erreurCle) return erreurCle;
+  try {
+    const erreur = await verifierResponsable();
+    if (erreur) return erreur;
+    const erreurCle = verifierCleServiceRole();
+    if (erreurCle) return erreurCle;
 
-  const body = await request.json();
-  const { nom, email, role, marques_autorisees } = body;
+    const body = await request.json();
+    const { nom, email, role, marques_autorisees } = body;
 
-  if (!nom || !email) {
-    return NextResponse.json({ error: "Nom et email sont requis." }, { status: 400 });
+    if (!nom || !email) {
+      return NextResponse.json({ error: "Nom et email sont requis." }, { status: 400 });
+    }
+    if (role && !["RESPONSABLE", "COMMERCIAL"].includes(role)) {
+      return NextResponse.json({ error: "Rôle invalide." }, { status: 400 });
+    }
+
+    const motDePasse = genererMotDePasse();
+    const admin = supabaseAdmin();
+
+    const { data: created, error: errAuth } = await admin.auth.admin.createUser({
+      email,
+      password: motDePasse,
+      email_confirm: true,
+    });
+    if (errAuth) {
+      return NextResponse.json({ error: errAuth.message }, { status: 400 });
+    }
+
+    const { error: errProfil } = await admin.from("utilisateurs").insert({
+      id: created.user.id,
+      nom,
+      role: role || "COMMERCIAL",
+      marques_autorisees: marques_autorisees || [],
+    });
+    if (errProfil) {
+      // On nettoie le compte auth orphelin si l'insertion du profil échoue
+      await admin.auth.admin.deleteUser(created.user.id);
+      return NextResponse.json({ error: errProfil.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ email, motDePasse });
+  } catch (err) {
+    console.error("POST /api/admin/users error:", err);
+    return NextResponse.json({ error: err?.message || "Erreur serveur inattendue" }, { status: 500 });
   }
-  if (role && !["RESPONSABLE", "COMMERCIAL"].includes(role)) {
-    return NextResponse.json({ error: "Rôle invalide." }, { status: 400 });
-  }
-
-  const motDePasse = genererMotDePasse();
-  const admin = supabaseAdmin();
-
-  const { data: created, error: errAuth } = await admin.auth.admin.createUser({
-    email,
-    password: motDePasse,
-    email_confirm: true,
-  });
-  if (errAuth) {
-    return NextResponse.json({ error: errAuth.message }, { status: 400 });
-  }
-
-  const { error: errProfil } = await admin.from("utilisateurs").insert({
-    id: created.user.id,
-    nom,
-    role: role || "COMMERCIAL",
-    marques_autorisees: marques_autorisees || [],
-  });
-  if (errProfil) {
-    // On nettoie le compte auth orphelin si l'insertion du profil échoue
-    await admin.auth.admin.deleteUser(created.user.id);
-    return NextResponse.json({ error: errProfil.message }, { status: 500 });
-  }
-
-  return NextResponse.json({ email, motDePasse });
 }
 
 // Réinitialise le mot de passe d'un utilisateur existant et renvoie le nouveau mot de passe.
 export async function PATCH(request) {
-  const erreur = await verifierResponsable();
-  if (erreur) return erreur;
-  const erreurCle = verifierCleServiceRole();
-  if (erreurCle) return erreurCle;
+  try {
+    const erreur = await verifierResponsable();
+    if (erreur) return erreur;
+    const erreurCle = verifierCleServiceRole();
+    if (erreurCle) return erreurCle;
 
-  const { userId } = await request.json();
-  if (!userId) return NextResponse.json({ error: "userId requis." }, { status: 400 });
+    const { userId } = await request.json();
+    if (!userId) return NextResponse.json({ error: "userId requis." }, { status: 400 });
 
-  const motDePasse = genererMotDePasse();
-  const admin = supabaseAdmin();
-  const { error } = await admin.auth.admin.updateUserById(userId, { password: motDePasse });
-  if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+    const motDePasse = genererMotDePasse();
+    const admin = supabaseAdmin();
+    const { error } = await admin.auth.admin.updateUserById(userId, { password: motDePasse });
+    if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 
-  return NextResponse.json({ motDePasse });
+    return NextResponse.json({ motDePasse });
+  } catch (err) {
+    console.error("PATCH /api/admin/users error:", err);
+    return NextResponse.json({ error: err?.message || "Erreur serveur inattendue" }, { status: 500 });
+  }
 }

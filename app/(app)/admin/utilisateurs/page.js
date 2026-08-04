@@ -16,14 +16,20 @@ export default function AdminUtilisateursPage() {
   useEffect(() => {
     (async () => {
       try {
+        console.log("Admin page: checking session...");
         const supabase = supabaseBrowser();
         const { data: { session } } = await supabase.auth.getSession();
-        if (!session) { router.push("/login"); return; }
+        if (!session) { console.log("Admin page: no session"); router.push("/login"); return; }
+        
+        console.log("Admin page: checking role...");
         const { data: profil } = await supabase.from("utilisateurs").select("role").eq("id", session.user.id).single();
-        if (profil?.role !== "RESPONSABLE") { setAutorise(false); return; }
+        if (profil?.role !== "RESPONSABLE") { console.log("Admin page: not RESPONSABLE"); setAutorise(false); return; }
+        
+        console.log("Admin page: loading users...");
         setAutorise(true);
         await chargerListe();
       } catch (e) {
+        console.error("Admin page error:", e);
         setErreur("Erreur au chargement de la page : " + (e?.message || "erreur inconnue"));
         setAutorise(true);
       } finally {
@@ -34,20 +40,30 @@ export default function AdminUtilisateursPage() {
 
   async function chargerListe() {
     try {
-      const res = await fetch("/api/admin/users");
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // timeout 10s
+      
+      const res = await fetch("/api/admin/users", { signal: controller.signal });
+      clearTimeout(timeoutId);
+      
       const texte = await res.text();
       let data;
       try { data = JSON.parse(texte); } catch { data = null; }
+      
       if (!res.ok) {
         setErreur(
           (data && data.error) ||
-          `Le serveur a renvoyé une erreur (${res.status}). Vérifiez que SUPABASE_SERVICE_ROLE_KEY est bien configurée sur Vercel.`
+          `Serveur erreur (${res.status}). Vérifiez que SUPABASE_SERVICE_ROLE_KEY est bien configurée sur Vercel.`
         );
         return;
       }
       setUtilisateurs(data.utilisateurs || []);
     } catch (e) {
-      setErreur("Impossible de contacter le serveur : " + (e?.message || "erreur réseau"));
+      if (e.name === 'AbortError') {
+        setErreur("Timeout : le serveur ne répond pas après 10 secondes");
+      } else {
+        setErreur("Impossible de contacter le serveur : " + (e?.message || "erreur réseau"));
+      }
     }
   }
 
