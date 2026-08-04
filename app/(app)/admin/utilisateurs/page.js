@@ -158,17 +158,44 @@ export default function AdminUtilisateursPage() {
         <h2 className="font-bold text-ink mb-3">Intégration données</h2>
         <button
           onClick={async () => {
-            if (!confirm("Seeder Benimar 2027 (11 modèles + 10 options) ? Cette action est idempotente.")) return;
+            if (!confirm("Seeder Benimar 2027 (38 modèles + 9 options) ? Cette action est idempotente.")) return;
+            setResultat(null);
+            setErreur("");
             try {
-              const res = await fetch("/api/admin/seed-benimar", { method: "POST" });
-              const data = await res.json();
-              if (res.ok) {
-                setResultat({ email: "Benimar", motDePasse: data.message, type: "seed" });
-              } else {
-                setErreur(data.error || "Erreur lors du seed");
+              console.log("Début du seed Benimar...");
+              const controller = new AbortController();
+              const timeout = setTimeout(() => controller.abort(), 30000); // timeout 30s
+              
+              const res = await fetch("/api/admin/seed-benimar", { 
+                method: "POST",
+                signal: controller.signal,
+              });
+              clearTimeout(timeout);
+              
+              console.log("Réponse reçue :", res.status);
+              const text = await res.text();
+              console.log("Contenu :", text);
+              
+              let data;
+              try { data = JSON.parse(text); } catch { data = null; }
+              
+              if (!res.ok) {
+                const errMsg = data?.error || text || `Erreur ${res.status}`;
+                console.error("Erreur seed :", errMsg);
+                setErreur(errMsg);
+                return;
               }
-            } catch {
-              setErreur("Erreur réseau");
+              
+              console.log("Seed réussi :", data);
+              setResultat({ email: "Benimar", motDePasse: data.message, type: "seed" });
+              await chargerListe(); // Recharger la liste
+            } catch (err) {
+              console.error("Erreur fetch :", err);
+              if (err.name === 'AbortError') {
+                setErreur("Timeout : le serveur a mis trop longtemps à répondre (30s)");
+              } else {
+                setErreur("Erreur : " + (err?.message || "réseau"));
+              }
             }
           }}
           className="px-5 py-2.5 rounded-md bg-pos text-white font-bold text-sm"
