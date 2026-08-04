@@ -117,16 +117,49 @@ export default function AdminUtilisateursPage() {
       {resultat && (
         <div className="mb-6 border border-pos/40 bg-[#F3F6E9] rounded-md px-4 py-3 text-sm">
           <div className="font-bold text-ink mb-1">
-            {resultat.type === "création" ? "Accès créé" : "Mot de passe réinitialisé"}
+            {resultat.type === "création"
+              ? "Accès créé"
+              : resultat.type === "réinitialisation"
+              ? "Mot de passe réinitialisé"
+              : "Intégration complète"}
           </div>
-          <div className="text-sub">
-            Communiquez ces identifiants à la personne concernée (ils ne seront plus réaffichés) :
-          </div>
-          <div className="mt-2 font-mono text-ink bg-white border border-border rounded px-3 py-2 inline-block">
-            {resultat.email} / {resultat.motDePasse}
-          </div>
+          {resultat.type === "seed" ? (
+            <div className="text-sub mt-1">{resultat.motDePasse}</div>
+          ) : (
+            <>
+              <div className="text-sub">
+                Communiquez ces identifiants à la personne concernée (ils ne seront plus réaffichés) :
+              </div>
+              <div className="mt-2 font-mono text-ink bg-white border border-border rounded px-3 py-2 inline-block">
+                {resultat.email} / {resultat.motDePasse}
+              </div>
+            </>
+          )}
         </div>
       )}
+
+      <div className="bg-surface border border-border rounded-xl p-6 mb-8">
+        <h2 className="font-bold text-ink mb-3">Intégration données</h2>
+        <button
+          onClick={async () => {
+            if (!confirm("Seeder Benimar 2027 (11 modèles + 10 options) ? Cette action est idempotente.")) return;
+            try {
+              const res = await fetch("/api/admin/seed-benimar", { method: "POST" });
+              const data = await res.json();
+              if (res.ok) {
+                setResultat({ email: "Benimar", motDePasse: data.message, type: "seed" });
+              } else {
+                setErreur(data.error || "Erreur lors du seed");
+              }
+            } catch {
+              setErreur("Erreur réseau");
+            }
+          }}
+          className="px-5 py-2.5 rounded-md bg-pos text-white font-bold text-sm"
+        >
+          Intégrer Benimar 2027
+        </button>
+      </div>
 
       <form onSubmit={creerUtilisateur} className="bg-surface border border-border rounded-xl p-6 mb-8">
         <h2 className="font-bold text-ink mb-4">Créer un nouvel accès</h2>
