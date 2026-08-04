@@ -73,15 +73,15 @@ export async function POST(request) {
       { nom: "Kaleo 663", gamme: "Kaleo", type: "CAMPING_CAR", type_carrosserie: "PROFILE", prix_usine_ht: 42990, prix_public_ttc: 56490 },
       { nom: "Kaleo 695", gamme: "Kaleo", type: "CAMPING_CAR", type_carrosserie: "PROFILE", prix_usine_ht: 42990, prix_public_ttc: 56490 },
       // BENIVAN
-      { nom: "Benivan 100 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "FOURGON", prix_usine_ht: 39990, prix_public_ttc: 52990 },
-      { nom: "Benivan 120 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "FOURGON", prix_usine_ht: 41090, prix_public_ttc: 54490 },
-      { nom: "Benivan 144 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "FOURGON", prix_usine_ht: 41090, prix_public_ttc: 54490 },
-      { nom: "Benivan 160 UP", gamme: "Benivan", type: "FOURGON", type_carrosserie: "FOURGON", prix_usine_ht: 43490, prix_public_ttc: 57990 },
-      { nom: "Benivan 100", gamme: "Benivan", type: "FOURGON", type_carrosserie: "FOURGON", prix_usine_ht: 43990, prix_public_ttc: 58990 },
-      { nom: "Benivan 120", gamme: "Benivan", type: "FOURGON", type_carrosserie: "FOURGON", prix_usine_ht: 44990, prix_public_ttc: 60490 },
-      { nom: "Benivan 144", gamme: "Benivan", type: "FOURGON", type_carrosserie: "FOURGON", prix_usine_ht: 44490, prix_public_ttc: 59990 },
-      { nom: "Benivan 160", gamme: "Benivan", type: "FOURGON", type_carrosserie: "FOURGON", prix_usine_ht: 45990, prix_public_ttc: 61990 },
-      { nom: "Benivan 160 Stormline", gamme: "Benivan", type: "FOURGON", type_carrosserie: "FOURGON", prix_usine_ht: 51990, prix_public_ttc: 67990 },
+      { nom: "Benivan 100 UP", gamme: "Benivan", type: "CAMPING_CAR", type_carrosserie: "FOURGON", prix_usine_ht: 39990, prix_public_ttc: 52990 },
+      { nom: "Benivan 120 UP", gamme: "Benivan", type: "CAMPING_CAR", type_carrosserie: "FOURGON", prix_usine_ht: 41090, prix_public_ttc: 54490 },
+      { nom: "Benivan 144 UP", gamme: "Benivan", type: "CAMPING_CAR", type_carrosserie: "FOURGON", prix_usine_ht: 41090, prix_public_ttc: 54490 },
+      { nom: "Benivan 160 UP", gamme: "Benivan", type: "CAMPING_CAR", type_carrosserie: "FOURGON", prix_usine_ht: 43490, prix_public_ttc: 57990 },
+      { nom: "Benivan 100", gamme: "Benivan", type: "CAMPING_CAR", type_carrosserie: "FOURGON", prix_usine_ht: 43990, prix_public_ttc: 58990 },
+      { nom: "Benivan 120", gamme: "Benivan", type: "CAMPING_CAR", type_carrosserie: "FOURGON", prix_usine_ht: 44990, prix_public_ttc: 60490 },
+      { nom: "Benivan 144", gamme: "Benivan", type: "CAMPING_CAR", type_carrosserie: "FOURGON", prix_usine_ht: 44490, prix_public_ttc: 59990 },
+      { nom: "Benivan 160", gamme: "Benivan", type: "CAMPING_CAR", type_carrosserie: "FOURGON", prix_usine_ht: 45990, prix_public_ttc: 61990 },
+      { nom: "Benivan 160 Stormline", gamme: "Benivan", type: "CAMPING_CAR", type_carrosserie: "FOURGON", prix_usine_ht: 51990, prix_public_ttc: 67990 },
     ].map((m) => ({ ...m, marque_id: benimarId, collection: 2027, actif: true }));
 
     const { error: errModeles } = await admin.from("modeles").upsert(modelesData, { onConflict: "marque_id,nom" });
