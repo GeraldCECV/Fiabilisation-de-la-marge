@@ -88,6 +88,11 @@ export async function POST(request) {
     if (errModeles) throw new Error("Modèles: " + errModeles.message);
     console.log(`[SEED] ${modelesData.length} modèles insérés en un seul appel`);
 
+    // Récupère les vrais id générés par Supabase pour ces modèles
+    const { data: modelesEnBase, error: errFetchModeles } = await admin
+      .from("modeles").select("id, nom").eq("marque_id", benimarId);
+    if (errFetchModeles) throw new Error("Relecture modèles: " + errFetchModeles.message);
+
     // 3. Options — même schéma que le seed qui fonctionne : marque_id, designation, achat_ht, prix_ttc
     console.log("[SEED] Insertion options...");
     // On repart de zéro pour les options Benimar (pas de contrainte FK stricte dessus)
@@ -105,13 +110,33 @@ export async function POST(request) {
       { marque_id: benimarId, designation: "Porte-vélos 4 rails", achat_ht: 334, prix_ttc: 490 },
     ];
 
-    const { error: errOpt } = await admin.from("options").insert(options);
+    const { data: optionsEnBase, error: errOpt } = await admin.from("options").insert(options).select();
     if (errOpt) throw new Error("Options: " + errOpt.message);
+
+    // 4. Compatibilités — sans ligne ici, le Calculateur n'affiche AUCUNE option pour le modèle
+    // (voir schema.sql : "Une ligne absente = indisponible"). Par défaut on relie toutes les
+    // options à tous les modèles Benimar en statut OPTION ; à affiner ensuite au cas par cas.
+    console.log("[SEED] Insertion compatibilités...");
+    const modeleIds = modelesEnBase.map((m) => m.id);
+    await admin.from("compatibilites").delete().in("modele_id", modeleIds);
+
+    const compatRows = [];
+    for (const modele of modelesEnBase) {
+      for (const opt of optionsEnBase) {
+        compatRows.push({ modele_id: modele.id, option_id: opt.id, statut: "OPTION" });
+      }
+    }
+    const chunkSize = 500;
+    for (let i = 0; i < compatRows.length; i += chunkSize) {
+      const { error: errCompat } = await admin.from("compatibilites").insert(compatRows.slice(i, i + chunkSize));
+      if (errCompat) throw new Error("Compatibilités: " + errCompat.message);
+    }
+    console.log(`[SEED] ${compatRows.length} compatibilités insérées`);
 
     console.log("[SEED] ✅ Seed complété avec succès");
     return NextResponse.json({
       success: true,
-      message: `✅ Benimar 2027 COMPLET : ${modelesData.length} modèles + ${options.length} options intégrés !`,
+      message: `✅ Benimar 2027 COMPLET : ${modelesData.length} modèles + ${options.length} options + ${compatRows.length} compatibilités intégrés !`,
     });
   } catch (err) {
     console.error("[SEED] ❌ Erreur :", err);
