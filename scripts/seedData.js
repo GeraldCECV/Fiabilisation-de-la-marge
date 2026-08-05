@@ -963,7 +963,64 @@ const FLORIUM_OPTIONS = [
     compat: zipCompat(FO_PROFILES_ALL, Array(FO_PROFILES_ALL.length).fill("O")) },
 ].map((o) => ({ ...o, marque: "Florium" }));
 
-const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES];
+const FLORIUM_BP_VEHICULE_IDS = ["fobp_59lt_bvm","fobp_59lt_bva","fobp_63lj_bvm","fobp_63lj_bva","fobp_63ld_bvm","fobp_63ld_bva","fobp_63ks_bvm","fobp_63ks_bva"];
+
+const FLORIUM_BP_VEHICULES = [
+  { id: "fobp_59lt_bvm", nom: "59LT (Fiat L3H2, BV Mécanique)", gamme: "Black Pearl", typeCarrosserie: "FOURGON", prixUsineHt: 48919, prixPublicTtc: 66990 },
+  { id: "fobp_59lt_bva", nom: "59LT (Fiat L3H2, BV Automatisée)", gamme: "Black Pearl", typeCarrosserie: "FOURGON", prixUsineHt: 51302, prixPublicTtc: 70240 },
+  { id: "fobp_63lj_bvm", nom: "63LJ (Fiat L4H2, BV Mécanique)", gamme: "Black Pearl", typeCarrosserie: "FOURGON", prixUsineHt: 51119, prixPublicTtc: 69990 },
+  { id: "fobp_63lj_bva", nom: "63LJ (Fiat L4H2, BV Automatisée)", gamme: "Black Pearl", typeCarrosserie: "FOURGON", prixUsineHt: 53502, prixPublicTtc: 73240 },
+  { id: "fobp_63ld_bvm", nom: "63LD (Fiat L4H2, BV Mécanique)", gamme: "Black Pearl", typeCarrosserie: "FOURGON", prixUsineHt: 51662, prixPublicTtc: 70730 },
+  { id: "fobp_63ld_bva", nom: "63LD (Fiat L4H2, BV Automatisée)", gamme: "Black Pearl", typeCarrosserie: "FOURGON", prixUsineHt: 54045, prixPublicTtc: 73980 },
+  { id: "fobp_63ks_bvm", nom: "63KS (Fiat L4H2, BV Mécanique)", gamme: "Black Pearl", typeCarrosserie: "FOURGON", prixUsineHt: 52175, prixPublicTtc: 71430 },
+  { id: "fobp_63ks_bva", nom: "63KS (Fiat L4H2, BV Automatisée)", gamme: "Black Pearl", typeCarrosserie: "FOURGON", prixUsineHt: 54558, prixPublicTtc: 74680 },
+].map((v) => ({ ...v, marque: "Florium", type: "CAMPING_CAR", collection: 2027 }));
+
+const FOBP_ALL = FLORIUM_BP_VEHICULE_IDS;
+const FOBP_BVA = ["fobp_59lt_bva","fobp_63lj_bva","fobp_63ld_bva","fobp_63ks_bva"];
+const FOBP_63_ALL = ["fobp_63lj_bvm","fobp_63lj_bva","fobp_63ld_bvm","fobp_63ld_bva","fobp_63ks_bvm","fobp_63ks_bva"];
+const FOBP_63KS = ["fobp_63ks_bvm","fobp_63ks_bva"];
+
+const FLORIUM_BP_OPTIONS = [
+  { id: "fobp_pack_pearl", nom: "Pack Pearl : batterie cellule Lithium 150Ah chauffée, prédisposition attelage, rétroviseurs électriques dégivrants rabattables électriquement, caméra de recul intégrée au multimédia, réglage spécifique ESC, porte moustiquaire ouvrant latéral, réservoir d'eaux usées chauffé, store remis en cabine, boîte à gants centrale", achatHt: 1490, cessionPose: 0, prixTtc: 1990, poids: 0,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_moteur_160ch_bva", nom: "Motorisation 160ch avec BVA (sur prix de base du 140ch BVA)", achatHt: 937, cessionPose: 0, prixTtc: 1250, poids: 0,
+    compat: zipCompat(FOBP_BVA, Array(FOBP_BVA.length).fill("O")) },
+  { id: "fobp_moteur_180ch_bva", nom: "Motorisation 180ch avec BVA (sur prix de base du 140ch BVA)", achatHt: 1846, cessionPose: 0, prixTtc: 2460, poids: 0,
+    compat: zipCompat(FOBP_BVA, Array(FOBP_BVA.length).fill("O")) },
+  { id: "fobp_couleur_gris_expedition", nom: "Couleur Gris Expédition", achatHt: 600, cessionPose: 0, prixTtc: 800, poids: 0,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_couleur_gris_artense", nom: "Couleur Gris Artense", achatHt: 742, cessionPose: 0, prixTtc: 990, poids: 0,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_couleur_noir_metallic", nom: "Couleur Noir Metallic", achatHt: 742, cessionPose: 0, prixTtc: 990, poids: 0,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_frein_stationnement_elec", nom: "Frein de stationnement électrique", achatHt: 393, cessionPose: 0, prixTtc: 524, poids: 0,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_pack_lounge_campervan", nom: "Pack Lounge CamperVan : climatisation automatique + chargeur téléphone sans fil + radio multimédia Fiat écran 10'' DAB/GPS + combiné de bord numérique", achatHt: 1492, cessionPose: 0, prixTtc: 1990, poids: 2,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_roue_secours_treuil", nom: "Roue de secours avec treuil", achatHt: 358, cessionPose: 0, prixTtc: 477, poids: 22,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_chassis_40h", nom: "Châssis 40H - PTAC 4T250", achatHt: 975, cessionPose: 0, prixTtc: 1300, poids: 0,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_pack_led_assist", nom: "Pack Led Assist : phares full LED, allumage des feux et essuie-vitre AV automatiques avec commutation auto des feux de route", achatHt: 853, cessionPose: 0, prixTtc: 1137, poids: 0,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_baies_portes_arriere", nom: "Baies portes arrière (droite et gauche) sur les 63", achatHt: 566, cessionPose: 0, prixTtc: 753, poids: 5,
+    compat: zipCompat(FOBP_63_ALL, Array(FOBP_63_ALL.length).fill("O")) },
+  { id: "fobp_regulateur_adaptatif", nom: "Régulateur de vitesse adaptatif", achatHt: 361, cessionPose: 0, prixTtc: 482, poids: 0,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_kit_salon_arriere_63ks", nom: "Kit salon arrière sur 63KS (coussins + table + pied de table)", achatHt: 347, cessionPose: 0, prixTtc: 490, poids: 10,
+    compat: zipCompat(FOBP_63KS, Array(FOBP_63KS.length).fill("O")) },
+  { id: "fobp_chauffage_truma4000_ed", nom: "Chauffage Truma 4000 Électrique et Diesel", achatHt: 390, cessionPose: 0, prixTtc: 550, poids: 1,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_3eme_couchage_dinette", nom: "3ème couchage dinette", achatHt: 489, cessionPose: 0, prixTtc: 690, poids: 10,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_support_tele", nom: "Support télé", achatHt: 85, cessionPose: 0, prixTtc: 120, poids: 4,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_store_manuel_noir", nom: "Store manuel noir 3,75m (sur 59) ou 4,00m (sur 63), posé usine", achatHt: 1476, cessionPose: 0, prixTtc: 1710, poids: 29,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+].map((o) => ({ ...o, marque: "Florium" }));
+
+const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES];
 
 // ---------------------------------------------------------------------------
 // OPTIONS (statut par véhicule : "O" option payante, "S" de série, "-"/absent indisponible)
@@ -1392,6 +1449,6 @@ const RAPIDO_OPTIONS_VANS = [
     compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","-","-","-"]) },
 ].map((o) => ({ ...o, marque: "Rapido" }));
 
-const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS];
+const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS, ...FLORIUM_BP_OPTIONS];
 
 module.exports = { VEHICULES, OPTIONS };
