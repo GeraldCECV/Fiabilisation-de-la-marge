@@ -738,7 +738,136 @@ const ELIOS_OPTIONS = [
     compat: zipCompat(ELIOS_VEHICULE_IDS, ["-","-","-","O","-"]) },
 ].map((o) => ({ ...o, marque: "Elios" }));
 
-const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES];
+const FLEURETTE_VEHICULE_IDS = [
+  "fl_60lg_bvm","fl_60lg_bva","fl_64ldf_bvm","fl_64ldf_bva","fl_69ljg_bvm","fl_69ljg_bva",
+  "fl_67lo_bvm","fl_67lo_bva","fl_70lmf_bvm","fl_70lmf_bva","fl_70ljg_bvm","fl_70ljg_bva","fl_74lmf_bvm","fl_74lmf_bva",
+  "fl_72lmf","fl_72ljg","fl_74ljg_alko","fl_75lmf_alko",
+];
+
+const FLEURETTE_VEHICULES = [
+  // Profilés Migrateur
+  { id: "fl_60lg_bvm", nom: "60 LG (BV Mécanique)", gamme: "Migrateur", typeCarrosserie: "PROFILE", prixUsineHt: 52293, prixPublicTtc: 72400 },
+  { id: "fl_60lg_bva", nom: "60 LG (BV Automatisée)", gamme: "Migrateur", typeCarrosserie: "PROFILE", prixUsineHt: 54650, prixPublicTtc: 75650 },
+  { id: "fl_64ldf_bvm", nom: "64 LDF (BV Mécanique)", gamme: "Migrateur", typeCarrosserie: "PROFILE", prixUsineHt: 54033, prixPublicTtc: 74800 },
+  { id: "fl_64ldf_bva", nom: "64 LDF (BV Automatisée)", gamme: "Migrateur", typeCarrosserie: "PROFILE", prixUsineHt: 56390, prixPublicTtc: 78050 },
+  { id: "fl_69ljg_bvm", nom: "69 LJG Wellness (BV Mécanique)", gamme: "Migrateur", typeCarrosserie: "PROFILE", prixUsineHt: 57028, prixPublicTtc: 78930 },
+  { id: "fl_69ljg_bva", nom: "69 LJG Wellness (BV Automatisée)", gamme: "Migrateur", typeCarrosserie: "PROFILE", prixUsineHt: 59384, prixPublicTtc: 82180 },
+  // Profilés Magister
+  { id: "fl_67lo_bvm", nom: "67 LO (BV Mécanique)", gamme: "Magister", typeCarrosserie: "PROFILE", prixUsineHt: 57368, prixPublicTtc: 79400 },
+  { id: "fl_67lo_bva", nom: "67 LO (BV Automatisée)", gamme: "Magister", typeCarrosserie: "PROFILE", prixUsineHt: 59725, prixPublicTtc: 82650 },
+  { id: "fl_70lmf_bvm", nom: "70 LMF Wellness (BV Mécanique)", gamme: "Magister", typeCarrosserie: "PROFILE", prixUsineHt: 59348, prixPublicTtc: 82130 },
+  { id: "fl_70lmf_bva", nom: "70 LMF Wellness (BV Automatisée)", gamme: "Magister", typeCarrosserie: "PROFILE", prixUsineHt: 61704, prixPublicTtc: 85380 },
+  { id: "fl_70ljg_bvm", nom: "70 LJG Wellness (BV Mécanique)", gamme: "Magister", typeCarrosserie: "PROFILE", prixUsineHt: 59971, prixPublicTtc: 82990 },
+  { id: "fl_70ljg_bva", nom: "70 LJG Wellness (BV Automatisée)", gamme: "Magister", typeCarrosserie: "PROFILE", prixUsineHt: 62327, prixPublicTtc: 86240 },
+  { id: "fl_74lmf_bvm", nom: "74 LMF Wellness (BV Mécanique)", gamme: "Magister", typeCarrosserie: "PROFILE", prixUsineHt: 60508, prixPublicTtc: 83730 },
+  { id: "fl_74lmf_bva", nom: "74 LMF Wellness (BV Automatisée)", gamme: "Magister", typeCarrosserie: "PROFILE", prixUsineHt: 62864, prixPublicTtc: 86980 },
+  // Intégraux Discover
+  { id: "fl_72lmf", nom: "72 LMF (châssis Fiat, BV Automatisée)", gamme: "Discover", typeCarrosserie: "INTEGRAL", prixUsineHt: 73499, prixPublicTtc: 102230 },
+  { id: "fl_72ljg", nom: "72 LJG (châssis Fiat, BV Automatisée)", gamme: "Discover", typeCarrosserie: "INTEGRAL", prixUsineHt: 74220, prixPublicTtc: 103230 },
+  { id: "fl_74ljg_alko", nom: "74 LJG Wellness (châssis Alko, BV Automatisée)", gamme: "Discover", typeCarrosserie: "INTEGRAL", prixUsineHt: 81211, prixPublicTtc: 114900 },
+  { id: "fl_75lmf_alko", nom: "75 LMF Wellness (châssis Alko, BV Automatisée)", gamme: "Discover", typeCarrosserie: "INTEGRAL", prixUsineHt: 80503, prixPublicTtc: 113900 },
+].map((v) => ({ ...v, marque: "Fleurette", type: "CAMPING_CAR", collection: 2027 }));
+
+
+const FL_MIGRATEUR = ["fl_60lg_bvm","fl_60lg_bva","fl_64ldf_bvm","fl_64ldf_bva","fl_69ljg_bvm","fl_69ljg_bva"];
+const FL_MAGISTER = ["fl_67lo_bvm","fl_67lo_bva","fl_70lmf_bvm","fl_70lmf_bva","fl_70ljg_bvm","fl_70ljg_bva","fl_74lmf_bvm","fl_74lmf_bva"];
+const FL_DISCOVER = ["fl_72lmf","fl_72ljg","fl_74ljg_alko","fl_75lmf_alko"];
+const FL_PROFILES_ALL = [...FL_MIGRATEUR, ...FL_MAGISTER];
+const FL_ALL = [...FL_PROFILES_ALL, ...FL_DISCOVER];
+const FL_WELLNESS_PROFILES = ["fl_69ljg_bvm","fl_69ljg_bva","fl_70lmf_bvm","fl_70lmf_bva","fl_70ljg_bvm","fl_70ljg_bva","fl_74lmf_bvm","fl_74lmf_bva"];
+const FL_NONWELLNESS_PROFILES = ["fl_60lg_bvm","fl_60lg_bva","fl_64ldf_bvm","fl_64ldf_bva","fl_67lo_bvm","fl_67lo_bva"];
+const FL_WELLNESS_DISCOVER = ["fl_74ljg_alko","fl_75lmf_alko"];
+const FL_NONWELLNESS_DISCOVER = ["fl_72lmf","fl_72ljg"];
+const FL_BVA_MODELS = ["fl_60lg_bva","fl_64ldf_bva","fl_69ljg_bva","fl_67lo_bva","fl_70lmf_bva","fl_70ljg_bva","fl_74lmf_bva","fl_72lmf","fl_72ljg","fl_74ljg_alko","fl_75lmf_alko"];
+
+function statutListe(idsOui, tousLesIds, statutOui = "O", statutAutre = null) {
+  const dict = {};
+  for (const id of tousLesIds) dict[id] = idsOui.includes(id) ? statutOui : statutAutre;
+  return dict;
+}
+
+function compatManuel(dict) {
+  const out = {};
+  for (const [id, statut] of Object.entries(dict)) if (statut) out[id] = statut;
+  return out;
+}
+
+const FLEURETTE_OPTIONS = [
+  // ---- Options cellule (FF) ----
+  { id: "fl_pack_confort_profiles", nom: "Pack Confort sur Profilés (traction+, antibrouillards+pare-chocs peint, commandes volant+HP avant, porte cellule 2 points+baie, moustiquaire, stores plissés cabine, autoradio Pioneer DAB+ caméra recul, rétroviseurs électriques dégivrants, commande digitale Truma, 2e clé télécommandée, convertisseur DC/DC 40Ah, batterie Lithium 150Ah chauffante connectée, sièges cabine réglables hauteur, vide poche central, hotte digitale, matelas Evoluflex HR, voilage/coussins déco, toit décaissé)", achatHt: 640, cessionPose: 0, prixTtc: 1490, poids: 0,
+    compat: zipCompat(FL_PROFILES_ALL, Array(FL_PROFILES_ALL.length).fill("O")) },
+  { id: "fl_pack_navision_hifi", nom: "Pack Navision Hifi : multimédia Pioneer tablette 9'', GPS, DAB+, subwoofer, Bluetooth, CarPlay/Android Auto, USB, 2xHP 140W + rétrocaméra AR vision permanente", achatHt: 1516, cessionPose: 0, prixTtc: 2140, poids: 0,
+    compat: zipCompat(FL_ALL, Array(FL_ALL.length).fill("O")) },
+  { id: "fl_pack_technhome", nom: "Pack Techn'home (Intégraux uniquement) : convertisseur 2000W + cafetière Nespresso", achatHt: 850, cessionPose: 0, prixTtc: 1200, poids: 0,
+    compat: zipCompat(FL_DISCOVER, Array(FL_DISCOVER.length).fill("O")) },
+  { id: "fl_sellerie_cuir_croisillons", nom: "Sellerie cuir pleine fleur à croisillons", achatHt: 2125, cessionPose: 0, prixTtc: 3000, poids: 0,
+    compat: zipCompat(FL_ALL, Array(FL_ALL.length).fill("O")) },
+  { id: "fl_sellerie_emocuir", nom: "Sellerie Emocuir", achatHt: 1522, cessionPose: 0, prixTtc: 2150, poids: 0,
+    compat: zipCompat(FL_ALL, Array(FL_ALL.length).fill("O")) },
+  { id: "fl_complement_matelas_3eme", nom: "Complément matelas 3ème couchage", achatHt: 248, cessionPose: 0, prixTtc: 350, poids: 0,
+    compat: zipCompat(FL_ALL, Array(FL_ALL.length).fill("O")) },
+  { id: "fl_retrocamera_simple", nom: "Rétrocaméra de recul simple optique grand angle, écran rétroviseur", achatHt: 248, cessionPose: 0, prixTtc: 350, poids: 0,
+    compat: zipCompat(FL_ALL, Array(FL_ALL.length).fill("O")) },
+  { id: "fl_combi_truma_de", nom: "Combi Truma DE Diesel/Électrique (4DE ou 6DE selon modèle)", achatHt: 460, cessionPose: 0, prixTtc: 650, poids: 0,
+    compat: compatManuel({
+      ...statutListe([...FL_NONWELLNESS_PROFILES, ...FL_NONWELLNESS_DISCOVER], FL_ALL, "O"),
+      ...statutListe([...FL_WELLNESS_PROFILES, ...FL_WELLNESS_DISCOVER], FL_ALL, "S"),
+    }) },
+  { id: "fl_douchette_soute", nom: "Douchette soute (Profilés, eau froide uniquement)", achatHt: 225, cessionPose: 0, prixTtc: 320, poids: 0,
+    compat: zipCompat(FL_PROFILES_ALL, Array(FL_PROFILES_ALL.length).fill("O")) },
+  { id: "fl_repose_pieds_elec", nom: "Repose-pieds électrique sur siège passager avec télécommande (Profilés Fiat uniquement)", achatHt: 460, cessionPose: 0, prixTtc: 650, poids: 0,
+    compat: compatManuel({
+      ...statutListe(FL_NONWELLNESS_PROFILES, FL_PROFILES_ALL, "O"),
+      ...statutListe(FL_WELLNESS_PROFILES, FL_PROFILES_ALL, "S"),
+    }) },
+  { id: "fl_lit_pavillon_110", nom: "Lit de Pavillon AV électrique 110cm (Magister 70LMF ou 70LJG)", achatHt: 750, cessionPose: 0, prixTtc: 1060, poids: 0,
+    compat: zipCompat(["fl_70lmf_bvm","fl_70lmf_bva","fl_70ljg_bvm","fl_70ljg_bva"], ["O","O","O","O"]) },
+  { id: "fl_lit_pavillon_130", nom: "Lit de Pavillon AV électrique 130cm (Magister 74LMF)", achatHt: 892, cessionPose: 0, prixTtc: 1260, poids: 0,
+    compat: zipCompat(["fl_74lmf_bvm","fl_74lmf_bva"], ["O","O"]) },
+  { id: "fl_pare_soleil_discover", nom: "Pare-soleil latéraux Discover (la paire)", achatHt: 276, cessionPose: 0, prixTtc: 390, poids: 0,
+    compat: zipCompat(FL_DISCOVER, Array(FL_DISCOVER.length).fill("O")) },
+  { id: "fl_suppr_lit_pavillon_integral", nom: "Suppression du lit pavillon dans l'intégral (remplacé par placards hauts + dinette/salon transformable en couchage)", achatHt: 347, cessionPose: 0, prixTtc: 490, poids: 0,
+    compat: zipCompat(FL_DISCOVER, Array(FL_DISCOVER.length).fill("O")) },
+  { id: "fl_prise_12v_suppl", nom: "Prise 12V supplémentaire", achatHt: 105, cessionPose: 0, prixTtc: 150, poids: 0,
+    compat: zipCompat(FL_ALL, Array(FL_ALL.length).fill("O")) },
+  { id: "fl_prise_220v_suppl", nom: "Prise 220V supplémentaire", achatHt: 105, cessionPose: 0, prixTtc: 150, poids: 0,
+    compat: zipCompat(FL_ALL, Array(FL_ALL.length).fill("O")) },
+
+  // ---- Options châssis Fiat ----
+  { id: "fl_moteur_160ch_bva", nom: "Motorisation 160ch avec BVA (sur prix de base du 140ch BVA)", achatHt: 937, cessionPose: 0, prixTtc: 1250, poids: 0,
+    compat: zipCompat(FL_BVA_MODELS, Array(FL_BVA_MODELS.length).fill("O")) },
+  { id: "fl_moteur_180ch_bva", nom: "Motorisation 180ch avec BVA (sur prix de base du 140ch BVA, indisponible sur 60LG)", achatHt: 1846, cessionPose: 0, prixTtc: 2460, poids: 0,
+    compat: zipCompat(FL_BVA_MODELS.filter((id) => id !== "fl_60lg_bva"), Array(FL_BVA_MODELS.length - 1).fill("O")) },
+  { id: "fl_pack_optimum", nom: "Pack Optimum (Intégraux 74LJG et 75LMF en 180ch uniquement) : réservoir GO 90L, châssis 40H PTAC 4250kg, chauffage Alde gaz avec échangeur thermique et tapis cabine chauffant", achatHt: 3850, cessionPose: 0, prixTtc: 5130, poids: 0,
+    compat: zipCompat(FL_WELLNESS_DISCOVER, ["O","O"]) },
+  { id: "fl_pack_lounge", nom: "Pack Lounge : climatisation automatique + chargeur sans fil + combiné de bord numérique (de série sur Intégraux Discover Wellness)", achatHt: 613, cessionPose: 0, prixTtc: 818, poids: 0,
+    compat: compatManuel({
+      ...statutListe(FL_NONWELLNESS_DISCOVER, FL_DISCOVER, "O"),
+      ...statutListe(FL_WELLNESS_DISCOVER, FL_DISCOVER, "S"),
+    }) },
+  { id: "fl_chassis_40h_hd", nom: "Châssis 40H (4T250) Heavy Duty (Profilés 67LO/70LMF/70LJG/74LMF en 180ch et BVA, ou Intégraux)", achatHt: 1242, cessionPose: 0, prixTtc: 1655, poids: 0,
+    compat: zipCompat(["fl_67lo_bva","fl_70lmf_bva","fl_70ljg_bva","fl_74lmf_bva", ...FL_DISCOVER], ["O","O","O","O","O","O","O","O"]) },
+  { id: "fl_allumage_feux_auto", nom: "Allumage des feux et essuie-vitre avant automatiques avec commutation auto des feux de route (Profilés uniquement)", achatHt: 164, cessionPose: 0, prixTtc: 218, poids: 0,
+    compat: zipCompat(FL_PROFILES_ALL, Array(FL_PROFILES_ALL.length).fill("O")) },
+  { id: "fl_regulateur_adaptatif", nom: "Régulateur de vitesse adaptatif au-delà de 30km/h (Profilés uniquement)", achatHt: 361, cessionPose: 0, prixTtc: 482, poids: 0,
+    compat: zipCompat(FL_PROFILES_ALL, Array(FL_PROFILES_ALL.length).fill("O")) },
+  { id: "fl_frein_stationnement_elec", nom: "Frein de stationnement électrique (de série sur Wellness M69LJG/H70LMF/H70LJG/H74LMF, indisponible sur Intégraux châssis Al-Ko)", achatHt: 393, cessionPose: 0, prixTtc: 524, poids: 0,
+    compat: compatManuel({
+      ...statutListe([...FL_NONWELLNESS_PROFILES, ...FL_NONWELLNESS_DISCOVER], [...FL_PROFILES_ALL, ...FL_NONWELLNESS_DISCOVER], "O"),
+      ...statutListe(FL_WELLNESS_PROFILES, [...FL_PROFILES_ALL, ...FL_NONWELLNESS_DISCOVER], "S"),
+    }) },
+  { id: "fl_pack_led_assist", nom: "Pack Led Assist : phares full LED, allumage feux et essuie-vitre AV automatiques avec commutation auto feux de route (Profilés uniquement)", achatHt: 853, cessionPose: 0, prixTtc: 1137, poids: 0,
+    compat: zipCompat(FL_PROFILES_ALL, Array(FL_PROFILES_ALL.length).fill("O")) },
+  { id: "fl_keyless", nom: "Keyless (Profilés uniquement, impose une seule télécommande)", achatHt: 416, cessionPose: 0, prixTtc: 555, poids: 0,
+    compat: zipCompat(FL_PROFILES_ALL, Array(FL_PROFILES_ALL.length).fill("O")) },
+  { id: "fl_pack_allure", nom: "Pack Allure : volant cuir + finition aérateurs grise + jantes alu 16'' BKB en BVM (Profilés uniquement, de série sur M69LJG/H70LMF/H74LMF Wellness)", achatHt: 668, cessionPose: 0, prixTtc: 891, poids: 0,
+    compat: compatManuel({
+      ...statutListe(["fl_60lg_bvm","fl_60lg_bva","fl_64ldf_bvm","fl_64ldf_bva","fl_67lo_bvm","fl_67lo_bva","fl_70ljg_bvm","fl_70ljg_bva"], FL_PROFILES_ALL, "O"),
+      ...statutListe(["fl_69ljg_bvm","fl_69ljg_bva","fl_70lmf_bvm","fl_70lmf_bva","fl_74lmf_bvm","fl_74lmf_bva"], FL_PROFILES_ALL, "S"),
+    }) },
+].map((o) => ({ ...o, marque: "Fleurette" }));
+
+const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES];
 
 // ---------------------------------------------------------------------------
 // OPTIONS (statut par véhicule : "O" option payante, "S" de série, "-"/absent indisponible)
@@ -1167,6 +1296,6 @@ const RAPIDO_OPTIONS_VANS = [
     compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","-","-","-"]) },
 ].map((o) => ({ ...o, marque: "Rapido" }));
 
-const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS];
+const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS];
 
 module.exports = { VEHICULES, OPTIONS };
