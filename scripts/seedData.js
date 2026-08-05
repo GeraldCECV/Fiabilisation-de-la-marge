@@ -734,7 +734,7 @@ const ELIOS_OPTIONS = [
     compat: zipCompat(ELIOS_VEHICULE_IDS, ["O","O","O","O","O"]) },
   { id: "elios_pack_store_solaire", nom: "Pack accessoires Store et Panneau solaire", achatHt: 1000, cessionPose: 0, prixTtc: 1320, poids: 0,
     compat: zipCompat(ELIOS_VEHICULE_IDS, ["O","O","O","-","O"]) },
-  { id: "elios_pack_store_solaire_skylift", nom: "Pack accessoires Store et Panneau solaire (Sky-Lift, +200€ HT)", achatHt: 1200, cessionPose: 0, prixTtc: 1584, poids: 0,
+  { id: "elios_pack_store_solaire_skylift", nom: "Pack accessoires Store et Panneau solaire (Sky-Lift, +200€ HT)", achatHt: 1200, cessionPose: 0, prixTtc: 1590, poids: 0,
     compat: zipCompat(ELIOS_VEHICULE_IDS, ["-","-","-","O","-"]) },
 ].map((o) => ({ ...o, marque: "Elios" }));
 
