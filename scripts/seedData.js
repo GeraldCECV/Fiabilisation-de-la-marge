@@ -1147,7 +1147,7 @@ const STYLEVAN_VEHICULES = [
   { id: "sv_melbourne4_136bvm", nom: "Melbourne IV (Ford Transit Custom L2H1 136ch BVM, 4 places, lit haut relevable)", gamme: "Melbourne IV", prixUsineHt: 48621, prixPublicTtc: 64990 },
   { id: "sv_melbourne4_136bva", nom: "Melbourne IV (Ford Transit Custom L2H1 136ch BVA 8 vitesses, 4 places, lit haut relevable)", gamme: "Melbourne IV", prixUsineHt: 50200, prixPublicTtc: 67090 },
   { id: "sv_melbourne4_170bva", nom: "Melbourne IV (Ford Transit Custom L2H1 170ch BVA 8 vitesses, 4 places, lit haut relevable)", gamme: "Melbourne IV", prixUsineHt: 52981, prixPublicTtc: 70790 },
-].map((v) => ({ ...v, marque: "Stylevan", type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2026 }));
+].map((v) => ({ ...v, marque: "Stylevan", type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2027 }));
 
 const SV_BELIZE = ["sv_belize_136bvm","sv_belize_136bva","sv_belize_170bva"];
 const SV_MELBOURNE = ["sv_melbourne2_136bvm","sv_melbourne2_136bva","sv_melbourne2_170bva","sv_melbourne4_136bvm","sv_melbourne4_136bva","sv_melbourne4_170bva"];
