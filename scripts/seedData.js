@@ -716,7 +716,28 @@ CAMPEREVE_OPTIONS.forEach((o) => {
   }
 });
 
-const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES];
+const ELIOS_VEHICULE_IDS = ["elios_59t", "elios_63lb", "elios_63gx", "elios_63gxskylift", "elios_63family"];
+
+const ELIOS_VEHICULES = [
+  // Transport (1 800 € HT) inclus dans prixUsineHt, pour rester cohérent avec les autres marques
+  // dont le prix usine HT est toujours "avec transport" (tarif réseau HT au 01/07/2026)
+  { id: "elios_59t", nom: "Elios 59 T", gamme: "59", prixUsineHt: 46071, prixPublicTtc: 62500 },
+  { id: "elios_63lb", nom: "Elios 63 LB", gamme: "63", prixUsineHt: 47488, prixPublicTtc: 64500 },
+  { id: "elios_63gx", nom: "Elios 63 GX", gamme: "63", prixUsineHt: 49613, prixPublicTtc: 67500 },
+  { id: "elios_63gxskylift", nom: "Elios 63 GX Sky-Lift", gamme: "63", prixUsineHt: 52613, prixPublicTtc: 71500 },
+  { id: "elios_63family", nom: "Elios 63 Family", gamme: "63", prixUsineHt: 48196, prixPublicTtc: 65500 },
+].map((v) => ({ ...v, marque: "Elios", type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2027 }));
+
+const ELIOS_OPTIONS = [
+  { id: "elios_bva", nom: "Boîte de vitesses automatique", achatHt: 2685, cessionPose: 0, prixTtc: 3790, poids: 0,
+    compat: zipCompat(ELIOS_VEHICULE_IDS, ["O","O","O","O","O"]) },
+  { id: "elios_pack_store_solaire", nom: "Pack accessoires Store et Panneau solaire", achatHt: 1000, cessionPose: 0, prixTtc: 0, poids: 0,
+    compat: zipCompat(ELIOS_VEHICULE_IDS, ["O","O","O","-","O"]) },
+  { id: "elios_pack_store_solaire_skylift", nom: "Pack accessoires Store et Panneau solaire (Sky-Lift, +200€ HT)", achatHt: 1200, cessionPose: 0, prixTtc: 0, poids: 0,
+    compat: zipCompat(ELIOS_VEHICULE_IDS, ["-","-","-","O","-"]) },
+].map((o) => ({ ...o, marque: "Elios" }));
+
+const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES];
 
 // ---------------------------------------------------------------------------
 // OPTIONS (statut par véhicule : "O" option payante, "S" de série, "-"/absent indisponible)
@@ -1145,6 +1166,6 @@ const RAPIDO_OPTIONS_VANS = [
     compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","-","-","-"]) },
 ].map((o) => ({ ...o, marque: "Rapido" }));
 
-const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS];
+const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS];
 
 module.exports = { VEHICULES, OPTIONS };
