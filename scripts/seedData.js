@@ -1022,7 +1022,42 @@ const FLORIUM_BP_OPTIONS = [
     compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
 ].map((o) => ({ ...o, marque: "Florium" }));
 
-const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES];
+const ELISTER_BELIXTER_VEHICULE_IDS = ["fl_elister_73lmf", "fl_elister_73ljg", "fo_belixter_73lmf", "fo_belixter_73ljg"];
+
+const ELISTER_BELIXTER_VEHICULES = [
+  { id: "fl_elister_73lmf", nom: "Elister 73LMF (Sprinter Mercedes 150cv, BVM, Traction, 3T5/5T5)", gamme: "Elister", typeCarrosserie: "PROFILE", prixUsineHt: 81678, prixPublicTtc: 114230, marque: "Fleurette" },
+  { id: "fl_elister_73ljg", nom: "Elister 73LJG (Sprinter Mercedes 150cv, BVM, Traction, 3T5/5T5)", gamme: "Elister", typeCarrosserie: "PROFILE", prixUsineHt: 81678, prixPublicTtc: 114230, marque: "Fleurette" },
+  { id: "fo_belixter_73lmf", nom: "Belixter 73LMF (Sprinter Mercedes 150cv, BVM, Traction, 3T5/5T5)", gamme: "Belixter", typeCarrosserie: "PROFILE", prixUsineHt: 81678, prixPublicTtc: 114230, marque: "Florium" },
+  { id: "fo_belixter_73ljg", nom: "Belixter 73LJG (Sprinter Mercedes 150cv, BVM, Traction, 3T5/5T5)", gamme: "Belixter", typeCarrosserie: "PROFILE", prixUsineHt: 81678, prixPublicTtc: 114230, marque: "Florium" },
+].map((v) => ({ ...v, type: "CAMPING_CAR", collection: 2027 }));
+
+// Options communes Elister/Belixter (base Mercedes Sprinter partagée entre Fleurette et Florium) :
+// taguées "Fleurette" par convention côté DB (marque_id unique requis), mais compat couvre les 4
+// modèles des deux marques.
+const ELISTER_BELIXTER_OPTIONS = [
+  { id: "eb_pack_luxe_150ch", nom: "Pack LUXE 150ch BVA : BVA 9G-Tronic, volant cuir, assistant signalisation routière, détection fatigue, avertisseur franchissement ligne actif, Distronic Plus, combiné instruments visuel couleur, prise 12V tableau de bord, module pavillon confort", achatHt: 2867, cessionPose: 0, prixTtc: 4000, poids: 0,
+    compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
+  { id: "eb_pack_luxe_170ch", nom: "Pack LUXE 170ch BVA : BVA 9G-Tronic, volant cuir, assistant signalisation routière, détection fatigue, avertisseur franchissement ligne actif, Distronic Plus, combiné instruments visuel couleur, prise 12V tableau de bord, module pavillon confort", achatHt: 6092, cessionPose: 0, prixTtc: 8500, poids: 0,
+    compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
+  { id: "eb_jantes_alu17", nom: "Jantes alu 17'' (sans pneus 4 saisons)", achatHt: 300, cessionPose: 0, prixTtc: 400, poids: 0,
+    compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
+  { id: "eb_peinture_argent_iridium", nom: "Peinture métallisée argent iridium", achatHt: 1154, cessionPose: 0, prixTtc: 1538, poids: 0,
+    compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
+  { id: "eb_phares_led_hp", nom: "Phares LED hautes performances", achatHt: 1498, cessionPose: 0, prixTtc: 1997, poids: 0,
+    compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
+  { id: "eb_passage_ptac4t1_ptra5t5", nom: "Passage en PTAC 4T1 avec PTRA de 5T5", achatHt: 260, cessionPose: 0, prixTtc: 347, poids: 0,
+    compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
+  { id: "eb_sellerie_emocuir_ivoire", nom: "Sellerie Emocuir Ivoire avec fil champagne", achatHt: 1523, cessionPose: 0, prixTtc: 2150, poids: 0,
+    compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
+  { id: "eb_pack_serenity", nom: "Pack Serenity : Combi 4000ED Diesel et Électrique, DC/DC 60, panneau solaire 170W Black Booster", achatHt: 926, cessionPose: 0, prixTtc: 1308, poids: 0,
+    compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
+  { id: "eb_prise_12v_suppl", nom: "Prise 12V supplémentaire", achatHt: 105, cessionPose: 0, prixTtc: 150, poids: 0,
+    compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
+  { id: "eb_prise_220v_suppl", nom: "Prise 220V supplémentaire", achatHt: 105, cessionPose: 0, prixTtc: 150, poids: 0,
+    compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
+].map((o) => ({ ...o, marque: "Fleurette" }));
+
+const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES];
 
 // ---------------------------------------------------------------------------
 // OPTIONS (statut par véhicule : "O" option payante, "S" de série, "-"/absent indisponible)
@@ -1451,6 +1486,6 @@ const RAPIDO_OPTIONS_VANS = [
     compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","-","-","-"]) },
 ].map((o) => ({ ...o, marque: "Rapido" }));
 
-const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS, ...FLORIUM_BP_OPTIONS];
+const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS, ...FLORIUM_BP_OPTIONS, ...ELISTER_BELIXTER_OPTIONS];
 
 module.exports = { VEHICULES, OPTIONS };
