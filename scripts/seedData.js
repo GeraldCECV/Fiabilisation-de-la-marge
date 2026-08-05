@@ -719,21 +719,22 @@ CAMPEREVE_OPTIONS.forEach((o) => {
 const ELIOS_VEHICULE_IDS = ["elios_59t", "elios_63lb", "elios_63gx", "elios_63gxskylift", "elios_63family"];
 
 const ELIOS_VEHICULES = [
-  // Transport (1 800 € HT) inclus dans prixUsineHt, pour rester cohérent avec les autres marques
-  // dont le prix usine HT est toujours "avec transport" (tarif réseau HT au 01/07/2026)
-  { id: "elios_59t", nom: "Elios 59 T", gamme: "59", prixUsineHt: 46071, prixPublicTtc: 62500 },
-  { id: "elios_63lb", nom: "Elios 63 LB", gamme: "63", prixUsineHt: 47488, prixPublicTtc: 64500 },
-  { id: "elios_63gx", nom: "Elios 63 GX", gamme: "63", prixUsineHt: 49613, prixPublicTtc: 67500 },
-  { id: "elios_63gxskylift", nom: "Elios 63 GX Sky-Lift", gamme: "63", prixUsineHt: 52613, prixPublicTtc: 71500 },
-  { id: "elios_63family", nom: "Elios 63 Family", gamme: "63", prixUsineHt: 48196, prixPublicTtc: 65500 },
+  // Prix usine HT hors transport (le tarif Elios sépare explicitement le transport, contrairement
+  // aux autres marques) : 1 800 € HT de transport à ajouter manuellement via le champ "Transport
+  // usine" du calculateur, dossier par dossier.
+  { id: "elios_59t", nom: "Elios 59 T", gamme: "59", prixUsineHt: 44271, prixPublicTtc: 62500 },
+  { id: "elios_63lb", nom: "Elios 63 LB", gamme: "63", prixUsineHt: 45688, prixPublicTtc: 64500 },
+  { id: "elios_63gx", nom: "Elios 63 GX", gamme: "63", prixUsineHt: 47813, prixPublicTtc: 67500 },
+  { id: "elios_63gxskylift", nom: "Elios 63 GX Sky-Lift", gamme: "63", prixUsineHt: 50813, prixPublicTtc: 71500 },
+  { id: "elios_63family", nom: "Elios 63 Family", gamme: "63", prixUsineHt: 46396, prixPublicTtc: 65500 },
 ].map((v) => ({ ...v, marque: "Elios", type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2027 }));
 
 const ELIOS_OPTIONS = [
   { id: "elios_bva", nom: "Boîte de vitesses automatique", achatHt: 2685, cessionPose: 0, prixTtc: 3790, poids: 0,
     compat: zipCompat(ELIOS_VEHICULE_IDS, ["O","O","O","O","O"]) },
-  { id: "elios_pack_store_solaire", nom: "Pack accessoires Store et Panneau solaire", achatHt: 1000, cessionPose: 0, prixTtc: 0, poids: 0,
+  { id: "elios_pack_store_solaire", nom: "Pack accessoires Store et Panneau solaire", achatHt: 1000, cessionPose: 0, prixTtc: 1320, poids: 0,
     compat: zipCompat(ELIOS_VEHICULE_IDS, ["O","O","O","-","O"]) },
-  { id: "elios_pack_store_solaire_skylift", nom: "Pack accessoires Store et Panneau solaire (Sky-Lift, +200€ HT)", achatHt: 1200, cessionPose: 0, prixTtc: 0, poids: 0,
+  { id: "elios_pack_store_solaire_skylift", nom: "Pack accessoires Store et Panneau solaire (Sky-Lift, +200€ HT)", achatHt: 1200, cessionPose: 0, prixTtc: 1320, poids: 0,
     compat: zipCompat(ELIOS_VEHICULE_IDS, ["-","-","-","O","-"]) },
 ].map((o) => ({ ...o, marque: "Elios" }));
 
