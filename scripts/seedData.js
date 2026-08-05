@@ -1059,7 +1059,79 @@ const ELISTER_BELIXTER_OPTIONS = [
     compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
 ].map((o) => ({ ...o, marque: "Fleurette" }));
 
-const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES];
+const RANDGER_VEHICULE_IDS = [
+  "rg_540select","rg_600select","rg_602select","rg_635select","rg_640select",
+  "rg_r602","rg_r635","rg_r640","rg_r555","rg_r595",
+  "rg_r5604x2_130","rg_r5604x2_165bva","rg_r5604x4",
+];
+
+const RANDGER_VEHICULES = [
+  { id: "rg_540select", nom: "540 Select (Citroën Jumper 140cv)", gamme: "Select", prixUsineHt: 41377.58, prixPublicTtc: 55790 },
+  { id: "rg_600select", nom: "600 Select (Citroën Jumper 140cv)", gamme: "Select", prixUsineHt: 42638.42, prixPublicTtc: 57490 },
+  { id: "rg_602select", nom: "602 Select (Citroën Jumper 140cv)", gamme: "Select", prixUsineHt: 42267.58, prixPublicTtc: 56990 },
+  { id: "rg_635select", nom: "635 Select (Citroën Jumper 140cv)", gamme: "Select", prixUsineHt: 45753.42, prixPublicTtc: 61690 },
+  { id: "rg_640select", nom: "640 Select (Citroën Jumper 140cv)", gamme: "Select", prixUsineHt: 44492.58, prixPublicTtc: 59990 },
+  { id: "rg_r602", nom: "R602 (Citroën Jumper 140cv)", gamme: "R", prixUsineHt: 47659.33, prixPublicTtc: 64990 },
+  { id: "rg_r635", nom: "R635 (Citroën Jumper 140cv)", gamme: "R", prixUsineHt: 49492.67, prixPublicTtc: 67490 },
+  { id: "rg_r640", nom: "R640 (Citroën Jumper 140cv)", gamme: "R", prixUsineHt: 49492.67, prixPublicTtc: 67490 },
+  { id: "rg_r555", nom: "R555 (Fiat Ducato 140cv)", gamme: "R", prixUsineHt: 54259.33, prixPublicTtc: 73990 },
+  { id: "rg_r595", nom: "R595 (Fiat Ducato 140cv)", gamme: "R", prixUsineHt: 53526.00, prixPublicTtc: 72990 },
+  { id: "rg_r5604x2_130", nom: "R560 4x2 (Ford Transit 130cv)", gamme: "R560", prixUsineHt: 43992.67, prixPublicTtc: 59990 },
+  { id: "rg_r5604x2_165bva", nom: "R560 4x2 (Ford Transit 165cv BVA)", gamme: "R560", prixUsineHt: 45459.33, prixPublicTtc: 61990 },
+  { id: "rg_r5604x4", nom: "R560 4x4 (Ford Transit 165cv)", gamme: "R560", prixUsineHt: 50959.33, prixPublicTtc: 69490 },
+].map((v) => ({ ...v, marque: "Randger", type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2027 }));
+
+// Colonnes du tarif options (11) : 540 SELECT, 640 SELECT, 635 SELECT, 602 SELECT, 600 SELECT,
+// R555, R595, R640, R602, R560 4X2, R560 4X4. R635 absent de la grille d'options d'origine :
+// comme R635 partage exactement le même prix que R640 (67 490 € TTC), on lui applique par
+// défaut la même compatibilité que R640 (à vérifier/confirmer).
+const RG_OPT_COLS = ["rg_540select","rg_640select","rg_635select","rg_602select","rg_600select","rg_r555","rg_r595","rg_r640","rg_r602","rg_r5604x2_130","rg_r5604x4"];
+// Le R560 4x2 165cv BVA suit le même statut que le R560 4x2 130cv (colonne unique "R560 4X2" dans le tarif)
+function ajouteVariantesRandger(compat) {
+  const out = { ...compat };
+  if ("rg_r640" in out) out["rg_r635"] = out["rg_r640"];
+  if ("rg_r5604x2_130" in out) out["rg_r5604x2_165bva"] = out["rg_r5604x2_130"];
+  return out;
+}
+
+const RANDGER_OPTIONS = [
+  { id: "rg_grand_lanterneau_dinette", nom: "Grand lanterneau électrique au-dessus dinette (incompatible avec l'option Sky-up)", achatHt: 1338.75, cessionPose: 0, prixTtc: 1890, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["-","-","-","-","-","-","-","O","O","-","-"])) },
+  { id: "rg_sky_up", nom: "Sky-Up (incompatible avec grand lanterneau électrique, supprime le toit panoramique)", achatHt: 5925.92, cessionPose: 0, prixTtc: 7990, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","-","-","O","O","-","-"])) },
+  { id: "rg_pare_buffle_serigraphie", nom: "Pare-buffle sérigraphie noir", achatHt: 630.42, cessionPose: 0, prixTtc: 890, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["-","-","-","-","-","-","-","-","-","O","S"])) },
+  { id: "rg_batterie_lithium", nom: "Batterie Lithium", achatHt: 701.25, cessionPose: 0, prixTtc: 1990, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","S","S","S","S","S","S"])) },
+  { id: "rg_complement_3eme_couchage", nom: "Complément 3ème couchage dinette", achatHt: 205.42, cessionPose: 0, prixTtc: 290, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","S","S","O","O","O","O"])) },
+  { id: "rg_pack_multimedia_zenec", nom: "Pack Multimedia Zenec", achatHt: 701.25, cessionPose: 0, prixTtc: 1690, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","S","S","S","S","-","-"])) },
+  { id: "rg_pack_drive", nom: "Pack Drive (JA 16'' + boîte automatique)", achatHt: 2521.67, cessionPose: 0, prixTtc: 3400, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","-","-","-","-","-","-"])) },
+  { id: "rg_moteur_180cv_pack_drive", nom: "Motorisation 180cv Pack Drive (plus-value au 140cv standard)", achatHt: 1833.33, cessionPose: 0, prixTtc: 2500, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","-","-","-","-","-","-"])) },
+  { id: "rg_pack_confort", nom: "Pack Confort : moustiquaire (590€ TTC) + occultant (890€ TTC) + store (1290€ TTC) + panneau solaire (790€ TTC)", achatHt: 1038.33, cessionPose: 0, prixTtc: 3560, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","-","-","-","-","-","-"])) },
+  { id: "rg_boite_auto_140cv", nom: "Boîte automatique 140cv", achatHt: 2192.67, cessionPose: 0, prixTtc: 2990, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["-","-","-","-","-","-","-","O","O","-","-"])) },
+  { id: "rg_moteur_180cv_bva_obligatoire", nom: "Motorisation 180cv + boîte automatique obligatoire (plus-value au 140cv standard)", achatHt: 4026.00, cessionPose: 0, prixTtc: 5490, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["-","-","-","-","-","O","O","O","O","-","-"])) },
+  { id: "rg_peinture_metallisee_fiat_citroen", nom: "Peinture métallisée (porteur Fiat Ducato / Citroën Jumper)", achatHt: 595.00, cessionPose: 0, prixTtc: 840, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","O","O","O","O","-","-"])) },
+  { id: "rg_phares_full_led", nom: "Phares Full LED", achatHt: 913.75, cessionPose: 0, prixTtc: 1290, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","O","O","O","O","-","-"])) },
+  { id: "rg_frein_stationnement_elec", nom: "Frein de stationnement électrique", achatHt: 488.75, cessionPose: 0, prixTtc: 690, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","O","O","O","O","-","-"])) },
+  { id: "rg_roue_secours_treuil", nom: "Roue de secours + treuil", achatHt: 205.42, cessionPose: 0, prixTtc: 290, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","O","O","O","O","-","-"])) },
+  { id: "rg_allumage_feux_auto_capteur_pluie", nom: "Allumage feux automatiques + capteur de pluie", achatHt: 205.42, cessionPose: 0, prixTtc: 290, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["O","O","O","O","O","S","S","S","S","-","-"])) },
+  { id: "rg_peinture_metallisee_ford", nom: "Peinture métallisée (porteur Ford Transit)", achatHt: 417.92, cessionPose: 0, prixTtc: 590, poids: 0,
+    compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["-","-","-","-","-","-","-","-","-","O","O"])) },
+].map((o) => ({ ...o, marque: "Randger" }));
+
+const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES, ...RANDGER_VEHICULES];
 
 // ---------------------------------------------------------------------------
 // OPTIONS (statut par véhicule : "O" option payante, "S" de série, "-"/absent indisponible)
@@ -1488,6 +1560,6 @@ const RAPIDO_OPTIONS_VANS = [
     compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","-","-","-"]) },
 ].map((o) => ({ ...o, marque: "Rapido" }));
 
-const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS, ...FLORIUM_BP_OPTIONS, ...ELISTER_BELIXTER_OPTIONS];
+const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS, ...FLORIUM_BP_OPTIONS, ...ELISTER_BELIXTER_OPTIONS, ...RANDGER_OPTIONS];
 
 module.exports = { VEHICULES, OPTIONS };
