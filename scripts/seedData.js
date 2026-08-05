@@ -1018,6 +1018,8 @@ const FLORIUM_BP_OPTIONS = [
     compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
   { id: "fobp_store_manuel_noir", nom: "Store manuel noir 3,75m (sur 59) ou 4,00m (sur 63), posé usine", achatHt: 1476, cessionPose: 0, prixTtc: 1710, poids: 29,
     compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
+  { id: "fobp_pack_long_life", nom: "Pack Long Life : store manuel noir 3,75 ou 4,00m (suivant modèle) + panneau solaire 160W (non posé) + 2 fauteuils camper", achatHt: 673, cessionPose: 0, prixTtc: 2239, poids: 47,
+    compat: zipCompat(FOBP_ALL, Array(FOBP_ALL.length).fill("O")) },
 ].map((o) => ({ ...o, marque: "Florium" }));
 
 const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES];
