@@ -1055,6 +1055,8 @@ const ELISTER_BELIXTER_OPTIONS = [
     compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
   { id: "eb_prise_220v_suppl", nom: "Prise 220V supplémentaire", achatHt: 105, cessionPose: 0, prixTtc: 150, poids: 0,
     compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
+  { id: "eb_personnalisation_unitaire", nom: "Personnalisation unitaire (consulter Fleurette Constructeur)", achatHt: 347, cessionPose: 0, prixTtc: 490, poids: 0,
+    compat: zipCompat(ELISTER_BELIXTER_VEHICULE_IDS, ["O","O","O","O"]) },
 ].map((o) => ({ ...o, marque: "Fleurette" }));
 
 const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES];
