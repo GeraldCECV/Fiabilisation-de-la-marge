@@ -1131,7 +1131,114 @@ const RANDGER_OPTIONS = [
     compat: ajouteVariantesRandger(zipCompat(RG_OPT_COLS, ["-","-","-","-","-","-","-","-","-","O","O"])) },
 ].map((o) => ({ ...o, marque: "Randger" }));
 
-const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES, ...RANDGER_VEHICULES];
+const STYLEVAN_VEHICULE_IDS = [
+  "sv_belize_136bvm","sv_belize_136bva","sv_belize_170bva",
+  "sv_melbourne2_136bvm","sv_melbourne2_136bva","sv_melbourne2_170bva",
+  "sv_melbourne4_136bvm","sv_melbourne4_136bva","sv_melbourne4_170bva",
+];
+
+const STYLEVAN_VEHICULES = [
+  { id: "sv_belize_136bvm", nom: "Belize (Ford Transit Custom L2H1 136ch BVM, 3T2)", gamme: "Belize", prixUsineHt: 49982, prixPublicTtc: 66800 },
+  { id: "sv_belize_136bva", nom: "Belize (Ford Transit Custom L2H1 136ch BVA 8 vitesses, 3T2)", gamme: "Belize", prixUsineHt: 51560, prixPublicTtc: 68900 },
+  { id: "sv_belize_170bva", nom: "Belize (Ford Transit Custom L2H1 170ch BVA 8 vitesses, 3T2)", gamme: "Belize", prixUsineHt: 54341, prixPublicTtc: 72600 },
+  { id: "sv_melbourne2_136bvm", nom: "Melbourne II (Ford Transit Custom L2H1 136ch BVM, 2 places)", gamme: "Melbourne II", prixUsineHt: 45615, prixPublicTtc: 60990 },
+  { id: "sv_melbourne2_136bva", nom: "Melbourne II (Ford Transit Custom L2H1 136ch BVA 8 vitesses, 2 places)", gamme: "Melbourne II", prixUsineHt: 47193, prixPublicTtc: 63090 },
+  { id: "sv_melbourne2_170bva", nom: "Melbourne II (Ford Transit Custom L2H1 170ch BVA 8 vitesses, 2 places)", gamme: "Melbourne II", prixUsineHt: 49974, prixPublicTtc: 66790 },
+  { id: "sv_melbourne4_136bvm", nom: "Melbourne IV (Ford Transit Custom L2H1 136ch BVM, 4 places, lit haut relevable)", gamme: "Melbourne IV", prixUsineHt: 48621, prixPublicTtc: 64990 },
+  { id: "sv_melbourne4_136bva", nom: "Melbourne IV (Ford Transit Custom L2H1 136ch BVA 8 vitesses, 4 places, lit haut relevable)", gamme: "Melbourne IV", prixUsineHt: 50200, prixPublicTtc: 67090 },
+  { id: "sv_melbourne4_170bva", nom: "Melbourne IV (Ford Transit Custom L2H1 170ch BVA 8 vitesses, 4 places, lit haut relevable)", gamme: "Melbourne IV", prixUsineHt: 52981, prixPublicTtc: 70790 },
+].map((v) => ({ ...v, marque: "Stylevan", type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2026 }));
+
+const SV_BELIZE = ["sv_belize_136bvm","sv_belize_136bva","sv_belize_170bva"];
+const SV_MELBOURNE = ["sv_melbourne2_136bvm","sv_melbourne2_136bva","sv_melbourne2_170bva","sv_melbourne4_136bvm","sv_melbourne4_136bva","sv_melbourne4_170bva"];
+const SV_MELBOURNE_II = ["sv_melbourne2_136bvm","sv_melbourne2_136bva","sv_melbourne2_170bva"];
+const SV_ALL = [...SV_BELIZE, ...SV_MELBOURNE];
+
+const STYLEVAN_OPTIONS = [
+  // ---- Packs Custom (mention "option nécessaire" dans le tarif = quasi systématique à la vente) ----
+  { id: "sv_pack_custom_belize", nom: "Pack Custom Belize : pré-disposition panneau solaire, banquette BZ électrique, chauffe-eau Truma (boiler 10L), batterie AGM 92Ah, préparation attelage électrique, sacoche 2 fauteuils+table camping, tapis de sol cabine, variateur luminosité, 2ème porte latérale vitrée gauche, stores avant Dométic, rideaux opacifiants, sellerie noire perlée, toile grande ouverture 240° avec moustiquaire", achatHt: 800, cessionPose: 0, prixTtc: 1200, poids: 0,
+    compat: zipCompat(SV_BELIZE, ["O","O","O"]) },
+  { id: "sv_pack_custom_melbourne", nom: "Pack Custom Melbourne : pré-disposition panneau solaire, chauffe-eau Whale (réservoir 8L), batterie AGM 92Ah, préparation attelage électrique, sacoche 2 fauteuils+table camping, tapis de sol cabine, variateur luminosité, 2ème porte latérale vitrée gauche, rideaux opacifiants, stores avant Dometic, toile grande ouverture 240° avec moustiquaire", achatHt: 800, cessionPose: 0, prixTtc: 1200, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+
+  // ---- Options Porteurs Ford (identiques Belize/Melbourne) ----
+  { id: "sv_peinture_metallisee", nom: "Peinture métallisée Gris Moondust ou Noir Agate (toit polyester Gris Moondust) ou Gris Matter", achatHt: 1523, cessionPose: 0, prixTtc: 2100, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+  { id: "sv_pneumatiques_4saisons", nom: "Pneumatiques 4 saisons", achatHt: 302, cessionPose: 0, prixTtc: 403, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+  { id: "sv_jantes_alu19", nom: "Jantes Alu 19'' (attention hauteur augmentée)", achatHt: 780, cessionPose: 0, prixTtc: 1040, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+  { id: "sv_ecrou_antivol", nom: "Écrou antivol", achatHt: 60, cessionPose: 0, prixTtc: 80, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+  { id: "sv_projecteurs_led_matrix", nom: "Projecteurs Led Matrix adaptatifs / Feux de route automatiques anti-éblouissants", achatHt: 714, cessionPose: 0, prixTtc: 952, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+  { id: "sv_version_4x4", nom: "Version 4x4 (uniquement sur 170ch/BVA)", achatHt: 3328, cessionPose: 0, prixTtc: 4437, poids: 0,
+    compat: zipCompat(["sv_belize_170bva","sv_melbourne2_170bva","sv_melbourne4_170bva"], ["O","O","O"]) },
+  { id: "sv_pack_assistance_conduite", nom: "Pack Assistance à la conduite améliorée (360°) : régulateur de vitesse adaptatif, aide au centrage de la voie, caméra de parking", achatHt: 1848, cessionPose: 0, prixTtc: 2464, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+  { id: "sv_navigation_gps", nom: "Navigation GPS", achatHt: 509, cessionPose: 0, prixTtc: 678, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+  { id: "sv_chargeur_induction", nom: "Chargeur smartphone à induction", achatHt: 281, cessionPose: 0, prixTtc: 375, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+  { id: "sv_crochet_attelage_fixe", nom: "Crochet d'attelage fixe", achatHt: 497, cessionPose: 0, prixTtc: 663, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+  { id: "sv_miroir_intelligent_dashcam", nom: "Miroir intelligent, rétroviseur digital et Dash Cam", achatHt: 1193, cessionPose: 0, prixTtc: 1590, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+  { id: "sv_volant_chauffant", nom: "Volant chauffant", achatHt: 110, cessionPose: 0, prixTtc: 147, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+  { id: "sv_clim_bizone", nom: "Climatisation Bi-zone", achatHt: 338, cessionPose: 0, prixTtc: 451, poids: 0,
+    compat: zipCompat(SV_ALL, Array(SV_ALL.length).fill("O")) },
+
+  // ---- Options Cellule Belize ----
+  { id: "sv_toile_douche_belize", nom: "Toile de douche avec bonde intégrée", achatHt: 355, cessionPose: 0, prixTtc: 490, poids: 0,
+    compat: zipCompat(SV_BELIZE, ["O","O","O"]) },
+  { id: "sv_echelle_lit_belize", nom: "Échelle de lit", achatHt: 114, cessionPose: 0, prixTtc: 158, poids: 0,
+    compat: zipCompat(SV_BELIZE, ["O","O","O"]) },
+  { id: "sv_barre_seuil_belize", nom: "Barre de seuil alu brossée sur pare-choc arrière", achatHt: 65, cessionPose: 0, prixTtc: 90, poids: 0,
+    compat: zipCompat(SV_BELIZE, ["O","O","O"]) },
+  { id: "sv_surmatelas_belize", nom: "Surmatelas matelassé de 2cm pour couchage du bas", achatHt: 179, cessionPose: 0, prixTtc: 249, poids: 0,
+    compat: zipCompat(SV_BELIZE, ["O","O","O"]) },
+  { id: "sv_pack_liberte_belize", nom: "Pack Liberté : 1 batterie Lithium 150Ah posée avec connexion Bluetooth + panneau solaire 200W extra plat 3mm (non monté)", achatHt: 1238, cessionPose: 0, prixTtc: 1712, poids: 0,
+    compat: zipCompat(SV_BELIZE, ["O","O","O"]) },
+  { id: "sv_kit_isolation_toit_belize", nom: "Kit isolation de toit (non posé)", achatHt: 390, cessionPose: 0, prixTtc: 542, poids: 0,
+    compat: zipCompat(SV_BELIZE, ["O","O","O"]) },
+  { id: "sv_store_fiamma_belize", nom: "Store Fiamma FR35 Pro 270 noir avec kit de fixation (non posé)", achatHt: 443, cessionPose: 0, prixTtc: 616, poids: 0,
+    compat: zipCompat(SV_BELIZE, ["O","O","O"]) },
+  { id: "sv_toile_hayon_belize", nom: "Toile de Hayon", achatHt: 280, cessionPose: 0, prixTtc: 389, poids: 0,
+    compat: zipCompat(SV_BELIZE, ["O","O","O"]) },
+  { id: "sv_moustiquaire_porte_laterale_belize", nom: "Moustiquaire porte latérale (préciser le côté et le nombre)", achatHt: 148, cessionPose: 0, prixTtc: 206, poids: 0,
+    compat: zipCompat(SV_BELIZE, ["O","O","O"]) },
+  { id: "sv_moustiquaire_hayon_ar_belize", nom: "Moustiquaire hayon AR", achatHt: 148, cessionPose: 0, prixTtc: 206, poids: 0,
+    compat: zipCompat(SV_BELIZE, ["O","O","O"]) },
+
+  // ---- Options Cellule Melbourne ----
+  { id: "sv_coffre_rangement_melbourne", nom: "Coffre de rangement avec coussin d'assise sous lit", achatHt: 276, cessionPose: 0, prixTtc: 390, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+  { id: "sv_lit_haut_2places_melbourne2", nom: "Lit haut 2 places dimensions 128x205cm (Melbourne II uniquement)", achatHt: 700, cessionPose: 0, prixTtc: 990, poids: 0,
+    compat: zipCompat(SV_MELBOURNE_II, ["O","O","O"]) },
+  { id: "sv_sellerie_noire_perlee_melbourne", nom: "Sellerie noire perlée sur 2 sièges porteur avant uniquement", achatHt: 347, cessionPose: 0, prixTtc: 490, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+  { id: "sv_echelle_lit_melbourne", nom: "Échelle de lit", achatHt: 114, cessionPose: 0, prixTtc: 158, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+  { id: "sv_barre_seuil_melbourne", nom: "Barre de seuil alu brossée sur pare-choc arrière", achatHt: 65, cessionPose: 0, prixTtc: 90, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+  { id: "sv_surmatelas_melbourne", nom: "Surmatelas matelassé de 2cm pour couchage du bas", achatHt: 179, cessionPose: 0, prixTtc: 249, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+  { id: "sv_pack_liberte_melbourne", nom: "Pack Liberté : 1 batterie Lithium 150Ah chauffante posée avec connexion Bluetooth + panneau solaire 200W extra plat 3mm (non monté)", achatHt: 1238, cessionPose: 0, prixTtc: 1712, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+  { id: "sv_kit_isolation_toit_melbourne", nom: "Kit isolation de toit (non posé)", achatHt: 390, cessionPose: 0, prixTtc: 542, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+  { id: "sv_store_fiamma_melbourne", nom: "Store Fiamma FR35 Pro 270 noir avec kit de fixation (non posé)", achatHt: 443, cessionPose: 0, prixTtc: 616, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+  { id: "sv_toile_hayon_melbourne", nom: "Toile de Hayon", achatHt: 280, cessionPose: 0, prixTtc: 389, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+  { id: "sv_moustiquaire_porte_laterale_melbourne", nom: "Moustiquaire porte latérale (préciser le côté et le nombre)", achatHt: 148, cessionPose: 0, prixTtc: 206, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+  { id: "sv_moustiquaire_hayon_ar_melbourne", nom: "Moustiquaire hayon AR", achatHt: 148, cessionPose: 0, prixTtc: 206, poids: 0,
+    compat: zipCompat(SV_MELBOURNE, Array(SV_MELBOURNE.length).fill("O")) },
+].map((o) => ({ ...o, marque: "Stylevan" }));
+
+const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES, ...RANDGER_VEHICULES, ...STYLEVAN_VEHICULES];
 
 // ---------------------------------------------------------------------------
 // OPTIONS (statut par véhicule : "O" option payante, "S" de série, "-"/absent indisponible)
@@ -1560,6 +1667,6 @@ const RAPIDO_OPTIONS_VANS = [
     compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","-","-","-"]) },
 ].map((o) => ({ ...o, marque: "Rapido" }));
 
-const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS, ...FLORIUM_BP_OPTIONS, ...ELISTER_BELIXTER_OPTIONS, ...RANDGER_OPTIONS];
+const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS, ...FLORIUM_BP_OPTIONS, ...ELISTER_BELIXTER_OPTIONS, ...RANDGER_OPTIONS, ...STYLEVAN_OPTIONS];
 
 module.exports = { VEHICULES, OPTIONS };
