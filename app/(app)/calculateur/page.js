@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
 import { calculerMarge, BATTERIE_COUTS } from "@/lib/margeEngine";
+import { FRAIS_TRANSPORT_PAR_MARQUE } from "@/scripts/fraisTransportData";
 
 const ANNEE_COURANTE = 2027;
 const fmt = (n) => (Number(n) || 0).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
@@ -83,6 +84,16 @@ export default function CalculateurPage() {
       const filtres = typeParDefaut ? liste.filter((m) => m.type_carrosserie === typeParDefaut) : liste;
       setModeles(filtres);
       if (filtres.length) setModeleId(filtres[0].id);
+
+      const nomMarque = marques.find((m) => m.id === marqueId)?.nom;
+      const defauts = FRAIS_TRANSPORT_PAR_MARQUE[nomMarque];
+      if (defauts) {
+        setFraisSortieUsine(defauts.fraisSortieUsine);
+        setTransportUsine(defauts.transportUsine);
+      } else {
+        setFraisSortieUsine(0);
+        setTransportUsine(0);
+      }
     })();
   }, [marqueId]);
 
