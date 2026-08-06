@@ -404,10 +404,6 @@ export default function EditDossierPage() {
                 <input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
               </div>
             )}
-            <div className="mt-3">
-              <div className="text-xs text-sub">Bon de préparation / commentaires</div>
-              <textarea value={commentaires} onChange={(e) => setCommentaires(e.target.value)} rows={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
-            </div>
           </div>
         </div>
 
@@ -425,6 +421,10 @@ export default function EditDossierPage() {
           <button onClick={enregistrer} disabled={saving} className="w-full py-2.5 rounded-md bg-ink text-white font-bold text-sm disabled:opacity-60">
             {saving ? "Enregistrement…" : "Enregistrer les modifications"}
           </button>
+          <div className="bg-surface border border-border rounded-lg p-5">
+            <div className="text-xs text-sub">Bon de préparation / commentaires</div>
+            <textarea value={commentaires} onChange={(e) => setCommentaires(e.target.value)} rows={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
+          </div>
           {error && <div className="text-neg text-xs">{error}</div>}
         </div>
       </div>
