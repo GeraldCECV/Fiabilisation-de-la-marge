@@ -20,6 +20,7 @@ export default function CalculateurPage() {
   const [modeleId, setModeleId] = useState(null);
   const [options, setOptions] = useState([]);
   const [optionsChoisiesIds, setOptionsChoisiesIds] = useState([]);
+  const [optionsHymerTtc, setOptionsHymerTtc] = useState("");
   const [equipementsYpocamp, setEquipementsYpocamp] = useState([]);
   const [equipementsYpocampChoisisIds, setEquipementsYpocampChoisisIds] = useState([]);
   const [baremes, setBaremes] = useState([]);
@@ -103,6 +104,7 @@ export default function CalculateurPage() {
       liste.sort((a, b) => a.designation.localeCompare(b.designation, "fr", { sensitivity: "base" }));
       setOptions(liste);
       setOptionsChoisiesIds([]);
+      setOptionsHymerTtc("");
       setEquipementsYpocampChoisisIds([]);
       setDossierIdActuel(null);
       setMsg("");
@@ -119,6 +121,7 @@ export default function CalculateurPage() {
   }, [modeleId]);
 
   const modele = modeles.find((m) => m.id === modeleId);
+  const estHymer = marques.find((m) => m.id === marqueId)?.nom === "Hymer";
   const optionsSelectionnables = options.filter((o) => o.statut === "OPTION");
   const optionsDeSerie = options.filter((o) => o.statut === "SERIE");
   const optionsChoisies = optionsSelectionnables.filter((o) => optionsChoisiesIds.includes(o.id));
@@ -129,6 +132,7 @@ export default function CalculateurPage() {
     return calculerMarge({
       modele,
       optionsChoisies,
+      optionsHymerTtc: estHymer ? (optionsHymerTtc === "" ? 0 : Number(optionsHymerTtc)) : null,
       equipementsYpocampChoisies,
       baremes,
       forfaits,
@@ -144,7 +148,7 @@ export default function CalculateurPage() {
       expo,
       batterieChoix,
     });
-  }, [modele, optionsChoisies, equipementsYpocampChoisies, baremes, forfaits, prixNegocie, financementActif, financementMontant, fraisSortieUsine, transportUsine, cessionOdoo, transportIntersite, expo, batterieChoix]);
+  }, [modele, estHymer, optionsChoisies, optionsHymerTtc, equipementsYpocampChoisies, baremes, forfaits, prixNegocie, financementActif, financementMontant, fraisSortieUsine, transportUsine, cessionOdoo, transportIntersite, expo, batterieChoix]);
 
   // Tant que le prix négocié n'a pas été modifié à la main, il suit automatiquement
   // le prix catalogue (qui inclut déjà les options usine et la batterie sélectionnées).
@@ -167,6 +171,7 @@ export default function CalculateurPage() {
       vendeur_id: session.user.id,
       modele_id: modele.id,
       options_choisies: optionsChoisiesIds,
+      options_hymer_ttc: estHymer ? (Number(optionsHymerTtc) || 0) : null,
       equipements_ypocamp_choisis: equipementsYpocampChoisisIds,
       stock_statut: stockStatut,
       numero_chassis: stockStatut === "STOCK" ? numeroChassis : null,
@@ -233,6 +238,7 @@ export default function CalculateurPage() {
     setExpo("PAS_EXPO");
     setBatterieChoix("Camping car avec batterie");
     setOptionsChoisiesIds([]);
+    setOptionsHymerTtc("");
     setEquipementsYpocampChoisisIds([]);
     setFinancementActif(false);
     setFinancementMontant(0);
@@ -366,33 +372,49 @@ export default function CalculateurPage() {
             </div>
           </div>
 
-          <div className="bg-surface border border-border rounded-lg p-5">
-            <label className="text-xs text-sub uppercase font-bold">Options usine ({optionsSelectionnables.length} disponibles)</label>
-            <select className="w-full mt-2 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" value=""
-              onChange={(e) => { const id = e.target.value; if (id) setOptionsChoisiesIds((prev) => (prev.includes(id) ? prev : [...prev, id])); }}>
-              <option value="">+ Ajouter une option usine…</option>
-              {optionsSelectionnables.filter((o) => !optionsChoisiesIds.includes(o.id)).map((o) => (
-                <option key={o.id} value={o.id}>{o.designation} — {fmt(o.prix_ttc)}</option>
-              ))}
-            </select>
-            <div className="mt-3 space-y-1.5">
-              {optionsChoisies.map((o) => (
-                <div key={o.id} className="flex items-center gap-2 text-sm bg-[#F0FFFE] border border-border rounded-md px-2 py-1.5">
-                  <span className="flex-1">{o.designation}</span>
-                  <span className="text-sub">{fmt(o.prix_ttc)}</span>
-                  <button onClick={() => setOptionsChoisiesIds((prev) => prev.filter((id) => id !== o.id))} className="text-neg px-1">×</button>
-                </div>
-              ))}
+          {estHymer ? (
+            <div className="bg-surface border border-border rounded-lg p-5">
+              <label className="text-xs text-sub uppercase font-bold">Options usine selon configuration (TTC client)</label>
+              <p className="text-[11px] text-sub mt-1 mb-2">
+                Catalogue Hymer trop volumineux pour être détaillé ligne à ligne : saisissez directement le total TTC des options choisies avec le client.
+              </p>
+              <input
+                type="number"
+                value={optionsHymerTtc}
+                onChange={(e) => setOptionsHymerTtc(e.target.value)}
+                placeholder="0"
+                className="w-full border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]"
+              />
             </div>
-            {optionsDeSerie.length > 0 && (
-              <div className="mt-3 pt-3 border-t border-border">
-                <div className="text-[11px] text-sub mb-1.5">Inclus de série sur ce modèle</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {optionsDeSerie.map((o) => <span key={o.id} className="text-[11px] px-2 py-0.5 rounded-full bg-[#E0F3F0] text-pos">{o.designation}</span>)}
-                </div>
+          ) : (
+            <div className="bg-surface border border-border rounded-lg p-5">
+              <label className="text-xs text-sub uppercase font-bold">Options usine ({optionsSelectionnables.length} disponibles)</label>
+              <select className="w-full mt-2 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" value=""
+                onChange={(e) => { const id = e.target.value; if (id) setOptionsChoisiesIds((prev) => (prev.includes(id) ? prev : [...prev, id])); }}>
+                <option value="">+ Ajouter une option usine…</option>
+                {optionsSelectionnables.filter((o) => !optionsChoisiesIds.includes(o.id)).map((o) => (
+                  <option key={o.id} value={o.id}>{o.designation} — {fmt(o.prix_ttc)}</option>
+                ))}
+              </select>
+              <div className="mt-3 space-y-1.5">
+                {optionsChoisies.map((o) => (
+                  <div key={o.id} className="flex items-center gap-2 text-sm bg-[#F0FFFE] border border-border rounded-md px-2 py-1.5">
+                    <span className="flex-1">{o.designation}</span>
+                    <span className="text-sub">{fmt(o.prix_ttc)}</span>
+                    <button onClick={() => setOptionsChoisiesIds((prev) => prev.filter((id) => id !== o.id))} className="text-neg px-1">×</button>
+                  </div>
+                ))}
               </div>
-            )}
-          </div>
+              {optionsDeSerie.length > 0 && (
+                <div className="mt-3 pt-3 border-t border-border">
+                  <div className="text-[11px] text-sub mb-1.5">Inclus de série sur ce modèle</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {optionsDeSerie.map((o) => <span key={o.id} className="text-[11px] px-2 py-0.5 rounded-full bg-[#E0F3F0] text-pos">{o.designation}</span>)}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="bg-surface border border-border rounded-lg p-5">
             <label className="text-xs text-sub uppercase font-bold">

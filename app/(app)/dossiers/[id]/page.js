@@ -33,7 +33,8 @@ export default async function DossierDetailPage({ params }) {
     equipementsYpocamp = data || [];
   }
 
-  const totalOptionsTtc = options.reduce((s, o) => s + Number(o.prix_ttc || 0), 0);
+  const estHymer = dossier.modeles?.marques?.nom === "Hymer";
+  const totalOptionsTtc = estHymer ? Number(dossier.options_hymer_ttc || 0) : options.reduce((s, o) => s + Number(o.prix_ttc || 0), 0);
   const totalEquipementsYpocampTtc = equipementsYpocamp.reduce((s, e) => s + Number(e.prix_ttc || 0), 0);
   const carteGrise = dossier.modeles?.type === "CAMPING_CAR" ? 790 : 380;
   const prixAvecOptions = (Number(dossier.modeles?.prix_public_ttc) || 0) + totalOptionsTtc + totalEquipementsYpocampTtc + carteGrise;
@@ -84,7 +85,18 @@ export default async function DossierDetailPage({ params }) {
           </table>
         </div>
 
-        {options.length > 0 && (
+        {estHymer && totalOptionsTtc > 0 && (
+          <div className="mb-6">
+            <div className="text-[11px] text-sub uppercase font-bold mb-2">Options usine selon configuration</div>
+            <table className="w-full text-sm">
+              <tbody>
+                <tr className="border-t border-border font-bold"><td className="py-1.5">Total options TTC</td><td className="py-1.5 text-right">{fmt(totalOptionsTtc)}</td></tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {!estHymer && options.length > 0 && (
           <div className="mb-6">
             <div className="text-[11px] text-sub uppercase font-bold mb-2">Options usine ({options.length})</div>
             <table className="w-full text-sm">

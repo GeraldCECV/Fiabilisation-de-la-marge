@@ -118,13 +118,23 @@ export async function GET(request, { params }) {
   if (dossier.commentaires) values.B49 = str(dossier.commentaires);
 
   // Options usine (jusqu'à 15 lignes, lignes 12 à 26)
-  options.slice(0, 15).forEach((o, i) => {
-    const row = 12 + i;
-    values[`G${row}`] = str(o.designation);
-    values[`I${row}`] = num(o.achat_ht || 0);
-    values[`J${row}`] = num(o.cession_pose || 0);
-    values[`K${row}`] = num(o.prix_ttc || 0);
-  });
+  // Hymer : catalogue d'options trop volumineux, une seule ligne saisie manuellement en TTC
+  // (HT = TTC / 1,2 * 0,83, pas de cession pose séparée)
+  if (dossier.options_hymer_ttc !== null && dossier.options_hymer_ttc !== undefined) {
+    const ttc = Number(dossier.options_hymer_ttc) || 0;
+    values.G12 = str("Options usine selon configuration");
+    values.I12 = num((ttc / 1.2) * 0.83);
+    values.J12 = num(0);
+    values.K12 = num(ttc);
+  } else {
+    options.slice(0, 15).forEach((o, i) => {
+      const row = 12 + i;
+      values[`G${row}`] = str(o.designation);
+      values[`I${row}`] = num(o.achat_ht || 0);
+      values[`J${row}`] = num(o.cession_pose || 0);
+      values[`K${row}`] = num(o.prix_ttc || 0);
+    });
+  }
 
   // Équipements Ypocamp / Top Accessoires (jusqu'à 9 lignes, lignes 36 à 44 — suite du bloc
   // "PREPARATION YPOCAMP / TOP ACCESSOIRES / SOUS-TRAITANT" dont le total ligne 45 est déjà
