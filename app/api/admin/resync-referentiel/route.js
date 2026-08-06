@@ -73,6 +73,26 @@ export async function POST(request) {
     }
     console.log(`[RESYNC] ${VEHICULES.length} modèles synchronisés (${vehiculeBatches.length} batchs)`);
 
+    // 2bis. Nettoyage des modèles orphelins : un modèle dont le nom a changé (ex: correction
+    // d'un libellé) n'est plus retrouvé par l'upsert ci-dessus (qui matche sur marque_id+nom) et
+    // reste dupliqué en base sous son ancien nom. On désactive (jamais on ne supprime, pour ne
+    // pas casser les dossiers déjà vendus qui y font référence) tout modèle actif d'une marque
+    // concernée dont le nom ne correspond plus à rien dans seedData.js.
+    let orphelinsDesactives = 0;
+    for (const [nomMarque, marqueId] of Object.entries(marqueIdParNom)) {
+      const nomsAttendus = new Set(VEHICULES.filter((v) => v.marque === nomMarque).map((v) => v.nom));
+      const { data: modelesActifs, error: selErr } = await admin
+        .from("modeles").select("id, nom").eq("marque_id", marqueId).eq("actif", true);
+      if (selErr) throw new Error(`Lecture modèles ${nomMarque}: ${selErr.message}`);
+      const idsOrphelins = (modelesActifs || []).filter((m) => !nomsAttendus.has(m.nom)).map((m) => m.id);
+      if (idsOrphelins.length > 0) {
+        const { error: majErr } = await admin.from("modeles").update({ actif: false }).in("id", idsOrphelins);
+        if (majErr) throw new Error(`Désactivation modèles orphelins ${nomMarque}: ${majErr.message}`);
+        orphelinsDesactives += idsOrphelins.length;
+      }
+    }
+    if (orphelinsDesactives > 0) console.log(`[RESYNC] ${orphelinsDesactives} modèles orphelins désactivés (anciens noms)`);
+
     // 3. Options — repart de zéro pour les marques concernées, insert PAR BATCH de 50
     const marqueIds = Object.values(marqueIdParNom);
     const { error: delOptionsErr } = await admin.from("options").delete().in("marque_id", marqueIds);
@@ -141,7 +161,7 @@ export async function POST(request) {
 
     return NextResponse.json({
       success: true,
-      message: `✅ Référentiel resynchronisé : ${VEHICULES.length} modèles, ${OPTIONS.length} options, ${compatRows.length} compatibilités (${marqueNoms.join(", ")}), ${equipRows.length} équipements Ypocamp.`,
+      message: `✅ Référentiel resynchronisé : ${VEHICULES.length} modèles, ${OPTIONS.length} options, ${compatRows.length} compatibilités (${marqueNoms.join(", ")}), ${equipRows.length} équipements Ypocamp.${orphelinsDesactives > 0 ? ` ${orphelinsDesactives} anciens modèles désactivés.` : ""}`,
     });
   } catch (err) {
     console.error("[RESYNC] ❌ Erreur :", err);
