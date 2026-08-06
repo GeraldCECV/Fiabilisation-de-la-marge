@@ -10,6 +10,8 @@ const FRAIS_TRANSPORT_PAR_MARQUE = {
   "Dreamer": { fraisSortieUsine: 280, transportUsine: 0 },
   "Elios": { fraisSortieUsine: 0, transportUsine: 1800 },
   "Fleurette": { fraisSortieUsine: 330, transportUsine: 0 },
+  "Florium": { fraisSortieUsine: 330, transportUsine: 0 },
+  "Carado": { fraisSortieUsine: 258.82, transportUsine: 1650 },
   "Hymer": { fraisSortieUsine: 77, transportUsine: 1300 },
   "Hymer Camper Vans": { fraisSortieUsine: 77, transportUsine: 1150 },
   "Randger": { fraisSortieUsine: 100, transportUsine: 0 },
