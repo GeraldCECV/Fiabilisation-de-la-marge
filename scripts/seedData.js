@@ -164,6 +164,13 @@ const ADRIA_OPTIONS_FOURGONS = [
       "adria_twin_540spb_citroen": "O",
       "adria_twin_600spb_family_citroen": "O",
       "adria_twin_640spb_family_fiat_supreme": "O",
+      "adria_twin_600spb_citroen_ptr": "O",
+      "adria_twin_640slb_citroen_ptr": "O",
+      "adria_twin_640sgx_citroen_ptr": "O",
+      "adria_twin_540spb_fiat_supreme_ptr": "O",
+      "adria_twin_600spb_fiat_supreme_ptr": "O",
+      "adria_twin_640slb_fiat_supreme_ptr": "O",
+      "adria_twin_640sgx_fiat_supreme_ptr": "O",
     } },
   { id: "adria_pack_accessoires_ptr", nom: "Pack accessoires : store et panneau solaire (modèles PTR)", achatHt: 1200, cessionPose: 0, prixTtc: 1554, poids: 0,
     compat: {
