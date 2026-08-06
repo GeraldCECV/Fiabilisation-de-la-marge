@@ -130,66 +130,141 @@ const ADRIA_VEHICULES_FOURGONS = [
 // Options Fourgons Adria (Source : Tarifs_HT_Fourgons.pdf / Tarifs_public_Fourgons.pdf)
 // Toit relevable PTR (Pop Top Roof) : de série uniquement sur Twin 540 SPB Suprême, en option
 // payante sur tous les autres modèles marqués [PTR] dans le tarif (compatible mais non inclus).
+const FG_CITROEN = ["adria_twin_540spb_citroen","adria_twin_600spb_family_citroen","adria_twin_600spb_citroen_ptr","adria_twin_640slb_citroen_ptr","adria_twin_640sgx_citroen_ptr"];
+const FG_FIAT = ["adria_twin_540spb_fiat_supreme_ptr","adria_twin_600spb_fiat_supreme_ptr","adria_twin_640spb_family_fiat_supreme","adria_twin_640slb_fiat_supreme_ptr","adria_twin_640sgx_fiat_supreme_ptr"];
+const FG_ALL_TWIN = [...FG_CITROEN, ...FG_FIAT];
+const FG_SUPERTWIN = ["adria_supertwin_600spb_ptr", "adria_supertwin_700sgx_ptr"];
+const FG_ALL = [...FG_ALL_TWIN, ...FG_SUPERTWIN];
+
+function statut(ids, s = "O") {
+  const out = {};
+  for (const i of ids) out[i] = s;
+  return out;
+}
+function mergeCompat(...dicts) {
+  const out = {};
+  for (const d of dicts) Object.assign(out, d);
+  return out;
+}
+
 const ADRIA_OPTIONS_FOURGONS = [
+  // ---- Base - Châssis - Motorisation ----
+  { id: "adria_fg_bva140", nom: "Boîte automatique pour motorisation 140CV", achatHt: 2649, cessionPose: 0, prixTtc: 3740, poids: 28,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_moteur160_35l", nom: "Motorisation 2,2L 160CV HD 35L avec boîte automatique", achatHt: 3733, cessionPose: 0, prixTtc: 5270, poids: 33,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_moteur160", nom: "Motorisation 2,2L 160CV HD avec boîte automatique (Twin 600, 640 / Twin PTR)", achatHt: 3829, cessionPose: 0, prixTtc: 5406, poids: 68,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_moteur180_43h", nom: "Motorisation 2,2L 180CV HD 43H avec boîte automatique (Twin)", achatHt: 5726, cessionPose: 0, prixTtc: 8083, poids: 73,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_jantes16_citroen", nom: "Jantes alu 16'' Citroën", achatHt: 638, cessionPose: 0, prixTtc: 901, poids: 8,
+    compat: statut(FG_CITROEN) },
+  { id: "adria_fg_pack_jantes16_fiat_35hl_bva", nom: "Pack Jantes alu 16'' Fiat (châssis 35H ou 35L BVA) + volant cuir + aérateurs chromés", achatHt: 614, cessionPose: 0, prixTtc: 868, poids: -4,
+    compat: statut(FG_FIAT) },
+  { id: "adria_fg_pack_jantes16_fiat_35l", nom: "Pack Jantes alu 16'' Fiat (châssis 35L) + volant cuir + aérateurs chromés", achatHt: 765, cessionPose: 0, prixTtc: 1080, poids: -8,
+    compat: statut(FG_FIAT) },
+  { id: "adria_fg_plus_value_chassis_fiat", nom: "Plus-value châssis Fiat (gamme Select, base Citroën)", achatHt: 1693, cessionPose: 0, prixTtc: 2390, poids: 0,
+    compat: statut(FG_CITROEN) },
+  { id: "adria_fg_plus_value_35h", nom: "Plus-value 35H (Twin 600, 640 et Twin PTR)", achatHt: 265, cessionPose: 0, prixTtc: 374, poids: 40,
+    compat: statut(FG_ALL_TWIN) },
+
+  // ---- Porteur ----
+  { id: "adria_fg_regulateur_adaptatif_citroen", nom: "Régulateur adaptatif (>30km/h) + volant cuir + antibrouillard avant", achatHt: 843, cessionPose: 0, prixTtc: 1190, poids: 0.33,
+    compat: statut(FG_CITROEN) },
+  { id: "adria_fg_regulateur_adaptatif_fiat", nom: "Régulateur de vitesse adaptatif >30km/h", achatHt: 464, cessionPose: 0, prixTtc: 654, poids: 0.1,
+    compat: statut(FG_FIAT) },
+  { id: "adria_fg_frein_parking_elec", nom: "Frein de parking électrique", achatHt: 427, cessionPose: 0, prixTtc: 604, poids: -9.4,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_feux_full_led", nom: "Feux Full LED", achatHt: 904, cessionPose: 0, prixTtc: 1277, poids: 5,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_capteurs_pluie_luminosite", nom: "Capteurs de pluie et de luminosité", achatHt: 181, cessionPose: 0, prixTtc: 256, poids: 0.2,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_volant_cuir_citroen", nom: "Volant et levier de vitesse en cuir", achatHt: 235, cessionPose: 0, prixTtc: 331, poids: 0,
+    compat: statut(FG_CITROEN) },
+  { id: "adria_fg_assistance_fermeture_porte", nom: "Assistance électrique à la fermeture de porte", achatHt: 393, cessionPose: 0, prixTtc: 554, poids: 6,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_suspension_pneumatique_ar", nom: "Suspension pneumatique arrière", achatHt: 373, cessionPose: 0, prixTtc: 527, poids: 10,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_gris_expedition", nom: "Couleur Gris Expédition", achatHt: 524, cessionPose: 0, prixTtc: 739, poids: 2,
+    compat: statut(FG_FIAT) },
+  { id: "adria_fg_iron_grey_metal", nom: "Couleur Iron Grey métal", achatHt: 662, cessionPose: 0, prixTtc: 935, poids: 0,
+    compat: statut(FG_CITROEN) },
+  { id: "adria_fg_gris_lanzarote", nom: "Couleur Gris Lanzarote", achatHt: 524, cessionPose: 0, prixTtc: 739, poids: 0,
+    compat: statut(FG_FIAT) },
+  { id: "adria_fg_gris_artense_metal", nom: "Couleur Gris Artense métal", achatHt: 662, cessionPose: 0, prixTtc: 935, poids: 2,
+    compat: statut(FG_FIAT) },
+  { id: "adria_fg_parechocs_peints_citroen", nom: "Pare-chocs peints et moulures basses peintes", achatHt: 241, cessionPose: 0, prixTtc: 340, poids: 1.5,
+    compat: statut(FG_CITROEN) },
+  { id: "adria_fg_parechocs_peints_fiat", nom: "Pare-chocs peints et moulures basses peintes", achatHt: 343, cessionPose: 0, prixTtc: 485, poids: 3.5,
+    compat: statut(FG_FIAT) },
+
+  // ---- Packs ----
+  { id: "adria_fg_pack_lounge", nom: "Pack Lounge : climatisation automatique, chargeur de téléphone sans fil, tableau de bord digital 7''", achatHt: 710, cessionPose: 0, prixTtc: 1003, poids: 1.51,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_pack_lounge_ecran10", nom: "Pack Lounge avec écran 10''", achatHt: 2035, cessionPose: 0, prixTtc: 2873, poids: 3.41,
+    compat: statut(FG_FIAT) },
+  { id: "adria_fg_pack_select_edition", nom: "Pack Select Edition : aérateurs satinés, boîte automatique, media pack, JA 16'', volant et pommeau cuir", achatHt: 2267, cessionPose: 0, prixTtc: 3200, poids: 22,
+    compat: statut(FG_CITROEN) },
+  { id: "adria_fg_pack_supreme_edition", nom: "Pack Supreme Edition : frein à main électrique, Pack Lounge, boîte automatique, media pack", achatHt: 2267, cessionPose: 0, prixTtc: 3200, poids: 22.11,
+    compat: statut(FG_FIAT) },
+  { id: "adria_pack_accessoires_standard", nom: "Pack accessoires : store et panneau solaire", achatHt: 1000, cessionPose: 0, prixTtc: 1320, poids: 38.5,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_pack_accessoires_ptr", nom: "Pack accessoires : store et panneau solaire (modèles PTR)", achatHt: 1200, cessionPose: 0, prixTtc: 1554, poids: 33,
+    compat: statut(["adria_twin_600spb_citroen_ptr","adria_twin_640slb_citroen_ptr","adria_twin_640sgx_citroen_ptr","adria_twin_540spb_fiat_supreme_ptr","adria_twin_600spb_fiat_supreme_ptr","adria_twin_640slb_fiat_supreme_ptr","adria_twin_640sgx_fiat_supreme_ptr"]) },
+
+  // ---- Cellule ----
+  { id: "adria_fg_batterie_liion_100ah", nom: "Batterie auxiliaire Li-ion 12,8V-100Ah Leoch", achatHt: 264, cessionPose: 0, prixTtc: 372, poids: 11,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_2x_batterie_liion_100ah", nom: "2x Batterie auxiliaire Li-ion 12,8V-100Ah Leoch", achatHt: 527, cessionPose: 0, prixTtc: 745, poids: 23,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_convertisseur_1000w", nom: "Convertisseur 12/220V 1000W (Twin)", achatHt: 307, cessionPose: 0, prixTtc: 433, poids: 6,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_media_pack", nom: "Media Pack : radio + caméra de recul", achatHt: 756, cessionPose: 0, prixTtc: 1068, poids: 2,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_mach20", nom: "MACH 2.0", achatHt: 193, cessionPose: 0, prixTtc: 272, poids: 0.45,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_moquette_cellule", nom: "Moquette cellule", achatHt: 216, cessionPose: 0, prixTtc: 305, poids: 7,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_machine_cafe_delonghi", nom: "Machine à café DE LONGHI avec support", achatHt: 205, cessionPose: 0, prixTtc: 289, poids: 3.7,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_refrigerateur_138l", nom: "Réfrigérateur 138L (sauf Twin 540)", achatHt: 240, cessionPose: 0, prixTtc: 338, poids: 13,
+    compat: statut(FG_ALL_TWIN.filter((id) => !id.includes("540"))) },
+  { id: "adria_fg_attelage_connexion_elec", nom: "Attelage avec connexion électrique", achatHt: 544, cessionPose: 0, prixTtc: 768, poids: 26,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_veloswing", nom: "Veloswing (porte-vélos)", achatHt: 1734, cessionPose: 0, prixTtc: 2448, poids: 53,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_clim_aventa_compact", nom: "Climatisation cellule Aventa Compact+ 2,2kW 2e génération (Compact et Twin)", achatHt: 1337, cessionPose: 0, prixTtc: 1888, poids: 25,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_truma_combi6de", nom: "Truma Combi 6DE (hors Coral XL)", achatHt: 572, cessionPose: 0, prixTtc: 808, poids: 3.4,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_eaux_usees_isolees_chauffees", nom: "Eaux usées isolées et chauffées (gamme Select)", achatHt: 167, cessionPose: 0, prixTtc: 236, poids: 4,
+    compat: statut(FG_CITROEN) },
+  { id: "adria_fg_cuir", nom: "Sellerie cuir", achatHt: 723, cessionPose: 0, prixTtc: 1078, poids: 3.5,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_lit_dinette", nom: "Lit dinette (matelas gonflable) + pompe", achatHt: 431, cessionPose: 0, prixTtc: 610, poids: 9.7,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_isolation_toit_relevable", nom: "Isolation pour toit relevable (hors SPB Family)", achatHt: 721, cessionPose: 0, prixTtc: 1019, poids: 4.4,
+    compat: statut(FG_ALL_TWIN.filter((id) => !id.includes("family"))) },
+  { id: "adria_fg_toit_panoramique_supreme", nom: "Toit panoramique ouvrant (Supreme)", achatHt: 578, cessionPose: 0, prixTtc: 816, poids: 7.4,
+    compat: statut(FG_FIAT) },
+  { id: "adria_fg_toit_panoramique_select", nom: "Toit panoramique ouvrant (Select) / Sunroof XL (Supreme)", achatHt: 480, cessionPose: 0, prixTtc: 678, poids: 6.6,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_poptop_roof_gris", nom: "Pop Top Roof gris", achatHt: 468, cessionPose: 0, prixTtc: 661, poids: 0,
+    compat: statut(FG_ALL_TWIN) },
+  { id: "adria_fg_plateforme_extractible_sgx", nom: "Plateforme extractible (pour SGX)", achatHt: 783, cessionPose: 0, prixTtc: 985, poids: 32,
+    compat: statut(["adria_twin_640sgx_citroen_ptr", "adria_twin_640sgx_fiat_supreme_ptr"]) },
+
+  // ---- Toit relevable PTR (structure) — absente de la circulaire officielle mais à conserver,
+  // confirmé par l'utilisateur. De série uniquement sur Twin 540 SPB Suprême, option payante sur
+  // les 6 autres modèles compatibles PTR, tarif distinct sur Supertwin.
   { id: "adria_ptr_twin", nom: "Toit relevable Pop Top Roof (PTR)", achatHt: 3000, cessionPose: 0, prixTtc: 4000, poids: 0,
-    compat: {
-      "adria_twin_600spb_citroen_ptr": "O",
-      "adria_twin_640slb_citroen_ptr": "O",
-      "adria_twin_640sgx_citroen_ptr": "O",
-      "adria_twin_540spb_fiat_supreme_ptr": "S",
-      "adria_twin_600spb_fiat_supreme_ptr": "O",
-      "adria_twin_640slb_fiat_supreme_ptr": "O",
-      "adria_twin_640sgx_fiat_supreme_ptr": "O",
-    } },
+    compat: mergeCompat(
+      statut(["adria_twin_600spb_citroen_ptr", "adria_twin_640slb_citroen_ptr", "adria_twin_640sgx_citroen_ptr"]),
+      statut(["adria_twin_540spb_fiat_supreme_ptr"], "S"),
+      statut(["adria_twin_600spb_fiat_supreme_ptr", "adria_twin_640slb_fiat_supreme_ptr", "adria_twin_640sgx_fiat_supreme_ptr"])
+    ) },
   { id: "adria_ptr_supertwin", nom: "Toit relevable Pop Top Roof (PTR)", achatHt: 4958, cessionPose: 0, prixTtc: 7000, poids: 0,
-    compat: {
-      "adria_supertwin_600spb_ptr": "O",
-      "adria_supertwin_700sgx_ptr": "O",
-    } },
-  { id: "adria_bva_fourgon", nom: "Boîte automatique", achatHt: 2685, cessionPose: 0, prixTtc: 3790, poids: 0,
-    compat: {
-      "adria_twin_540spb_citroen": "O",
-      "adria_twin_600spb_citroen_ptr": "O",
-      "adria_twin_600spb_family_citroen": "O",
-      "adria_twin_640slb_citroen_ptr": "O",
-      "adria_twin_640sgx_citroen_ptr": "O",
-      "adria_twin_540spb_fiat_supreme_ptr": "O",
-      "adria_twin_600spb_fiat_supreme_ptr": "O",
-      "adria_twin_640spb_family_fiat_supreme": "O",
-      "adria_twin_640slb_fiat_supreme_ptr": "O",
-      "adria_twin_640sgx_fiat_supreme_ptr": "O",
-    } },
-  { id: "adria_pack_accessoires_standard", nom: "Pack accessoires : store et panneau solaire", achatHt: 1000, cessionPose: 0, prixTtc: 1320, poids: 0,
-    compat: {
-      "adria_twin_540spb_citroen": "O",
-      "adria_twin_600spb_family_citroen": "O",
-      "adria_twin_640spb_family_fiat_supreme": "O",
-      "adria_twin_600spb_citroen_ptr": "O",
-      "adria_twin_640slb_citroen_ptr": "O",
-      "adria_twin_640sgx_citroen_ptr": "O",
-      "adria_twin_540spb_fiat_supreme_ptr": "O",
-      "adria_twin_600spb_fiat_supreme_ptr": "O",
-      "adria_twin_640slb_fiat_supreme_ptr": "O",
-      "adria_twin_640sgx_fiat_supreme_ptr": "O",
-    } },
-  { id: "adria_pack_accessoires_ptr", nom: "Pack accessoires : store et panneau solaire (modèles PTR)", achatHt: 1200, cessionPose: 0, prixTtc: 1554, poids: 0,
-    compat: {
-      "adria_twin_600spb_citroen_ptr": "O",
-      "adria_twin_640slb_citroen_ptr": "O",
-      "adria_twin_640sgx_citroen_ptr": "O",
-      "adria_twin_540spb_fiat_supreme_ptr": "O",
-      "adria_twin_600spb_fiat_supreme_ptr": "O",
-      "adria_twin_640slb_fiat_supreme_ptr": "O",
-      "adria_twin_640sgx_fiat_supreme_ptr": "O",
-    } },
-  { id: "adria_chassis_fiat_ducato", nom: "Plus-value châssis FIAT DUCATO (gamme Select, base Citroën)", achatHt: 1693, cessionPose: 0, prixTtc: 2390, poids: 0,
-    compat: {
-      "adria_twin_540spb_citroen": "O",
-      "adria_twin_600spb_citroen_ptr": "O",
-      "adria_twin_600spb_family_citroen": "O",
-      "adria_twin_640slb_citroen_ptr": "O",
-      "adria_twin_640sgx_citroen_ptr": "O",
-    } },
+    compat: statut(FG_SUPERTWIN) },
 ].map((o) => ({ ...o, marque: "Adria" }));
 
 
