@@ -1860,12 +1860,12 @@ const CARADO_VEHICULES = [
   { id: "carado_i338_proplus20", nom: "I338 Pro+ 20 ans (Fiat 140cv)", gamme: "Intégraux", typeCarrosserie: "INTEGRAL", prixUsineHt: 56960.42, prixPublicTtc: 81765 },
   { id: "carado_i447_proplus20", nom: "I447 Pro+ 20 ans (Fiat 140cv)", gamme: "Intégraux", typeCarrosserie: "INTEGRAL", prixUsineHt: 58789.83, prixPublicTtc: 84320 },
   // Vans
-  { id: "carado_van132_standard", nom: "Van 132 Standard (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 36765.14, prixPublicTtc: 52990 },
-  { id: "carado_van337_standard", nom: "Van 337 Standard (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 38983.63, prixPublicTtc: 56050 },
-  { id: "carado_van347_standard", nom: "Van 347 Standard (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 39723.13, prixPublicTtc: 57070 },
-  { id: "carado_van132_proplus20", nom: "Van 132 Pro+ 20 ans (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 40334.12, prixPublicTtc: 57920 },
-  { id: "carado_van337_proplus20", nom: "Van 337 Pro+ 20 ans (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 42404.71, prixPublicTtc: 60775 },
-  { id: "carado_van347_proplus20", nom: "Van 347 Pro+ 20 ans (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 43144.21, prixPublicTtc: 61795 },
+  { id: "carado_van132_standard", nom: "Van 132 Standard (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "PROFILE", prixUsineHt: 36765.14, prixPublicTtc: 52990 },
+  { id: "carado_van337_standard", nom: "Van 337 Standard (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "PROFILE", prixUsineHt: 38983.63, prixPublicTtc: 56050 },
+  { id: "carado_van347_standard", nom: "Van 347 Standard (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "PROFILE", prixUsineHt: 39723.13, prixPublicTtc: 57070 },
+  { id: "carado_van132_proplus20", nom: "Van 132 Pro+ 20 ans (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "PROFILE", prixUsineHt: 40334.12, prixPublicTtc: 57920 },
+  { id: "carado_van337_proplus20", nom: "Van 337 Pro+ 20 ans (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "PROFILE", prixUsineHt: 42404.71, prixPublicTtc: 60775 },
+  { id: "carado_van347_proplus20", nom: "Van 347 Pro+ 20 ans (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "PROFILE", prixUsineHt: 43144.21, prixPublicTtc: 61795 },
   // Camper Vans Pro (Citroën)
   { id: "carado_cv540_pro", nom: "CV 540 Pro (Citroën 140cv)", gamme: "Camper Vans Pro", typeCarrosserie: "FOURGON", prixUsineHt: 39135.81, prixPublicTtc: 55650 },
   { id: "carado_cv541_pro", nom: "CV 541 Pro (Citroën 140cv)", gamme: "Camper Vans Pro", typeCarrosserie: "FOURGON", prixUsineHt: 42650.93, prixPublicTtc: 60445 },
