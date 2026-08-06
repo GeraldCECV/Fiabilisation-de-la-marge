@@ -1558,7 +1558,32 @@ const CHAUSSON_OPTIONS = [
     compat: { "ch_s697": "O", "ch_s514": "O", "ch_s614": "O" } },
 ].map((o) => ({ ...o, marque: "Chausson" }));
 
-const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES, ...RANDGER_VEHICULES, ...STYLEVAN_VEHICULES, ...CHAUSSON_VEHICULES];
+const HYMER_VEHICULES = [
+  // Profilés
+  { id: "hy_exsist_474", nom: "Exsis-T 474 (Al-Ko, Fiat 2,2-35L 140cv)", gamme: "Exsis-T", typeCarrosserie: "PROFILE", prixUsineHt: 74264.35, prixPublicTtc: 102100 },
+  { id: "hy_exsist_580pure", nom: "Exsis-T 580 Pure (Fiat, Fiat 2,2-35L 140cv)", gamme: "Exsis-T", typeCarrosserie: "PROFILE", prixUsineHt: 74264.35, prixPublicTtc: 102100 },
+  { id: "hy_gts_600", nom: "GTS 600 (Traction, MB 315 2,0L 150cv)", gamme: "GTS", typeCarrosserie: "PROFILE", prixUsineHt: 74873.17, prixPublicTtc: 103000 },
+  { id: "hy_gts_685", nom: "GTS 685 (Traction, MB 315 2,0L 150cv)", gamme: "GTS", typeCarrosserie: "PROFILE", prixUsineHt: 75579.06, prixPublicTtc: 103970 },
+  { id: "hy_mlt_570", nom: "ML-T 570 (Propulsion, MB 417 2,0L 170cv)", gamme: "ML-T", typeCarrosserie: "PROFILE", prixUsineHt: 83343.77, prixPublicTtc: 115995 },
+  { id: "hy_mlt_570xp", nom: "ML-T 570 Xperience (Propulsion, MB 417 2,0L 170cv)", gamme: "ML-T", typeCarrosserie: "PROFILE", prixUsineHt: 90368.56, prixPublicTtc: 125800 },
+  { id: "hy_mlt_570crossover", nom: "ML-T 570 CrossOver New (4x4, MB 419 2,0L 190cv)", gamme: "ML-T", typeCarrosserie: "PROFILE", prixUsineHt: 114755.53, prixPublicTtc: 159825 },
+  { id: "hy_mlt_580", nom: "ML-T 580 (Propulsion, MB 417 2,0L 170cv)", gamme: "ML-T", typeCarrosserie: "PROFILE", prixUsineHt: 84755.53, prixPublicTtc: 117965 },
+  { id: "hy_mlt_580xp", nom: "ML-T 580 Xperience (Propulsion, MB 417 2,0L 170cv)", gamme: "ML-T", typeCarrosserie: "PROFILE", prixUsineHt: 91780.32, prixPublicTtc: 127765 },
+  { id: "hy_mlt_580crosstrail", nom: "ML-T 580 CrossTrail (4x4, MB 419 2,0L 190cv)", gamme: "ML-T", typeCarrosserie: "PROFILE", prixUsineHt: 120049.65, prixPublicTtc: 167210 },
+  { id: "hy_bmct_580fl", nom: "BMC-T 580 FL (Super Light Chassis, MB 315 2,0L 150cv)", gamme: "BMC-T", typeCarrosserie: "PROFILE", prixUsineHt: 86478.21, prixPublicTtc: 120310 },
+  { id: "hy_bmct_600fl", nom: "BMC-T 600 FL (Super Light Chassis, MB 315 2,0L 150cv)", gamme: "BMC-T", typeCarrosserie: "PROFILE", prixUsineHt: 88313.51, prixPublicTtc: 122870 },
+  { id: "hy_bmct_680fl", nom: "BMC-T 680 FL (Super Light Chassis, MB 315 2,0L 150cv)", gamme: "BMC-T", typeCarrosserie: "PROFILE", prixUsineHt: 90289.98, prixPublicTtc: 125625 },
+  { id: "hy_bmlt_780", nom: "B-ML T 780 (Super Light Chassis, MB 415 2,0L 150cv)", gamme: "B-ML-T", typeCarrosserie: "PROFILE", prixUsineHt: 97327.80, prixPublicTtc: 137000 },
+  { id: "hy_ventures", nom: "Venture S (4x4, MB 419 2,0L 190cv)", gamme: "Venture S", typeCarrosserie: "PROFILE", prixUsineHt: 165876.54, prixPublicTtc: 242345 },
+  // Intégraux
+  { id: "hy_bmci_580fl", nom: "BMC-i 580 FL (Super Light Chassis, MB 315 2,0L 150cv)", gamme: "BMC-i", typeCarrosserie: "INTEGRAL", prixUsineHt: 99420.23, prixPublicTtc: 139965 },
+  { id: "hy_bmci_600fl", nom: "BMC-i 600 FL (Super Light Chassis, MB 315 2,0L 150cv)", gamme: "BMC-i", typeCarrosserie: "INTEGRAL", prixUsineHt: 101233.68, prixPublicTtc: 142525 },
+  { id: "hy_bmci_680fl", nom: "BMC-i 680 FL (Super Light Chassis, MB 315 2,0L 150cv)", gamme: "BMC-i", typeCarrosserie: "INTEGRAL", prixUsineHt: 103186.62, prixPublicTtc: 145285 },
+  { id: "hy_bmli_780", nom: "BML i 780 (Super Light Chassis, MB 415 2,0L 150cv)", gamme: "BML-i", typeCarrosserie: "INTEGRAL", prixUsineHt: 115953.84, prixPublicTtc: 165225 },
+  { id: "hy_bmli_880", nom: "BML i 880 (Super Light Chassis, MB 415 2,0L 150cv)", gamme: "BML-i", typeCarrosserie: "INTEGRAL", prixUsineHt: 124429.48, prixPublicTtc: 177335 },
+].map((v) => ({ ...v, marque: "Hymer", type: "CAMPING_CAR", collection: 2027 }));
+
+const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES, ...RANDGER_VEHICULES, ...STYLEVAN_VEHICULES, ...CHAUSSON_VEHICULES, ...HYMER_VEHICULES];
 
 // ---------------------------------------------------------------------------
 // OPTIONS (statut par véhicule : "O" option payante, "S" de série, "-"/absent indisponible)
