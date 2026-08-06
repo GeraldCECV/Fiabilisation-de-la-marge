@@ -1835,7 +1835,56 @@ const HYMER_CV_VEHICULES = [
   { id: "hycv_gcs700crosstrail", nom: "Grand Canyon S 700 CrossTrail (Mercedes 419, 190cv)", gamme: "Grand Canyon S", prixUsineHt: 110867.76, prixPublicTtc: 152700 },
 ].map((v) => ({ ...v, marque: "Hymer Camper Vans", type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2027 }));
 
-const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES, ...RANDGER_VEHICULES, ...STYLEVAN_VEHICULES, ...CHAUSSON_VEHICULES, ...HYMER_VEHICULES, ...HYMER_CV_VEHICULES];
+const CARADO_VEHICULES = [
+  // Profilés Citroën
+  { id: "carado_t135_standard", nom: "T135 Standard (Citroën 140cv)", gamme: "Profilés Citroën", typeCarrosserie: "PROFILE", prixUsineHt: 41776.07, prixPublicTtc: 59900 },
+  { id: "carado_t328_standard", nom: "T328 Standard (Citroën 140cv)", gamme: "Profilés Citroën", typeCarrosserie: "PROFILE", prixUsineHt: 43698.76, prixPublicTtc: 62560 },
+  { id: "carado_t448_standard", nom: "T448 Standard (Citroën 140cv)", gamme: "Profilés Citroën", typeCarrosserie: "PROFILE", prixUsineHt: 45251.70, prixPublicTtc: 64700 },
+  { id: "carado_t447_standard", nom: "T447 Standard (Citroën 140cv)", gamme: "Profilés Citroën", typeCarrosserie: "PROFILE", prixUsineHt: 45251.70, prixPublicTtc: 64700 },
+  { id: "carado_t135_proplus20", nom: "T135 Pro+ 20 ans (Citroën 140cv)", gamme: "Profilés Citroën", typeCarrosserie: "PROFILE", prixUsineHt: 45436.05, prixPublicTtc: 64950 },
+  { id: "carado_t328_proplus20", nom: "T328 Pro+ 20 ans (Citroën 140cv)", gamme: "Profilés Citroën", typeCarrosserie: "PROFILE", prixUsineHt: 47432.69, prixPublicTtc: 67700 },
+  { id: "carado_t448_proplus20", nom: "T448 Pro+ 20 ans (Citroën 140cv)", gamme: "Profilés Citroën", typeCarrosserie: "PROFILE", prixUsineHt: 49281.43, prixPublicTtc: 70260 },
+  { id: "carado_t447_proplus20", nom: "T447 Pro+ 20 ans (Citroën 140cv)", gamme: "Profilés Citroën", typeCarrosserie: "PROFILE", prixUsineHt: 49281.43, prixPublicTtc: 70260 },
+  // Profilés ED27 - Ford
+  { id: "carado_t335t_ed27", nom: "T335T ED27 20 ans (Ford 165cv BVA)", gamme: "Profilés ED27 Ford", typeCarrosserie: "PROFILE", prixUsineHt: 49626.06, prixPublicTtc: 70730 },
+  { id: "carado_t338t_ed27", nom: "T338T ED27 20 ans (Ford 165cv BVA)", gamme: "Profilés ED27 Ford", typeCarrosserie: "PROFILE", prixUsineHt: 48516.81, prixPublicTtc: 69200 },
+  { id: "carado_t457t_ed27", nom: "T457T ED27 20 ans (Ford 165cv BVA)", gamme: "Profilés ED27 Ford", typeCarrosserie: "PROFILE", prixUsineHt: 50143.70, prixPublicTtc: 71450 },
+  { id: "carado_t459t_ed27", nom: "T459T ED27 20 ans (Ford 165cv BVA)", gamme: "Profilés ED27 Ford", typeCarrosserie: "PROFILE", prixUsineHt: 50143.70, prixPublicTtc: 71450 },
+  // Capucines avec Pack "Pro"
+  { id: "carado_a132_pro", nom: "A132 Pro (Citroën 140cv)", gamme: "Capucines", typeCarrosserie: "CAPUCINE", prixUsineHt: 42778.26, prixPublicTtc: 61290 },
+  { id: "carado_a361_pro", nom: "A361 Pro (Citroën 140cv)", gamme: "Capucines", typeCarrosserie: "CAPUCINE", prixUsineHt: 45736.24, prixPublicTtc: 65370 },
+  { id: "carado_a464_pro", nom: "A464 Pro (Citroën 140cv)", gamme: "Capucines", typeCarrosserie: "CAPUCINE", prixUsineHt: 47954.73, prixPublicTtc: 68430 },
+  // Intégraux
+  { id: "carado_i338_standard", nom: "I338 Standard (Fiat 140cv)", gamme: "Intégraux", typeCarrosserie: "INTEGRAL", prixUsineHt: 54534.06, prixPublicTtc: 78380 },
+  { id: "carado_i447_standard", nom: "I447 Standard (Fiat 140cv)", gamme: "Intégraux", typeCarrosserie: "INTEGRAL", prixUsineHt: 56215.57, prixPublicTtc: 80725 },
+  { id: "carado_i338_proplus20", nom: "I338 Pro+ 20 ans (Fiat 140cv)", gamme: "Intégraux", typeCarrosserie: "INTEGRAL", prixUsineHt: 56960.42, prixPublicTtc: 81765 },
+  { id: "carado_i447_proplus20", nom: "I447 Pro+ 20 ans (Fiat 140cv)", gamme: "Intégraux", typeCarrosserie: "INTEGRAL", prixUsineHt: 58789.83, prixPublicTtc: 84320 },
+  // Vans
+  { id: "carado_van132_standard", nom: "Van 132 Standard (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 36765.14, prixPublicTtc: 52990 },
+  { id: "carado_van337_standard", nom: "Van 337 Standard (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 38983.63, prixPublicTtc: 56050 },
+  { id: "carado_van347_standard", nom: "Van 347 Standard (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 39723.13, prixPublicTtc: 57070 },
+  { id: "carado_van132_proplus20", nom: "Van 132 Pro+ 20 ans (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 40334.12, prixPublicTtc: 57920 },
+  { id: "carado_van337_proplus20", nom: "Van 337 Pro+ 20 ans (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 42404.71, prixPublicTtc: 60775 },
+  { id: "carado_van347_proplus20", nom: "Van 347 Pro+ 20 ans (Citroën 140cv)", gamme: "Vans", typeCarrosserie: "FOURGON", prixUsineHt: 43144.21, prixPublicTtc: 61795 },
+  // Camper Vans Pro (Citroën)
+  { id: "carado_cv540_pro", nom: "CV 540 Pro (Citroën 140cv)", gamme: "Camper Vans Pro", typeCarrosserie: "FOURGON", prixUsineHt: 39135.81, prixPublicTtc: 55650 },
+  { id: "carado_cv541_pro", nom: "CV 541 Pro (Citroën 140cv)", gamme: "Camper Vans Pro", typeCarrosserie: "FOURGON", prixUsineHt: 42650.93, prixPublicTtc: 60445 },
+  { id: "carado_cv600_pro", nom: "CV 600 Pro (Citroën 140cv)", gamme: "Camper Vans Pro", typeCarrosserie: "FOURGON", prixUsineHt: 39958.50, prixPublicTtc: 56770 },
+  { id: "carado_cv601_pro", nom: "CV 601 Pro (Citroën 140cv)", gamme: "Camper Vans Pro", typeCarrosserie: "FOURGON", prixUsineHt: 40781.18, prixPublicTtc: 57890 },
+  { id: "carado_cv602_pro", nom: "CV 602 Pro (Citroën 140cv)", gamme: "Camper Vans Pro", typeCarrosserie: "FOURGON", prixUsineHt: 40332.45, prixPublicTtc: 57280 },
+  { id: "carado_cv640_pro", nom: "CV 640 Pro (Citroën 140cv)", gamme: "Camper Vans Pro", typeCarrosserie: "FOURGON", prixUsineHt: 41603.87, prixPublicTtc: 59020 },
+  { id: "carado_cv600_proplus20", nom: "CV 600 Pro+ 20 ans (Citroën 140cv)", gamme: "Camper Vans Pro", typeCarrosserie: "FOURGON", prixUsineHt: 43398.83, prixPublicTtc: 61460 },
+  { id: "carado_cv602_proplus20", nom: "CV 602 Pro+ 20 ans (Citroën 140cv)", gamme: "Camper Vans Pro", typeCarrosserie: "FOURGON", prixUsineHt: 43772.78, prixPublicTtc: 61970 },
+  { id: "carado_cv640_proplus20", nom: "CV 640 Pro+ 20 ans (Citroën 140cv)", gamme: "Camper Vans Pro", typeCarrosserie: "FOURGON", prixUsineHt: 45044.21, prixPublicTtc: 63695 },
+  // Camper Vans Peugeot
+  { id: "carado_cv540_peugeot", nom: "CV 540 Standard (Peugeot 140cv)", gamme: "Camper Vans Peugeot", typeCarrosserie: "FOURGON", prixUsineHt: 34585.39, prixPublicTtc: 48390 },
+  { id: "carado_cv600_peugeot", nom: "CV 600 Standard (Peugeot 140cv)", gamme: "Camper Vans Peugeot", typeCarrosserie: "FOURGON", prixUsineHt: 35333.29, prixPublicTtc: 49390 },
+  { id: "carado_cv640_peugeot", nom: "CV 640 Standard (Peugeot 140cv)", gamme: "Camper Vans Peugeot", typeCarrosserie: "FOURGON", prixUsineHt: 36829.08, prixPublicTtc: 51390 },
+  // Camper Vans Volkswagen
+  { id: "carado_cv595_xedition", nom: "CV 595 X-Edition (Volkswagen 163cv BVA)", gamme: "Camper Vans Volkswagen", typeCarrosserie: "FOURGON", prixUsineHt: 66263.12, prixPublicTtc: 92650 },
+].map((v) => ({ ...v, marque: "Carado", type: "CAMPING_CAR", collection: 2027 }));
+
+const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES, ...RANDGER_VEHICULES, ...STYLEVAN_VEHICULES, ...CHAUSSON_VEHICULES, ...HYMER_VEHICULES, ...HYMER_CV_VEHICULES, ...CARADO_VEHICULES];
 
 // ---------------------------------------------------------------------------
 // OPTIONS (statut par véhicule : "O" option payante, "S" de série, "-"/absent indisponible)
