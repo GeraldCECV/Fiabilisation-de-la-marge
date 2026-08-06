@@ -127,6 +127,40 @@ const ADRIA_VEHICULES_FOURGONS = [
   { id: "adria_supertwin_700sgx_ptr", nom: "SUPERTWIN 700 SGX PTR — Gamme Supertwin (Mercedes, 4X4 190cv AUT.)", gammeTwin: "Supertwin", prixUsineHt: 110471, prixPublicTtc: 155900 },
 ].map((v) => ({ ...v, marque: "Adria", gamme: `Fourgons — ${v.gammeTwin}`, type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2027 }));
 
+// Options Fourgons Adria (Source : Tarifs_HT_Fourgons.pdf / Tarifs_public_Fourgons.pdf)
+// Toit relevable PTR (Pop Top Roof) : de série uniquement sur Twin 540 SPB Suprême, en option
+// payante sur tous les autres modèles marqués [PTR] dans le tarif (compatible mais non inclus).
+const ADRIA_OPTIONS_FOURGONS = [
+  { id: "adria_ptr_twin", nom: "Toit relevable Pop Top Roof (PTR)", achatHt: 3000, cessionPose: 0, prixTtc: 4000, poids: 0,
+    compat: {
+      "adria_twin_600spb_citroen_ptr": "O",
+      "adria_twin_640slb_citroen_ptr": "O",
+      "adria_twin_640sgx_citroen_ptr": "O",
+      "adria_twin_540spb_fiat_supreme_ptr": "S",
+      "adria_twin_600spb_fiat_supreme_ptr": "O",
+      "adria_twin_640slb_fiat_supreme_ptr": "O",
+      "adria_twin_640sgx_fiat_supreme_ptr": "O",
+    } },
+  { id: "adria_ptr_supertwin", nom: "Toit relevable Pop Top Roof (PTR)", achatHt: 4958, cessionPose: 0, prixTtc: 7000, poids: 0,
+    compat: {
+      "adria_supertwin_600spb_ptr": "O",
+      "adria_supertwin_700sgx_ptr": "O",
+    } },
+  { id: "adria_bva_fourgon", nom: "Boîte automatique", achatHt: 2685, cessionPose: 0, prixTtc: 3790, poids: 0,
+    compat: {
+      "adria_twin_540spb_citroen": "O",
+      "adria_twin_600spb_citroen_ptr": "O",
+      "adria_twin_600spb_family_citroen": "O",
+      "adria_twin_640slb_citroen_ptr": "O",
+      "adria_twin_640sgx_citroen_ptr": "O",
+      "adria_twin_540spb_fiat_supreme_ptr": "O",
+      "adria_twin_600spb_fiat_supreme_ptr": "O",
+      "adria_twin_640spb_family_fiat_supreme": "O",
+      "adria_twin_640slb_fiat_supreme_ptr": "O",
+      "adria_twin_640sgx_fiat_supreme_ptr": "O",
+    } },
+].map((o) => ({ ...o, marque: "Adria" }));
+
 
 const BENIMAR_VEHICULE_IDS = ["benimar_mileo_262", "benimar_mileo_263", "benimar_mileo_268", "benimar_mileo_298", "benimar_amphitryon_968", "benimar_amphitryon_981", "benimar_amphitryon_998", "benimar_yrteo_841", "benimar_yrteo_862", "benimar_yrteo_881", "benimar_yrteo_885", "benimar_tessoro_440_up", "benimar_tessoro_463_up", "benimar_tessoro_495_up", "benimar_tessoro_425", "benimar_tessoro_443", "benimar_tessoro_444", "benimar_tessoro_461", "benimar_tessoro_463", "benimar_tessoro_468", "benimar_tessoro_481", "benimar_tessoro_483", "benimar_tessoro_488", "benimar_tessoro_498", "benimar_sport_capucine_325_up", "benimar_sport_capucine_344_up", "benimar_sport_capucine_363_up", "benimar_kaleo_625", "benimar_kaleo_640", "benimar_kaleo_663", "benimar_kaleo_695", "benimar_benivan_100_up", "benimar_benivan_120_up", "benimar_benivan_144_up", "benimar_benivan_160_up", "benimar_benivan_100", "benimar_benivan_120", "benimar_benivan_144", "benimar_benivan_160", "benimar_benivan_160_stormline"];
 
@@ -2027,6 +2061,6 @@ const RAPIDO_OPTIONS_VANS = [
     compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","-","-","-"]) },
 ].map((o) => ({ ...o, marque: "Rapido" }));
 
-const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS, ...FLORIUM_BP_OPTIONS, ...ELISTER_BELIXTER_OPTIONS, ...RANDGER_OPTIONS, ...STYLEVAN_OPTIONS, ...CHAUSSON_OPTIONS];
+const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS, ...FLORIUM_BP_OPTIONS, ...ELISTER_BELIXTER_OPTIONS, ...RANDGER_OPTIONS, ...STYLEVAN_OPTIONS, ...CHAUSSON_OPTIONS, ...ADRIA_OPTIONS_FOURGONS];
 
 module.exports = { VEHICULES, OPTIONS };
