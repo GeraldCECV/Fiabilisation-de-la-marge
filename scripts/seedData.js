@@ -268,6 +268,103 @@ const ADRIA_OPTIONS_FOURGONS = [
 ].map((o) => ({ ...o, marque: "Adria" }));
 
 
+// Groupes de compatibilité camping-cars Adria (Source : circulaire KRVACAMP, options camping-car)
+const CC_CITROEN = ["adria_compact_dc_citroen","adria_compact_dl_citroen","adria_matrix_650dl_citroen","adria_matrix_670dc_citroen","adria_matrix_670dl_citroen","adria_coral_670dc_citroen","adria_coral_670dl_citroen","adria_coralxl_650dk_citroen","adria_coralxl_660sl_citroen"];
+const CC_FIAT_SUPREME = ["adria_compact_dl_fiat_supreme","adria_matrix_670dc_fiat_supreme","adria_matrix_670dl_fiat_supreme","adria_coral_670dc_fiat_supreme","adria_coral_670dl_fiat_supreme"];
+const CC_SONIC = ["adria_sonic_700dc_fiat_select","adria_sonic_700dl_fiat_select","adria_sonic_700dl_fiat_supreme","adria_sonic_700dc_fiat_supreme"];
+const CC_SUPERSONIC = ["adria_supersonic_780dc","adria_supersonic_780dl","adria_supersonic_780sl","adria_supersonic_890lc","adria_supersonic_890ll"];
+const CC_FIAT_ALL = [...CC_FIAT_SUPREME, ...CC_SONIC]; // tout ce qui porte un "X" en colonne Fiat
+const CC_ALL = [...CC_CITROEN, ...CC_FIAT_ALL, ...CC_SUPERSONIC];
+const CC_MATRIX = ["adria_matrix_650dl_citroen","adria_matrix_670dc_citroen","adria_matrix_670dl_citroen","adria_matrix_670dc_fiat_supreme","adria_matrix_670dl_fiat_supreme"];
+const CC_CORAL = ["adria_coral_670dc_citroen","adria_coral_670dl_citroen","adria_coral_670dc_fiat_supreme","adria_coral_670dl_fiat_supreme"];
+const CC_CORALXL = ["adria_coralxl_650dk_citroen","adria_coralxl_660sl_citroen"];
+const CC_COMPACT = ["adria_compact_dc_citroen","adria_compact_dl_citroen","adria_compact_dl_fiat_supreme"];
+
+const ADRIA_OPTIONS_CC = [
+  // ---- Base - Châssis - Motorisation ----
+  { id: "adria_cc_bva140", nom: "Boîte automatique pour motorisation 140CV", achatHt: 2649, cessionPose: 0, prixTtc: 3740, poids: 0,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_moteur160", nom: "Motorisation 2,2L 160CV HD avec boîte automatique", achatHt: 3829, cessionPose: 0, prixTtc: 5406, poids: 33,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_moteur180_44h", nom: "Motorisation 2,2L 180CV HD 44H avec boîte automatique (Sonic, Coral et Matrix)", achatHt: 6141, cessionPose: 0, prixTtc: 8670, poids: 73,
+    compat: statut([...CC_MATRIX, ...CC_CORAL, ...CC_SONIC]) },
+  { id: "adria_cc_jantes16_citroen", nom: "Jantes alu 16'' Citroën", achatHt: 638, cessionPose: 0, prixTtc: 901, poids: 8,
+    compat: statut(CC_CITROEN) },
+  { id: "adria_cc_pack_jantes16_fiat_35hl_bva", nom: "Pack Jantes alu 16'' Fiat (châssis 35H ou 35L BVA) + volant cuir + aérateurs chromés", achatHt: 614, cessionPose: 0, prixTtc: 868, poids: -4,
+    compat: statut(CC_FIAT_ALL) },
+  { id: "adria_cc_pack_jantes16_fiat_35l", nom: "Pack Jantes alu 16'' Fiat (châssis 35L) + volant cuir + aérateurs chromés", achatHt: 765, cessionPose: 0, prixTtc: 1080, poids: -8,
+    compat: statut(CC_FIAT_ALL) },
+  { id: "adria_cc_plus_value_chassis_fiat", nom: "Plus-value châssis Fiat (gamme Select, base Citroën)", achatHt: 1693, cessionPose: 0, prixTtc: 2390, poids: 0,
+    compat: statut(CC_CITROEN) },
+  { id: "adria_cc_plus_value_35h", nom: "Plus-value 35H", achatHt: 265, cessionPose: 0, prixTtc: 374, poids: 40,
+    compat: statut(CC_ALL) },
+
+  // ---- Porteur ----
+  { id: "adria_cc_regulateur_adaptatif_citroen", nom: "Régulateur adaptatif (>30km/h) + volant cuir + antibrouillard avant", achatHt: 843, cessionPose: 0, prixTtc: 1190, poids: 0.33,
+    compat: statut(CC_CITROEN) },
+  { id: "adria_cc_regulateur_adaptatif_fiat", nom: "Régulateur de vitesse adaptatif >30km/h", achatHt: 464, cessionPose: 0, prixTtc: 654, poids: 0.1,
+    compat: statut(CC_FIAT_ALL) },
+  { id: "adria_cc_frein_parking_elec", nom: "Frein de parking électrique", achatHt: 427, cessionPose: 0, prixTtc: 604, poids: -9.4,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_feux_full_led", nom: "Feux Full LED (hors Sonic)", achatHt: 904, cessionPose: 0, prixTtc: 1277, poids: 5,
+    compat: statut(CC_ALL.filter((id) => !CC_SONIC.includes(id))) },
+  { id: "adria_cc_capteurs_pluie_luminosite", nom: "Capteurs de pluie et de luminosité", achatHt: 181, cessionPose: 0, prixTtc: 256, poids: 0.2,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_suspension_pneumatique_ar", nom: "Suspension pneumatique arrière", achatHt: 373, cessionPose: 0, prixTtc: 527, poids: 10,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_volant_cuir_citroen", nom: "Volant et levier de vitesse en cuir", achatHt: 235, cessionPose: 0, prixTtc: 331, poids: 0,
+    compat: statut(CC_CITROEN) },
+
+  // ---- Packs ----
+  { id: "adria_cc_pack_lounge", nom: "Pack Lounge : climatisation automatique, chargeur de téléphone sans fil, tableau de bord digital 7''", achatHt: 710, cessionPose: 0, prixTtc: 1003, poids: 1.51,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_pack_lounge_ecran10", nom: "Pack Lounge avec écran 10''", achatHt: 2035, cessionPose: 0, prixTtc: 2873, poids: 3.41,
+    compat: statut(CC_FIAT_ALL) },
+  { id: "adria_cc_pack_select_edition", nom: "Pack Select Edition : aérateurs satinés, boîte automatique, media pack, JA 16'', volant et pommeau cuir", achatHt: 2267, cessionPose: 0, prixTtc: 3200, poids: 22,
+    compat: statut(CC_CITROEN) },
+  { id: "adria_cc_pack_supreme_edition", nom: "Pack Supreme Edition : frein à main électrique, Pack Lounge, boîte automatique, media pack", achatHt: 2267, cessionPose: 0, prixTtc: 3200, poids: 22.11,
+    compat: statut(CC_FIAT_ALL) },
+  { id: "adria_cc_pack_accessoires", nom: "Pack accessoires : store et panneau solaire", achatHt: 1000, cessionPose: 0, prixTtc: 1320, poids: 38.5,
+    compat: statut(CC_ALL) },
+
+  // ---- Cellule ----
+  { id: "adria_cc_batterie_liion_100ah", nom: "Batterie auxiliaire Li-ion 12,8V-100Ah Leoch", achatHt: 264, cessionPose: 0, prixTtc: 372, poids: 11,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_2x_batterie_liion_100ah", nom: "2x Batterie auxiliaire Li-ion 12,8V-100Ah Leoch", achatHt: 527, cessionPose: 0, prixTtc: 745, poids: 23,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_convertisseur_1500w", nom: "Convertisseur 12/220V 1500W (Camping-car)", achatHt: 578, cessionPose: 0, prixTtc: 816, poids: 6,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_media_pack", nom: "Media Pack : radio + caméra de recul", achatHt: 756, cessionPose: 0, prixTtc: 1068, poids: 2,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_audio_bluetooth", nom: "Système audio avec amplificateur Bluetooth et caisson de basse", achatHt: 238, cessionPose: 0, prixTtc: 337, poids: 5.37,
+    compat: statut(CC_FIAT_ALL) },
+  { id: "adria_cc_mach20", nom: "MACH 2.0", achatHt: 301, cessionPose: 0, prixTtc: 425, poids: 0.45,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_protection_evier", nom: "Protection d'évier / planche à découper", achatHt: 39, cessionPose: 0, prixTtc: 54, poids: 0.5,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_moquette_cellule", nom: "Moquette cellule", achatHt: 278, cessionPose: 0, prixTtc: 392, poids: 7,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_machine_cafe_std", nom: "Machine à café avec support (hors Coral XL)", achatHt: 132, cessionPose: 0, prixTtc: 187, poids: 3.7,
+    compat: statut(CC_ALL.filter((id) => !CC_CORALXL.includes(id))) },
+  { id: "adria_cc_machine_cafe_delonghi", nom: "Machine à café DE LONGHI avec support (Coral XL)", achatHt: 205, cessionPose: 0, prixTtc: 289, poids: 3.7,
+    compat: statut(CC_CORALXL) },
+  { id: "adria_cc_four_gaz", nom: "Four à gaz avec allumage électrique", achatHt: 266, cessionPose: 0, prixTtc: 376, poids: 9,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_attelage_connexion_elec", nom: "Attelage avec connexion électrique", achatHt: 949, cessionPose: 0, prixTtc: 1339, poids: 53,
+    compat: statut(CC_ALL) },
+  { id: "adria_cc_clim_aventa_comfort", nom: "Climatisation cellule Aventa Comfort 2,5kW 2e génération (Matrix, Coral, Sonic et Supersonic)", achatHt: 1746, cessionPose: 0, prixTtc: 2465, poids: 37,
+    compat: statut([...CC_MATRIX, ...CC_CORAL, ...CC_SONIC, ...CC_SUPERSONIC]) },
+  { id: "adria_cc_clim_aventa_compact", nom: "Climatisation cellule Aventa Compact+ 2,2kW 2e génération (Compact)", achatHt: 1337, cessionPose: 0, prixTtc: 1888, poids: 25,
+    compat: statut(CC_COMPACT) },
+  { id: "adria_cc_truma_combi6de", nom: "Truma Combi 6DE (hors Coral XL)", achatHt: 572, cessionPose: 0, prixTtc: 808, poids: 3.4,
+    compat: statut(CC_ALL.filter((id) => !CC_CORALXL.includes(id))) },
+  { id: "adria_cc_truma_combi6e", nom: "Truma Combi 6E (Coral XL)", achatHt: 370, cessionPose: 0, prixTtc: 522, poids: 2,
+    compat: statut(CC_CORALXL) },
+  { id: "adria_cc_cuir", nom: "Sellerie cuir", achatHt: 967, cessionPose: 0, prixTtc: 1366, poids: 3.5,
+    compat: statut(CC_ALL) },
+].map((o) => ({ ...o, marque: "Adria" }));
+
+
 const BENIMAR_VEHICULE_IDS = ["benimar_mileo_262", "benimar_mileo_263", "benimar_mileo_268", "benimar_mileo_298", "benimar_amphitryon_968", "benimar_amphitryon_981", "benimar_amphitryon_998", "benimar_yrteo_841", "benimar_yrteo_862", "benimar_yrteo_881", "benimar_yrteo_885", "benimar_tessoro_440_up", "benimar_tessoro_463_up", "benimar_tessoro_495_up", "benimar_tessoro_425", "benimar_tessoro_443", "benimar_tessoro_444", "benimar_tessoro_461", "benimar_tessoro_463", "benimar_tessoro_468", "benimar_tessoro_481", "benimar_tessoro_483", "benimar_tessoro_488", "benimar_tessoro_498", "benimar_sport_capucine_325_up", "benimar_sport_capucine_344_up", "benimar_sport_capucine_363_up", "benimar_kaleo_625", "benimar_kaleo_640", "benimar_kaleo_663", "benimar_kaleo_695", "benimar_benivan_100_up", "benimar_benivan_120_up", "benimar_benivan_144_up", "benimar_benivan_160_up", "benimar_benivan_100", "benimar_benivan_120", "benimar_benivan_144", "benimar_benivan_160", "benimar_benivan_160_stormline"];
 
 const BENIMAR_VEHICULES = [
@@ -2167,6 +2264,6 @@ const RAPIDO_OPTIONS_VANS = [
     compat: zipCompat(RAPIDO_VANS_IDS, ["O","O","-","-","-"]) },
 ].map((o) => ({ ...o, marque: "Rapido" }));
 
-const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS, ...FLORIUM_BP_OPTIONS, ...ELISTER_BELIXTER_OPTIONS, ...RANDGER_OPTIONS, ...STYLEVAN_OPTIONS, ...CHAUSSON_OPTIONS, ...ADRIA_OPTIONS_FOURGONS];
+const OPTIONS = [...DREAMER_OPTIONS, ...RAPIDO_OPTIONS, ...RAPIDO_OPTIONS_INTEGRAUX, ...RAPIDO_OPTIONS_VANS, ...BENIMAR_OPTIONS, ...CAMPEREVE_OPTIONS, ...ELIOS_OPTIONS, ...FLEURETTE_OPTIONS, ...FLORIUM_OPTIONS, ...FLORIUM_BP_OPTIONS, ...ELISTER_BELIXTER_OPTIONS, ...RANDGER_OPTIONS, ...STYLEVAN_OPTIONS, ...CHAUSSON_OPTIONS, ...ADRIA_OPTIONS_FOURGONS, ...ADRIA_OPTIONS_CC];
 
 module.exports = { VEHICULES, OPTIONS };
