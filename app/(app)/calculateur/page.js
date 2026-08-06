@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabaseBrowser } from "@/lib/supabaseBrowser";
 import { calculerMarge, BATTERIE_COUTS } from "@/lib/margeEngine";
 import { FRAIS_TRANSPORT_PAR_MARQUE } from "@/scripts/fraisTransportData";
+import { NIVEAUX_REMISE_ETAT } from "@/scripts/niveauxRemiseEtatData";
 
 const ANNEE_COURANTE = 2027;
 const fmt = (n) => (Number(n) || 0).toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
@@ -38,6 +39,9 @@ export default function CalculateurPage() {
   const [prixNegocie, setPrixNegocie] = useState(0);
   const [prixNegocieAuto, setPrixNegocieAuto] = useState(true);
   const [prixAffichParc, setPrixAffichParc] = useState(0);
+  const [souhaitRachatClient, setSouhaitRachatClient] = useState(0);
+  const [prixReventeVoVise, setPrixReventeVoVise] = useState(0);
+  const [niveauRemiseEtat, setNiveauRemiseEtat] = useState("de_base");
   const [financementActif, setFinancementActif] = useState(false);
   const [financementMontant, setFinancementMontant] = useState(0);
   const [financementOrganisme, setFinancementOrganisme] = useState("");
@@ -198,6 +202,9 @@ export default function CalculateurPage() {
       financement_montant: financementActif ? Number(financementMontant) || 0 : 0,
       rachat_actif: rachatActif,
       rachat_montant: rachatActif ? Number(rachatMontant) || 0 : 0,
+      souhait_rachat_client: rachatActif ? Number(souhaitRachatClient) || 0 : null,
+      prix_revente_vo_vise: rachatActif ? Number(prixReventeVoVise) || 0 : null,
+      niveau_remise_etat: rachatActif ? niveauRemiseEtat : null,
       commentaires,
       marge_attendue: calc.E29,
       marge_reelle: calc.E33,
@@ -257,6 +264,9 @@ export default function CalculateurPage() {
     setRachatActif(false);
     setRachatMontant(0);
     setPrixAffichParc(0);
+    setSouhaitRachatClient(0);
+    setPrixReventeVoVise(0);
+    setNiveauRemiseEtat("de_base");
     setCommentaires("");
     setDossierIdActuel(null);
     setDernierStatut("PROPOSITION");
@@ -516,27 +526,64 @@ export default function CalculateurPage() {
                 </select>
               </div>
             )}
-            <div className="grid grid-cols-2 gap-3 mt-3">
-              <div>
-                <div className="text-xs text-sub">Rachat véhicule client</div>
-                <select value={rachatActif ? "OUI" : "NON"} onChange={(e) => setRachatActif(e.target.value === "OUI")} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
-                  <option value="NON">Non</option>
-                  <option value="OUI">Oui</option>
-                </select>
-              </div>
-              {rachatActif && (
-                <div>
-                  <div className="text-xs text-sub">Montant rachat</div>
-                  <input type="number" value={rachatMontant} onChange={(e) => setRachatMontant(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
-                </div>
-              )}
+          </div>
+
+          <div className="bg-surface border border-border rounded-lg p-5">
+            <label className="text-xs text-sub uppercase font-bold">Reprise · Soulte</label>
+            <p className="text-[11px] text-sub mt-1 mb-3">Activer si une reprise VO entre dans l'affaire</p>
+            <div>
+              <div className="text-xs text-sub">Affaire avec reprise client ?</div>
+              <select value={rachatActif ? "OUI" : "NON"} onChange={(e) => setRachatActif(e.target.value === "OUI")} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
+                <option value="NON">Non</option>
+                <option value="OUI">Oui</option>
+              </select>
             </div>
-            {rachatActif && (
-              <div className="mt-3">
-                <div className="text-xs text-sub">Prix affiché sur parc</div>
-                <input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
-              </div>
-            )}
+            {rachatActif && (() => {
+              const souhait = Number(souhaitRachatClient) || 0;
+              const notrePrix = Number(rachatMontant) || 0;
+              const ecart = souhait - notrePrix;
+              const reventeVisee = Number(prixReventeVoVise) || 0;
+              const cout = NIVEAUX_REMISE_ETAT[niveauRemiseEtat]?.cout || 0;
+              const margeVo = reventeVisee - notrePrix - cout;
+              const bdc = Number(prixNegocie) || 0;
+              const soulte = bdc - notrePrix;
+              return (
+                <>
+                  <div className="grid grid-cols-2 gap-3 mt-3">
+                    <div>
+                      <div className="text-xs text-sub">Souhait rachat client</div>
+                      <input type="number" value={souhaitRachatClient} onChange={(e) => setSouhaitRachatClient(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-sub">Prix revente VO visé</div>
+                      <input type="number" value={prixReventeVoVise} onChange={(e) => setPrixReventeVoVise(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-sub">Notre prix de rachat</div>
+                      <input type="number" value={rachatMontant} onChange={(e) => setRachatMontant(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
+                    </div>
+                    <div>
+                      <div className="text-xs text-sub">Niveau remise en état</div>
+                      <select value={niveauRemiseEtat} onChange={(e) => setNiveauRemiseEtat(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]">
+                        {Object.entries(NIVEAUX_REMISE_ETAT).map(([key, n]) => (
+                          <option key={key} value={key}>{n.label} · {n.cout}€</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 mt-3 text-sm">
+                    <div className="flex items-center justify-between"><span className="text-sub">Écart rachat (client − nous)</span><span className="font-bold">{fmt(ecart)}</span></div>
+                    <div className="flex items-center justify-between"><span className="text-sub">Marge VO prévisionnelle</span><span className="font-bold">{fmt(margeVo)}</span></div>
+                    <div className="flex items-center justify-between"><span className="text-sub">Soulte client (BDC − notre prix rachat)</span><span className="font-bold">{fmt(soulte)}</span></div>
+                  </div>
+                  {ecart > 0 && (
+                    <div className="mt-3 text-xs bg-[#FDF3E3] text-[#8A6D3B] rounded-md px-3 py-2">
+                      Le client surévalue sa reprise de {fmt(ecart)}. À négocier.
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </div>
 
