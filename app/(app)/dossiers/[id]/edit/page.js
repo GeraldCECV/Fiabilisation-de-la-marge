@@ -101,7 +101,7 @@ export default function EditDossierPage() {
     })();
   }, [params.id]);
 
-  const estHymer = modele?.marques?.nom === "Hymer";
+  const estHymer = ["Hymer", "Hymer Camper Vans"].includes(modele?.marques?.nom);
   const optionsSelectionnables = options.filter((o) => o.statut === "OPTION");
   const optionsDeSerie = options.filter((o) => o.statut === "SERIE");
   const optionsChoisies = optionsSelectionnables.filter((o) => optionsChoisiesIds.includes(o.id));

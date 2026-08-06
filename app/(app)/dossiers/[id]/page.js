@@ -33,7 +33,7 @@ export default async function DossierDetailPage({ params }) {
     equipementsYpocamp = data || [];
   }
 
-  const estHymer = dossier.modeles?.marques?.nom === "Hymer";
+  const estHymer = ["Hymer", "Hymer Camper Vans"].includes(dossier.modeles?.marques?.nom);
   const totalOptionsTtc = estHymer ? Number(dossier.options_hymer_ttc || 0) : options.reduce((s, o) => s + Number(o.prix_ttc || 0), 0);
   const totalEquipementsYpocampTtc = equipementsYpocamp.reduce((s, e) => s + Number(e.prix_ttc || 0), 0);
   const carteGrise = dossier.modeles?.type === "CAMPING_CAR" ? 790 : 380;

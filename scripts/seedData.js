@@ -1583,7 +1583,22 @@ const HYMER_VEHICULES = [
   { id: "hy_bmli_880", nom: "BML i 880 (Super Light Chassis, MB 415 2,0L 150cv)", gamme: "BML-i", typeCarrosserie: "INTEGRAL", prixUsineHt: 124429.48, prixPublicTtc: 177335 },
 ].map((v) => ({ ...v, marque: "Hymer", type: "CAMPING_CAR", collection: 2027 }));
 
-const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES, ...RANDGER_VEHICULES, ...STYLEVAN_VEHICULES, ...CHAUSSON_VEHICULES, ...HYMER_VEHICULES];
+const HYMER_CV_VEHICULES = [
+  { id: "hycv_redwood600", nom: "Redwood 600 (Fiat 35 2,2L 140cv)", gamme: "Redwood", prixUsineHt: 53657.25, prixPublicTtc: 71990 },
+  { id: "hycv_redwood601", nom: "Redwood 601 (Fiat 35 2,2L 140cv)", gamme: "Redwood", prixUsineHt: 53657.25, prixPublicTtc: 71990 },
+  { id: "hycv_yellowstone540", nom: "Yellowstone 540 (Fiat 35 2,2L 140cv)", gamme: "Yellowstone", prixUsineHt: 55250.10, prixPublicTtc: 75920 },
+  { id: "hycv_yellowstone600", nom: "Yellowstone 600 (Fiat 35 2,2L 140cv)", gamme: "Yellowstone", prixUsineHt: 56346.75, prixPublicTtc: 77435 },
+  { id: "hycv_yellowstone601", nom: "Yellowstone 601 (Fiat 35 2,2L 140cv)", gamme: "Yellowstone", prixUsineHt: 56346.75, prixPublicTtc: 77435 },
+  { id: "hycv_yellowstone602", nom: "Yellowstone 602 (Fiat 35 2,2L 140cv)", gamme: "Yellowstone", prixUsineHt: 56346.75, prixPublicTtc: 77435 },
+  { id: "hycv_yellowstone640", nom: "Yellowstone 640 (Fiat 35 2,2L 140cv)", gamme: "Yellowstone", prixUsineHt: 57443.38, prixPublicTtc: 78950 },
+  { id: "hycv_gcs600", nom: "Grand Canyon S 600 (Mercedes 315, 150cv)", gamme: "Grand Canyon S", prixUsineHt: 73070.28, prixPublicTtc: 100560 },
+  { id: "hycv_gcs600xp", nom: "Grand Canyon S 600 Xperience (Mercedes 417, 170cv)", gamme: "Grand Canyon S", prixUsineHt: 84452.21, prixPublicTtc: 116260 },
+  { id: "hycv_gcs700", nom: "Grand Canyon S 700 (Mercedes 417, 170cv)", gamme: "Grand Canyon S", prixUsineHt: 77968.60, prixPublicTtc: 107310 },
+  { id: "hycv_gcs600crossover", nom: "Grand Canyon S 600 CrossOver (Mercedes 419, 190cv)", gamme: "Grand Canyon S", prixUsineHt: 101729.10, prixPublicTtc: 140090 },
+  { id: "hycv_gcs700crosstrail", nom: "Grand Canyon S 700 CrossTrail (Mercedes 419, 190cv)", gamme: "Grand Canyon S", prixUsineHt: 110867.76, prixPublicTtc: 152700 },
+].map((v) => ({ ...v, marque: "Hymer Camper Vans", type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2027 }));
+
+const VEHICULES = [...DREAMER_VEHICULES, ...RAPIDO_VEHICULES, ...RAPIDO_VEHICULES_INTEGRAUX, ...RAPIDO_VEHICULES_VANS, ...ADRIA_VEHICULES_CC, ...ADRIA_VEHICULES_FOURGONS, ...BENIMAR_VEHICULES, ...CAMPEREVE_VEHICULES, ...ELIOS_VEHICULES, ...FLEURETTE_VEHICULES, ...FLORIUM_VEHICULES, ...FLORIUM_BP_VEHICULES, ...ELISTER_BELIXTER_VEHICULES, ...RANDGER_VEHICULES, ...STYLEVAN_VEHICULES, ...CHAUSSON_VEHICULES, ...HYMER_VEHICULES, ...HYMER_CV_VEHICULES];
 
 // ---------------------------------------------------------------------------
 // OPTIONS (statut par véhicule : "O" option payante, "S" de série, "-"/absent indisponible)

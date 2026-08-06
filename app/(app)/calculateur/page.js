@@ -121,7 +121,7 @@ export default function CalculateurPage() {
   }, [modeleId]);
 
   const modele = modeles.find((m) => m.id === modeleId);
-  const estHymer = marques.find((m) => m.id === marqueId)?.nom === "Hymer";
+  const estHymer = ["Hymer", "Hymer Camper Vans"].includes(marques.find((m) => m.id === marqueId)?.nom);
   const optionsSelectionnables = options.filter((o) => o.statut === "OPTION");
   const optionsDeSerie = options.filter((o) => o.statut === "SERIE");
   const optionsChoisies = optionsSelectionnables.filter((o) => optionsChoisiesIds.includes(o.id));
