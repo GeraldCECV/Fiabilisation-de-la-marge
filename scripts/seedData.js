@@ -114,17 +114,17 @@ const ADRIA_VEHICULES_CC = [
 // Source : Tarifs_HT_Fourgons.pdf / Tarifs_public_Fourgons.pdf — Adria, collection 2027 (tarif au 01/07/2026)
 const ADRIA_VEHICULES_FOURGONS = [
   { id: "adria_twin_540spb_citroen", nom: "TWIN 540 SPB — Gamme Select (Citroën Jumper, 35L 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 43846, prixPublicTtc: 61900 },
-  { id: "adria_twin_600spb_citroen_ptr", nom: "TWIN 600 SPB PTR — Gamme Select (Citroën Jumper, 35L 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 45263, prixPublicTtc: 63900 },
+  { id: "adria_twin_600spb_citroen_ptr", nom: "TWIN 600 SPB — Gamme Select (Citroën Jumper, 35L 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 45263, prixPublicTtc: 63900 },
   { id: "adria_twin_600spb_family_citroen", nom: "TWIN 600 SPB FAMILY — Gamme Select (Citroën Jumper, 35L 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 45971, prixPublicTtc: 64900 },
-  { id: "adria_twin_640slb_citroen_ptr", nom: "TWIN 640 SLB PTR — Gamme Select (Citroën Jumper, 35H 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 46679, prixPublicTtc: 65900 },
-  { id: "adria_twin_640sgx_citroen_ptr", nom: "TWIN 640 SGX PTR — Gamme Select (Citroën Jumper, 35H 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 48804, prixPublicTtc: 68900 },
-  { id: "adria_twin_540spb_fiat_supreme_ptr", nom: "TWIN 540 SPB PTR — Gamme Supreme (Fiat Ducato, 35L 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 53763, prixPublicTtc: 75900 },
-  { id: "adria_twin_600spb_fiat_supreme_ptr", nom: "TWIN 600 SPB PTR — Gamme Supreme (Fiat Ducato, 35L 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 50929, prixPublicTtc: 71900 },
+  { id: "adria_twin_640slb_citroen_ptr", nom: "TWIN 640 SLB — Gamme Select (Citroën Jumper, 35H 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 46679, prixPublicTtc: 65900 },
+  { id: "adria_twin_640sgx_citroen_ptr", nom: "TWIN 640 SGX — Gamme Select (Citroën Jumper, 35H 140cv MAN.)", gammeTwin: "Select", prixUsineHt: 48804, prixPublicTtc: 68900 },
+  { id: "adria_twin_540spb_fiat_supreme_ptr", nom: "TWIN 540 SPB — Gamme Supreme (Fiat Ducato, 35L 140cv MAN., toit relevable inclus)", gammeTwin: "Supreme", prixUsineHt: 53763, prixPublicTtc: 75900 },
+  { id: "adria_twin_600spb_fiat_supreme_ptr", nom: "TWIN 600 SPB — Gamme Supreme (Fiat Ducato, 35L 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 50929, prixPublicTtc: 71900 },
   { id: "adria_twin_640spb_family_fiat_supreme", nom: "TWIN 640 SPB FAMILY — Gamme Supreme (Fiat Ducato, 35H 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 52346, prixPublicTtc: 73900 },
-  { id: "adria_twin_640slb_fiat_supreme_ptr", nom: "TWIN 640 SLB PTR — Gamme Supreme (Fiat Ducato, 35H 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 52346, prixPublicTtc: 73900 },
-  { id: "adria_twin_640sgx_fiat_supreme_ptr", nom: "TWIN 640 SGX PTR — Gamme Supreme (Fiat Ducato, 35H 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 54471, prixPublicTtc: 76900 },
-  { id: "adria_supertwin_600spb_ptr", nom: "SUPERTWIN 600 SPB PTR — Gamme Supertwin (Mercedes, 4X4 190cv AUT.)", gammeTwin: "Supertwin", prixUsineHt: 105471, prixPublicTtc: 148900 },
-  { id: "adria_supertwin_700sgx_ptr", nom: "SUPERTWIN 700 SGX PTR — Gamme Supertwin (Mercedes, 4X4 190cv AUT.)", gammeTwin: "Supertwin", prixUsineHt: 110471, prixPublicTtc: 155900 },
+  { id: "adria_twin_640slb_fiat_supreme_ptr", nom: "TWIN 640 SLB — Gamme Supreme (Fiat Ducato, 35H 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 52346, prixPublicTtc: 73900 },
+  { id: "adria_twin_640sgx_fiat_supreme_ptr", nom: "TWIN 640 SGX — Gamme Supreme (Fiat Ducato, 35H 140cv MAN.)", gammeTwin: "Supreme", prixUsineHt: 54471, prixPublicTtc: 76900 },
+  { id: "adria_supertwin_600spb_ptr", nom: "SUPERTWIN 600 SPB — Gamme Supertwin (Mercedes, 4X4 190cv AUT.)", gammeTwin: "Supertwin", prixUsineHt: 105471, prixPublicTtc: 148900 },
+  { id: "adria_supertwin_700sgx_ptr", nom: "SUPERTWIN 700 SGX — Gamme Supertwin (Mercedes, 4X4 190cv AUT.)", gammeTwin: "Supertwin", prixUsineHt: 110471, prixPublicTtc: 155900 },
 ].map((v) => ({ ...v, marque: "Adria", gamme: `Fourgons — ${v.gammeTwin}`, type: "CAMPING_CAR", typeCarrosserie: "FOURGON", collection: 2027 }));
 
 // Options Fourgons Adria (Source : Tarifs_HT_Fourgons.pdf / Tarifs_public_Fourgons.pdf)
