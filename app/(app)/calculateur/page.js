@@ -537,10 +537,6 @@ export default function CalculateurPage() {
                 <input type="number" value={prixAffichParc} onChange={(e) => setPrixAffichParc(e.target.value)} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
               </div>
             )}
-            <div className="mt-3">
-              <div className="text-xs text-sub">Bon de préparation / commentaires</div>
-              <textarea value={commentaires} onChange={(e) => setCommentaires(e.target.value)} rows={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
-            </div>
           </div>
         </div>
 
@@ -614,6 +610,10 @@ export default function CalculateurPage() {
               >
                 ⟳ Nouvelle proposition (enregistre celle-ci avant de vider le formulaire)
               </button>
+              <div className="bg-surface border border-border rounded-lg p-5">
+                <div className="text-xs text-sub">Bon de préparation / commentaires</div>
+                <textarea value={commentaires} onChange={(e) => setCommentaires(e.target.value)} rows={3} className="w-full mt-1 border border-border rounded-md px-2 py-2 text-sm bg-[#F0FFFE]" />
+              </div>
               {msg && <div className="text-xs text-sub">{msg}</div>}
             </>
           )}
